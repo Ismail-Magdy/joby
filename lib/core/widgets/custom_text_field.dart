@@ -177,12 +177,19 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       autovalidateMode: widget.autovalidateMode,
 
       /// Text style inside the field.
-      style: TextStyle(color: AppColors.primaryColor, fontSize: 14.sp),
+      style: TextStyle(
+        color: AppColors.primaryColor,
+        fontSize: 14.sp,
+        fontFamily: "Joby",
+      ),
 
       decoration: InputDecoration(
         hintText: widget.hintText,
 
-        hintStyle: const TextStyle(color: Color(0x7F4A628A)),
+        hintStyle: const TextStyle(
+          color: Color(0x7F4A628A),
+          fontFamily: "BrunoAceSC",
+        ),
 
         /// Optional prefix icon.
         prefixIcon: widget.prefixIcon != null
