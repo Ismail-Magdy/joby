@@ -1,14 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:joby/core/helpers/spacing.dart';
-import 'package:joby/core/themes/app_colors.dart';
-import 'package:joby/features/common/auth/manager/auth_cubit.dart';
-import 'package:joby/features/common/auth/manager/auth_state.dart';
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:flutter_svg/svg.dart";
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "package:joby/core/helpers/extensions.dart";
+import "package:joby/core/routes/routes.dart";
+import "package:joby/core/themes/app_colors.dart";
+import "package:joby/features/common/auth/manager/auth_cubit.dart";
+import "package:joby/features/common/auth/manager/auth_state.dart";
+import "package:joby/features/common/auth/presentation/widgets/custom_divider.dart";
 
-import '../../../../../core/widgets/custom_text_field.dart';
+import "../../../../../core/widgets/custom_text_field.dart";
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -55,13 +57,14 @@ class _AuthScreenState extends State<AuthScreen> {
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
-              // Snccess
+              //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    textAlign: .center,
-                    "Welcome ${state.user.name}!",
-                    style: TextStyle(fontSize: 14.sp),
+                  content: Center(
+                    child: Text(
+                      "Welcome ${state.user.name}!",
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
                   ),
                   backgroundColor: Colors.green,
                   behavior: .floating,
@@ -70,14 +73,29 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               );
               //
+              if (state.hasProfile) {
+                if (state.userType == "company") {
+                  context.pushReplacementNamed(Routes.companyHomeScreen);
+                } else {
+                  context.pushReplacementNamed(Routes.userHomeScreen);
+                }
+              } else {
+                if (state.userType == "company") {
+                  // TODO:  Company HomeScreen
+                  context.pushReplacementNamed(Routes.companyHomeScreen);
+                } else {
+                  context.pushReplacementNamed(Routes.userInfoScreen);
+                }
+              }
             } else if (state is AuthError) {
+              //
               ScaffoldMessenger.of(context).showSnackBar(
-                // Error
                 SnackBar(
-                  content: Text(
-                    textAlign: .center,
-                    state.message,
-                    style: TextStyle(fontSize: 14.sp),
+                  content: Center(
+                    child: Text(
+                      state.message,
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
                   ),
                   backgroundColor: Colors.red,
                   behavior: .floating,
@@ -85,22 +103,23 @@ class _AuthScreenState extends State<AuthScreen> {
                   shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
+              //
             }
           },
           builder: (context, state) {
             final cubit = context.read<AuthCubit>();
             return SingleChildScrollView(
-              padding: .symmetric(horizontal: 24.w, vertical: 30.h),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: .center,
                   children: [
-                    // Logo
+                    //
                     SvgPicture.asset("assets/svgs/joby_logo.svg"),
                     //
-                    verticalSpace(10),
-                    // Small Text
+                    SizedBox(height: 10.h),
+                    //
                     Text(
                       "Go ahead and set up your account",
                       style: TextStyle(
@@ -109,8 +128,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     //
-                    verticalSpace(40),
-                    // Tab Bar Button
+                    SizedBox(height: 40.h),
+                    // Two Auth Options
                     Container(
                       height: 55.h,
                       decoration: BoxDecoration(
@@ -119,6 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       child: Row(
                         children: [
+                          // Login Option
                           Expanded(
                             child: GestureDetector(
                               onTap: () => setState(() => isLogin = true),
@@ -129,7 +149,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   color: isLogin
                                       ? Colors.white
                                       : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(24.r),
+                                  borderRadius: .circular(24.r),
                                   boxShadow: isLogin
                                       ? [
                                           BoxShadow(
@@ -153,8 +173,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ),
                               ),
                             ),
+                            //
                           ),
-                          //
+                          // SignUp Option
                           Expanded(
                             child: GestureDetector(
                               onTap: () => setState(() => isLogin = false),
@@ -181,9 +202,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   "Sign Up",
                                   style: TextStyle(
                                     fontSize: 16.sp,
-                                    fontWeight: !isLogin
-                                        ? FontWeight.bold
-                                        : FontWeight.w500,
+                                    fontWeight: !isLogin ? .bold : .w500,
                                     color: !isLogin
                                         ? AppColors.primaryColor
                                         : Colors.grey.shade600,
@@ -192,11 +211,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                             ),
                           ),
+                          //
                         ],
                       ),
                     ),
                     //
-                    verticalSpace(30),
+                    SizedBox(height: 30.h),
                     //
                     if (!isLogin) ...[
                       CustomTextFormField(
@@ -207,7 +227,9 @@ class _AuthScreenState extends State<AuthScreen> {
                         validator: (val) =>
                             val!.isEmpty ? "Please enter your name" : null,
                       ),
-                      verticalSpace(16),
+                      //
+                      SizedBox(height: 16.h),
+                      //
                     ],
                     // Email
                     CustomTextFormField(
@@ -217,7 +239,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       prefixIcon: Icons.email_outlined,
                     ),
                     //
-                    verticalSpace(16),
+                    SizedBox(height: 16.h),
                     // Password
                     CustomTextFormField(
                       controller: _passwordController,
@@ -226,10 +248,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       prefixIcon: Icons.lock_outline,
                     ),
                     //
-                    verticalSpace(10),
+                    SizedBox(height: 10.h),
                     //
                     if (isLogin)
-                      // Forgot Password
                       Align(
                         alignment: .centerRight,
                         child: TextButton(
@@ -244,10 +265,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                       ),
                     //
-                    verticalSpace(isLogin ? 10 : 30),
+                    SizedBox(height: isLogin ? 10.h : 30.h),
                     // Button
                     SizedBox(
-                      width: .infinity,
+                      width: double.infinity,
                       height: 55.h,
                       child: ElevatedButton(
                         onPressed: state is AuthLoading
@@ -275,36 +296,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     //
-                    verticalSpace(30),
-                    // Divider
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: Colors.grey.shade300,
-                            thickness: 1,
-                          ),
-                        ),
-                        Padding(
-                          padding: .symmetric(horizontal: 10.w),
-                          child: Text(
-                            "Or continue with",
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 13.sp,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.grey.shade300,
-                            thickness: 1,
-                          ),
-                        ),
-                      ],
-                    ),
+                    SizedBox(height: 30.h),
+                    // Custom Divider
+                    CustomDivider(),
                     //
-                    verticalSpace(25),
+                    SizedBox(height: 25.h),
                     // Google Button
                     SizedBox(
                       width: .infinity,
@@ -338,6 +334,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                       ),
                     ),
+                    //
                   ],
                 ),
               ),

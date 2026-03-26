@@ -1,8 +1,13 @@
 class Routes {
-  static const String rootScreen = "/rootScreen";
-  static const String homeScreen = "/homeScreen";
-
+  /// Common
   static const String onBoardingScreen = "/onBoardingScreen";
-  // Added Auth Screen Route
   static const String authScreen = "/authScreen";
+
+  /// User
+  static const String userInfoScreen = "/userInfoScreen";
+  static const String userHomeScreen = "/userHomeScreen";
+  static const String userRootScreen = "/userRootScreen";
+
+  /// Company
+  static const String companyHomeScreen = "/companyHomeScreen";
 }

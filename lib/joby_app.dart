@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/routes/app_router.dart';
-import 'package:joby/core/routes/routes.dart';
 
 class JobyApp extends StatelessWidget {
-  const JobyApp({super.key, required this.appRouter});
+  const JobyApp({
+    super.key,
+    required this.appRouter,
+    required this.initialRoute,
+  });
   final AppRouter appRouter;
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +21,8 @@ class JobyApp extends StatelessWidget {
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
           theme: ThemeData(useMaterial3: true, fontFamily: "BrunoAceSC"),
+          initialRoute: initialRoute,
           onGenerateRoute: appRouter.generateRoute,
-          initialRoute: Routes.onBoardingScreen,
           debugShowCheckedModeBanner: false,
         ),
       ),

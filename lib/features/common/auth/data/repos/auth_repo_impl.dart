@@ -1,18 +1,15 @@
-import 'package:dartz/dartz.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import '../models/auth_credentials.dart';
-import '../models/user_model.dart';
-import 'auth_repo.dart';
+import "package:dartz/dartz.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
+import "package:google_sign_in/google_sign_in.dart";
+import "../models/auth_credentials.dart";
+import "../models/user_model.dart";
+import "auth_repo.dart";
 
 class AuthRepoImpl implements AuthRepo {
   final SupabaseClient supabaseClient;
 
-  //  Web Client ID
   final String webClientId =
       "39044447018-cclr5gn2dp3spu93uvqrg2as3o32er25.apps.googleusercontent.com";
-
-  //  iOS Client ID
   final String iosClientId =
       "39044447018-nefhnuaomgem3velpbl5hcue5c8n1j41.apps.googleusercontent.com";
 
@@ -107,5 +104,29 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<void> signOut() async {
     await supabaseClient.auth.signOut();
+  }
+
+  @override
+  Future<String> getUserRole() async {
+    try {
+      final userId = supabaseClient.auth.currentUser?.id;
+      if (userId == null) return "none";
+
+      final seekerData = await supabaseClient
+          .from("users")
+          .select("id")
+          .eq("id", userId)
+          .maybeSingle();
+
+      if (seekerData != null) return "seeker";
+
+      // مستقبلاً لما نعمل جدول للشركات هنشيل الكومنت من هنا
+      // final companyData = await supabaseClient.from("companies").select("id").eq("id", userId).maybeSingle();
+      // if (companyData != null) return "company";
+
+      return "none";
+    } catch (e) {
+      return "none";
+    }
   }
 }
