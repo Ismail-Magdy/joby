@@ -3,13 +3,13 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
-import "package:joby/core/helpers/extensions.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/features/common/auth/manager/auth_cubit.dart";
 import "package:joby/features/common/auth/manager/auth_state.dart";
 import "package:joby/features/common/auth/presentation/widgets/custom_divider.dart";
 
+import "../../../../../core/helpers/extensions.dart";
 import "../../../../../core/widgets/custom_text_field.dart";
 
 class AuthScreen extends StatefulWidget {
@@ -77,11 +77,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 if (state.userType == "company") {
                   context.pushReplacementNamed(Routes.companyHomeScreen);
                 } else {
-                  context.pushReplacementNamed(Routes.userHomeScreen);
+                  context.pushReplacementNamed(Routes.userRootScreen);
                 }
               } else {
                 if (state.userType == "company") {
-                  // TODO:  Company HomeScreen
                   context.pushReplacementNamed(Routes.companyHomeScreen);
                 } else {
                   context.pushReplacementNamed(Routes.userInfoScreen);

@@ -1,9 +1,12 @@
-import "dart:ui"; // مهم جداً عشان تأثير الـ Blur الزجاجي
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:joby/core/themes/app_colors.dart";
-import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
-import "package:joby/features/users/settings/presentation/screens/user_settings_screen.dart"; // اتأكد من المسار
+import "package:flutter_svg/svg.dart";
+
+import "../../../../core/helpers/spacing.dart";
+import "../../../../core/themes/app_colors.dart";
+import "../../ai/presentation/screens/ai_chat_screen.dart";
+import "../../home/presentation/screens/user_home_screen.dart";
+import "../../settings/presentation/screens/user_settings_screen.dart";
 
 class UserRootScreen extends StatefulWidget {
   const UserRootScreen({super.key});
@@ -13,76 +16,118 @@ class UserRootScreen extends StatefulWidget {
 }
 
 class _UserRootScreenState extends State<UserRootScreen> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _screens = [
+  //
+  List<Widget> screens = [
     const UserHomeScreen(),
+    const AiChatScreen(),
     const UserSettingsScreen(),
   ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
+  //
+  int currentIndex = 0;
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //
       extendBody: true,
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: Container(
-        margin: EdgeInsets.fromLTRB(24.w, 0, 24.w, 20.h),
-        height: 80.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20.r),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-            child: Container(
-              color: Colors.white.withOpacity(0.6),
-              child: BottomNavigationBar(
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person_outline),
-                    activeIcon: Icon(Icons.person),
-                    label: "Profile",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.settings_outlined),
-                    activeIcon: Icon(Icons.settings),
-                    label: "Settings",
-                  ),
-                ],
-                currentIndex: _selectedIndex,
-                selectedItemColor: AppColors.primaryColor,
-                unselectedItemColor: Colors.grey.shade600,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                type: BottomNavigationBarType.fixed,
-                showSelectedLabels: true,
-                showUnselectedLabels: false,
-                selectedLabelStyle: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-                iconSize: 26.sp,
-                onTap: _onItemTapped,
+      //
+      body: screens[currentIndex],
+      //
+      bottomNavigationBar: Padding(
+        padding: .only(left: 40.w, right: 40.w, bottom: 25.h),
+        child: Container(
+          height: 68.h,
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor,
+            borderRadius: .circular(40.r),
+          ),
+          child: Row(
+            mainAxisAlignment: .spaceAround,
+            children: [
+              // Profile Item
+              customIconNavigationBar(
+                index: 0,
+                icon: "assets/svgs/profile.svg",
+                title: "Profile",
               ),
-            ),
+              // AI Chat
+              customIconNavigationBar(
+                index: 1,
+                icon: "assets/svgs/chat.svg",
+                title: "Ask Joby",
+              ),
+              // Settings Item
+              customIconNavigationBar(
+                index: 2,
+                icon: "assets/svgs/settings.svg",
+                title: "Settings",
+              ),
+            ],
           ),
         ),
       ),
+      //
     );
   }
+
+  // Icon Navigation Bar
+  Widget customIconNavigationBar({
+    required int index,
+    required String icon,
+    required String title,
+  }) {
+    bool isSelected = currentIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          currentIndex = index;
+        });
+      },
+      child: Column(
+        mainAxisAlignment: .center,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            height: isSelected ? 38.h : 35.h,
+            width: isSelected ? 38.w : 35.w,
+            decoration: BoxDecoration(
+              shape: .circle,
+              color: isSelected
+                  ? const Color(0xffB9E5E8).withValues(alpha: 0.4)
+                  : Colors.transparent,
+            ),
+            child: Center(
+              child: AnimatedScale(
+                duration: const Duration(milliseconds: 300),
+                scale: isSelected ? 1.1 : 1.0,
+                child: SvgPicture.asset(
+                  icon,
+                  height: 22.h,
+                  colorFilter: const .mode(Colors.white, .srcIn),
+                ),
+              ),
+            ),
+          ),
+          //
+          verticalSpace(isSelected ? 2 : 3),
+          //
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 300),
+            style: TextStyle(
+              fontFamily: "BrunoAceSC",
+              color: Colors.white,
+              fontSize: isSelected ? 12.sp : 10.sp,
+              fontWeight: isSelected ? .bold : .normal,
+            ),
+            child: Text(title),
+          ),
+          //
+        ],
+      ),
+    );
+  }
+
+  //
 }

@@ -8,6 +8,7 @@ import "package:joby/features/common/auth/manager/auth_cubit.dart";
 import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/features/company/home/company_home_screen.dart";
 
+import "../../features/users/home/manager/user_home_cubit.dart";
 import "../../features/users/root/screens/user_root_screen.dart";
 import "../../features/users/user_info/manager/user_info_cubit.dart";
 import "../../features/users/user_info/presentation/screens/user_info_screen.dart";
@@ -44,7 +45,12 @@ class AppRouter {
 
       /// User Root Screen
       case Routes.userRootScreen:
-        return MaterialPageRoute(builder: (_) => const UserRootScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<UserHomeCubit>(
+            create: (context) => getIt<UserHomeCubit>(),
+            child: const UserRootScreen(),
+          ),
+        );
 
       /// Company Home Screen
       case Routes.companyHomeScreen:
