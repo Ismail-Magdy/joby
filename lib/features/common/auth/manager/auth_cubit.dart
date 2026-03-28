@@ -9,6 +9,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit({required this.authRepo}) : super(AuthInitial());
 
+  String? _normalizeRole(String? rawRole) {
+    if (rawRole == null || rawRole.isEmpty) return null;
+
+    final lower = rawRole.toLowerCase();
+    if (lower.contains("company") || lower.contains("business")) {
+      return "company";
+    }
+    return "seeker";
+  }
+
   Future<void> signInWithEmail(String email, String password) async {
     emit(AuthLoading());
 
@@ -17,16 +27,13 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold((errorMessage) => emit(AuthError(errorMessage)), (user) async {
       final dbRole = await authRepo.getUserRole();
-      final selectedRole = await SharedPrefHelper.getString("userType");
+      final rawRole = await SharedPrefHelper.getString("userType");
+      final selectedRole = _normalizeRole(rawRole);
 
-      if (dbRole != "none" && dbRole != selectedRole) {
+      if (dbRole != "none" && selectedRole != null && dbRole != selectedRole) {
         await authRepo.signOut();
         final roleName = dbRole == "seeker" ? "Job Seeker" : "Company";
-        emit(
-          AuthError(
-            "This email is already registered as a $roleName. Please log in from the correct section.",
-          ),
-        );
+        emit(AuthError("This email is already registered as a $roleName."));
         return;
       }
 
@@ -38,7 +45,7 @@ class AuthCubit extends Cubit<AuthState> {
         AuthSuccess(
           user: user,
           hasProfile: dbRole != "none",
-          userType: selectedRole,
+          userType: dbRole != "none" ? dbRole : (selectedRole ?? "seeker"),
         ),
       );
     });
@@ -60,16 +67,13 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold((errorMessage) => emit(AuthError(errorMessage)), (user) async {
       final dbRole = await authRepo.getUserRole();
-      final selectedRole = await SharedPrefHelper.getString("userType");
+      final rawRole = await SharedPrefHelper.getString("userType");
+      final selectedRole = _normalizeRole(rawRole);
 
-      if (dbRole != "none" && dbRole != selectedRole) {
+      if (dbRole != "none" && selectedRole != null && dbRole != selectedRole) {
         await authRepo.signOut();
         final roleName = dbRole == "seeker" ? "Job Seeker" : "Company";
-        emit(
-          AuthError(
-            "This email is already registered as a $roleName. Please log in from the correct section.",
-          ),
-        );
+        emit(AuthError("This email is already registered as a $roleName."));
         return;
       }
 
@@ -81,7 +85,7 @@ class AuthCubit extends Cubit<AuthState> {
         AuthSuccess(
           user: user,
           hasProfile: dbRole != "none",
-          userType: selectedRole,
+          userType: dbRole != "none" ? dbRole : (selectedRole ?? "seeker"),
         ),
       );
     });
@@ -94,16 +98,13 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold((errorMessage) => emit(AuthError(errorMessage)), (user) async {
       final dbRole = await authRepo.getUserRole();
-      final selectedRole = await SharedPrefHelper.getString("userType");
+      final rawRole = await SharedPrefHelper.getString("userType");
+      final selectedRole = _normalizeRole(rawRole);
 
-      if (dbRole != "none" && dbRole != selectedRole) {
+      if (dbRole != "none" && selectedRole != null && dbRole != selectedRole) {
         await authRepo.signOut();
         final roleName = dbRole == "seeker" ? "Job Seeker" : "Company";
-        emit(
-          AuthError(
-            "This email is already registered as a $roleName. Please log in from the correct section.",
-          ),
-        );
+        emit(AuthError("This email is already registered as a $roleName."));
         return;
       }
 
@@ -115,7 +116,7 @@ class AuthCubit extends Cubit<AuthState> {
         AuthSuccess(
           user: user,
           hasProfile: dbRole != "none",
-          userType: selectedRole,
+          userType: dbRole != "none" ? dbRole : (selectedRole ?? "seeker"),
         ),
       );
     });
