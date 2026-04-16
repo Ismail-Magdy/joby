@@ -4,6 +4,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:ionicons/ionicons.dart";
+import "package:joby/core/helpers/extensions.dart";
+import "package:joby/core/routes/routes.dart";
 import "package:joby/features/users/home/presentation/widgets/build_contact_icon_button.dart";
 import "package:open_filex/open_filex.dart";
 import "package:path_provider/path_provider.dart";
@@ -181,9 +183,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             //
                             // Pen Button
                             GestureDetector(
-                              onTap: () {
-                                // TODO: Edit Profile
-                              },
+                              onTap: () =>
+                                  context.pushNamed(Routes.editProfileScreen),
                               child: SvgPicture.asset(
                                 "assets/svgs/pen.svg",
                                 colorFilter: .mode(Colors.white, .srcIn),

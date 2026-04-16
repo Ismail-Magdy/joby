@@ -8,6 +8,10 @@ import "package:joby/features/common/auth/manager/auth_cubit.dart";
 import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/features/company/home/company_home_screen.dart";
 
+import "../../features/users/ai/manager/ai_chat_cubit.dart";
+import "../../features/users/ai/presentation/screens/ai_chat_screen.dart";
+import "../../features/users/edit_profile/manager/edit_profile_cubit.dart";
+import "../../features/users/edit_profile/presentation/screens/edit_profile_screen.dart";
 import "../../features/users/home/manager/user_home_cubit.dart";
 import "../../features/users/root/screens/user_root_screen.dart";
 import "../../features/users/user_info/manager/user_info_cubit.dart";
@@ -55,6 +59,24 @@ class AppRouter {
       /// Company Home Screen
       case Routes.companyHomeScreen:
         return MaterialPageRoute(builder: (_) => const CompanyHomeScreen());
+
+      /// Ai Chat Screen
+      case Routes.aiChatScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<AiChatCubit>(
+            create: (context) => AiChatCubit(),
+            child: const AiChatScreen(),
+          ),
+        );
+
+      /// Edit Profile Screen
+      case Routes.editProfileScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<EditProfileCubit>(),
+            child: const EditProfileScreen(),
+          ),
+        );
     }
     return null;
   }
