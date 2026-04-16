@@ -7,6 +7,8 @@ import 'package:joby/features/common/auth/data/repos/auth_repo_impl.dart';
 import 'package:joby/features/common/auth/manager/auth_cubit.dart';
 
 import '../../features/common/on_boarding/data/repositories/user_type_repository.dart';
+import '../../features/users/edit_profile/data/repos/edit_profile_repo.dart';
+import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/home/data/repos/user_home_repo.dart';
 import '../../features/users/home/data/repos/user_home_repo_impl.dart';
 import '../../features/users/home/manager/user_home_cubit.dart';
@@ -53,5 +55,11 @@ Future<void> initGetIt() async {
   );
   getIt.registerFactory<UserHomeCubit>(
     () => UserHomeCubit(userHomeRepo: getIt<UserHomeRepo>()),
+  );
+
+  /// Edit Profile
+  getIt.registerLazySingleton<EditProfileRepo>(() => EditProfileRepo(getIt()));
+  getIt.registerFactory<EditProfileCubit>(
+    () => EditProfileCubit(getIt(), getIt()),
   );
 }

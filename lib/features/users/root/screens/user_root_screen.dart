@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
+import "package:joby/features/users/ai/manager/ai_chat_cubit.dart";
 
 import "../../../../core/helpers/spacing.dart";
 import "../../../../core/themes/app_colors.dart";
@@ -31,7 +33,17 @@ class _UserRootScreenState extends State<UserRootScreen> {
       //
       extendBody: true,
       //
-      body: screens[currentIndex],
+      body: IndexedStack(
+        index: currentIndex,
+        children: [
+          const UserHomeScreen(),
+          BlocProvider(
+            create: (context) => AiChatCubit(),
+            child: const AiChatScreen(),
+          ),
+          const UserSettingsScreen(),
+        ],
+      ),
       //
       bottomNavigationBar: Padding(
         padding: .only(left: 40.w, right: 40.w, bottom: 25.h),
