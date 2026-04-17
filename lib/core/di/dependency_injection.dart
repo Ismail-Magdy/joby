@@ -6,6 +6,9 @@ import 'package:joby/features/common/auth/data/repos/auth_repo.dart';
 import 'package:joby/features/common/auth/data/repos/auth_repo_impl.dart';
 import 'package:joby/features/common/auth/manager/auth_cubit.dart';
 import '../../features/common/on_boarding/data/repositories/user_type_repository.dart';
+import '../../features/users/advice/data/repos/advice_repo.dart';
+import '../../features/users/advice/data/repos/advice_repo_impl.dart';
+import '../../features/users/advice/manager/advice_cubit.dart';
 import '../../features/users/ai/data/repos/ai_chat_repo.dart';
 import '../../features/users/ai/data/repos/ai_chat_repo_impl.dart';
 import '../../features/users/ai/manager/ai_chat_cubit.dart';
@@ -74,5 +77,13 @@ Future<void> initGetIt() async {
   );
   getIt.registerLazySingleton<AiChatCubit>(
     () => AiChatCubit(getIt<AiChatRepo>()),
+  );
+
+  /// Advice (Feedback) Feature
+  getIt.registerLazySingleton<AdviceRepo>(
+    () => AdviceRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+  );
+  getIt.registerFactory<AdviceCubit>(
+    () => AdviceCubit(adviceRepo: getIt<AdviceRepo>()),
   );
 }

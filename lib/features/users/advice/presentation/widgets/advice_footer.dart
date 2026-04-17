@@ -8,7 +8,7 @@ class AdviceFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        "Your default email app will open with the message pre filled",
+        "Your feedback will be sent directly to our team",
         style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade400),
         textAlign: .center,
       ),

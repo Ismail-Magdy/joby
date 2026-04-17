@@ -37,8 +37,8 @@ class SuccessStateWidget extends StatelessWidget {
           ),
           verticalSpace(8),
           Text(
-            "Your email app has opened with your message pre-filled "
-            "Just hit Send to complete it.",
+            "Your feedback has been sent successfully "
+            "We appreciate you helping us improve Joby",
             textAlign: .center,
             style: TextStyle(
               fontSize: 13.sp,
