@@ -7,8 +7,9 @@ class Routes {
   static const String userInfoScreen = "/userInfoScreen";
   static const String userHomeScreen = "/userHomeScreen";
   static const String userRootScreen = "/userRootScreen";
-  static const String aiChatScreen = "/aiChatScreen";
   static const String editProfileScreen = "/editProfileScreen";
+  static const String aboutUsScreen = "/aboutUsScreen";
+  static const String adviceScreen = "/adviceScreen";
 
   /// Company
   static const String companyHomeScreen = "/companyHomeScreen";

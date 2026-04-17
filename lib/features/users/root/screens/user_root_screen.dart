@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
+import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/features/users/ai/manager/ai_chat_cubit.dart";
 
 import "../../../../core/helpers/spacing.dart";
@@ -18,33 +19,25 @@ class UserRootScreen extends StatefulWidget {
 }
 
 class _UserRootScreenState extends State<UserRootScreen> {
-  //
-  List<Widget> screens = [
-    const UserHomeScreen(),
-    const AiChatScreen(),
-    const UserSettingsScreen(),
-  ];
-  //
   int currentIndex = 0;
-  //
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //
       extendBody: true,
-      //
       body: IndexedStack(
         index: currentIndex,
         children: [
           const UserHomeScreen(),
+          // AiChatCubit is a LazySingleton in GetIt — same instance reused,
+          // history is preserved in Hive across sessions.
           BlocProvider(
-            create: (context) => AiChatCubit(),
+            create: (_) => getIt<AiChatCubit>(),
             child: const AiChatScreen(),
           ),
           const UserSettingsScreen(),
         ],
       ),
-      //
       bottomNavigationBar: Padding(
         padding: .only(left: 40.w, right: 40.w, bottom: 25.h),
         child: Container(
@@ -56,20 +49,17 @@ class _UserRootScreenState extends State<UserRootScreen> {
           child: Row(
             mainAxisAlignment: .spaceAround,
             children: [
-              // Profile Item
-              customIconNavigationBar(
+              _navItem(
                 index: 0,
                 icon: "assets/svgs/profile.svg",
                 title: "Profile",
               ),
-              // AI Chat
-              customIconNavigationBar(
+              _navItem(
                 index: 1,
                 icon: "assets/svgs/chat.svg",
                 title: "Ask Joby",
               ),
-              // Settings Item
-              customIconNavigationBar(
+              _navItem(
                 index: 2,
                 icon: "assets/svgs/settings.svg",
                 title: "Settings",
@@ -78,24 +68,18 @@ class _UserRootScreenState extends State<UserRootScreen> {
           ),
         ),
       ),
-      //
     );
   }
 
-  // Icon Navigation Bar
-  Widget customIconNavigationBar({
+  Widget _navItem({
     required int index,
     required String icon,
     required String title,
   }) {
-    bool isSelected = currentIndex == index;
+    final isSelected = currentIndex == index;
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          currentIndex = index;
-        });
-      },
+      onTap: () => setState(() => currentIndex = index),
       child: Column(
         mainAxisAlignment: .center,
         children: [
@@ -122,9 +106,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
               ),
             ),
           ),
-          //
           verticalSpace(isSelected ? 2 : 3),
-          //
           AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 300),
             style: TextStyle(
@@ -135,11 +117,8 @@ class _UserRootScreenState extends State<UserRootScreen> {
             ),
             child: Text(title),
           ),
-          //
         ],
       ),
     );
   }
-
-  //
 }

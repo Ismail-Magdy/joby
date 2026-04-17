@@ -37,11 +37,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     Uri url;
 
     if (isPhone) {
-      String cleanedPhone = urlString.replaceAll(RegExp(r'\D'), '');
+      String cleanedPhone = urlString.replaceAll(RegExp(r"\D"), "");
       if (cleanedPhone.startsWith('01') && cleanedPhone.length == 11) {
         cleanedPhone = '20${cleanedPhone.substring(1)}';
       } else if (!cleanedPhone.startsWith('20') &&
-          !cleanedPhone.startsWith('r+')) {
+          !cleanedPhone.startsWith('+')) {
         cleanedPhone = '20$cleanedPhone';
       }
       url = Uri.parse("https://wa.me/$cleanedPhone");
@@ -54,7 +54,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     }
 
     try {
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!await launchUrl(url, mode: .externalApplication)) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -94,7 +94,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
       final result = await OpenFilex.open(savePath);
 
-      if (result.type != ResultType.done) {
+      if (result.type != .done) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
