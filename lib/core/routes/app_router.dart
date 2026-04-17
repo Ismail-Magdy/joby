@@ -9,6 +9,7 @@ import 'package:joby/core/di/dependency_injection.dart';
 import 'package:joby/features/company/home/company_home_screen.dart';
 import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
 import 'package:joby/features/users/advice/presentation/screens/advice_screen.dart';
+import '../../features/users/advice/manager/advice_cubit.dart';
 
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/edit_profile/presentation/screens/edit_profile_screen.dart';
@@ -73,9 +74,14 @@ class AppRouter {
       case Routes.aboutUsScreen:
         return MaterialPageRoute(builder: (_) => const AboutUsScreen());
 
-      /// Advice / Feedback Screen (stateful — no cubit needed)
+      /// Advice / Feedback Screen
       case Routes.adviceScreen:
-        return MaterialPageRoute(builder: (_) => const AdviceScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<AdviceCubit>(
+            create: (context) => getIt<AdviceCubit>(),
+            child: const AdviceScreen(),
+          ),
+        );
     }
     return null;
   }
