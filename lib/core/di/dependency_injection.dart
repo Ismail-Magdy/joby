@@ -5,8 +5,10 @@ import 'package:joby/features/common/on_boarding/manager/on_boarding_cubit.dart'
 import 'package:joby/features/common/auth/data/repos/auth_repo.dart';
 import 'package:joby/features/common/auth/data/repos/auth_repo_impl.dart';
 import 'package:joby/features/common/auth/manager/auth_cubit.dart';
-
 import '../../features/common/on_boarding/data/repositories/user_type_repository.dart';
+import '../../features/users/ai/data/repos/ai_chat_repo.dart';
+import '../../features/users/ai/data/repos/ai_chat_repo_impl.dart';
+import '../../features/users/ai/manager/ai_chat_cubit.dart';
 import '../../features/users/edit_profile/data/repos/edit_profile_repo.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/home/data/repos/user_home_repo.dart';
@@ -22,7 +24,6 @@ Future<void> initGetIt() async {
   /// Core Services
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
-
   getIt.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 
   /// OnBoarding Feature
@@ -57,9 +58,21 @@ Future<void> initGetIt() async {
     () => UserHomeCubit(userHomeRepo: getIt<UserHomeRepo>()),
   );
 
-  /// Edit Profile
-  getIt.registerLazySingleton<EditProfileRepo>(() => EditProfileRepo(getIt()));
+  /// Edit Profile Feature
+  getIt.registerLazySingleton<EditProfileRepo>(
+    () => EditProfileRepo(getIt<SupabaseClient>()),
+  );
   getIt.registerFactory<EditProfileCubit>(
-    () => EditProfileCubit(getIt(), getIt()),
+    () => EditProfileCubit(getIt<EditProfileRepo>(), getIt<SupabaseClient>()),
+  );
+
+  /// AI Chat Feature
+  // LazySingleton so the same cubit instance (with its Hive-backed history)
+  // is reused every time it is requested from GetIt.
+  getIt.registerLazySingleton<AiChatRepo>(
+    () => AiChatRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+  );
+  getIt.registerLazySingleton<AiChatCubit>(
+    () => AiChatCubit(getIt<AiChatRepo>()),
   );
 }

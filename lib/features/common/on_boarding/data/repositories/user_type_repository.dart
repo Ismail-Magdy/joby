@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:joby/core/helpers/constants.dart';
 import '../models/user_type.dart';
 
 abstract class OnBoardingRepo {
@@ -8,7 +9,7 @@ abstract class OnBoardingRepo {
 
 class OnBoardingRepoImpl implements OnBoardingRepo {
   final SharedPreferences sharedPreferences;
-  static const String _userTypeKey = "user_type_key";
+  static const String _userTypeKey = AppConstants.userTypeKey;
 
   OnBoardingRepoImpl({required this.sharedPreferences});
 

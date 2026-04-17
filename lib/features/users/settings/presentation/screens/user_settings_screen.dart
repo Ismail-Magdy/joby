@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/routes/routes.dart";
+import "package:joby/core/helpers/extensions.dart";
 
 import "../widgets/custom_settings_item.dart";
 
@@ -12,7 +13,6 @@ class UserSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      //
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
@@ -21,13 +21,12 @@ class UserSettingsScreen extends StatelessWidget {
           "Settings",
           style: TextStyle(
             color: Colors.black87,
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontSize: 20.sp,
           ),
         ),
         centerTitle: true,
       ),
-      //
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         child: Column(
@@ -35,12 +34,12 @@ class UserSettingsScreen extends StatelessWidget {
             CustomSettingsItem(
               icon: "assets/svgs/about-us.svg",
               label: "About Us",
-              onTap: () {},
+              onTap: () => context.pushNamed(Routes.aboutUsScreen),
             ),
             CustomSettingsItem(
               icon: "assets/svgs/advice.svg",
               label: "Advice?",
-              onTap: () {},
+              onTap: () => context.pushNamed(Routes.adviceScreen),
             ),
             CustomSettingsItem(
               isLogout: true,

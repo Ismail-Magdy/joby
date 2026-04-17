@@ -1,43 +1,49 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:path/path.dart' as p; // بنحتاجها عشان نجيب امتداد الملف
+import 'package:joby/core/helpers/constants.dart';
+import 'package:path/path.dart' as p;
 
 class EditProfileRepo {
   final SupabaseClient _supabaseClient;
 
   EditProfileRepo(this._supabaseClient);
 
-  // 1. دالة رفع الـ CV لـ Supabase Storage
+  /// Uploads the CV file to Supabase Storage and returns the public URL.
   Future<String?> uploadCv(File file) async {
     try {
-      final userId = _supabaseClient.auth.currentUser!.id;
-      final fileExt = p.extension(file.path); // بجيب الامتداد (.pdf)
-      // بنعمل اسم مميز للملف عبارة عن ID اليوزر + الوقت
+      final userId = _supabaseClient.auth.currentUser?.id;
+      if (userId == null) {
+        debugPrint(
+          'EditProfileRepo: Cannot upload CV — user not authenticated.',
+        );
+        return null;
+      }
+
+      final fileExt = p.extension(file.path);
       final fileName =
           '$userId-${DateTime.now().millisecondsSinceEpoch}$fileExt';
 
-      // بنرفع الملف لباكت اسمها 'resumes' (اتأكد إنك عملتها في Supabase)
       await _supabaseClient.storage
-          .from('resumes')
+          .from(AppConstants.resumesBucket)
           .upload(
             fileName,
             file,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
 
-      // بنجيب لينك الملف العام (Public URL)
       final publicUrl = _supabaseClient.storage
-          .from('resumes')
+          .from(AppConstants.resumesBucket)
           .getPublicUrl(fileName);
+
       return publicUrl;
     } catch (e) {
-      // TODO: Log error properly
-      print("Error uploading CV: $e");
+      debugPrint('EditProfileRepo: Error uploading CV: $e');
       return null;
     }
   }
 
-  // 2. دالة تحديث بيانات اليوزر ف الداتا بيز
+  /// Updates the user's contact/social info in the database.
   Future<bool> updateUserInfo({
     required String userId,
     required String whatsapp,
@@ -46,22 +52,21 @@ class EditProfileRepo {
     String? cvUrl,
   }) async {
     try {
-      // بنعمل Map بالداتا الجديدة (بنحدث بس الحقول اللي جت)
       final dataToUpdate = {
         'whatsapp': whatsapp,
-        if (linkedin != null) 'linkedin': linkedin,
-        if (github != null) 'github': github,
-        if (cvUrl != null) 'cv_url': cvUrl,
+        if (linkedin != null && linkedin.isNotEmpty) 'linkedin': linkedin,
+        if (github != null && github.isNotEmpty) 'github': github,
+        'cv_url': ?cvUrl,
       };
 
       await _supabaseClient
-          .from('user_info')
+          .from(AppConstants.usersTable)
           .update(dataToUpdate)
-          .eq('id', userId); // بنحدث بناءً على الـ User ID
+          .eq('id', userId);
 
       return true;
     } catch (e) {
-      print("Error updating user info: $e");
+      debugPrint('EditProfileRepo: Error updating user info: $e');
       return false;
     }
   }
