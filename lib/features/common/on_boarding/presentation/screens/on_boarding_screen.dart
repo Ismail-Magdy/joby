@@ -9,7 +9,6 @@ import 'package:joby/features/common/on_boarding/manager/on_boarding_cubit.dart'
 import 'package:joby/features/common/on_boarding/manager/on_boarding_state.dart';
 import 'package:joby/features/common/on_boarding/presentation/widgets/user_type_card.dart';
 import 'package:joby/core/routes/routes.dart';
-
 import '../../../../../core/helpers/extensions.dart';
 
 class OnBoardingScreen extends StatelessWidget {
@@ -36,6 +35,7 @@ class OnBoardingScreen extends StatelessWidget {
                   fontSize: 26.sp,
                   fontWeight: .bold,
                   color: AppColors.primaryColor,
+                  fontFamily: "BrunoAceSC",
                 ),
               ),
               //

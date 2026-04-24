@@ -40,6 +40,7 @@ class AboutUsScreen extends StatelessWidget {
             color: Colors.black87,
             fontSize: 20.sp,
             fontWeight: .bold,
+            fontFamily: "BrunoAceSC",
           ),
         ),
       ),
@@ -225,12 +226,20 @@ class AboutUsScreen extends StatelessWidget {
                               _launchUrl("mailto:ismailmagdy920@gmail.com"),
                         ),
                         //
+                        //
+                        CustomSocialButton(
+                          icon: Ionicons.logo_whatsapp,
+                          label: "WhatsApp",
+                          color: Colors.green,
+                          onTap: () =>
+                              _launchUrl("https://wa.me/+201206607906"),
+                        ),
+                        //
                       ],
                     ),
                   ),
                   //
                   verticalSpace(40),
-
                   // Footer
                   FooterSection(),
                   //

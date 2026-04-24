@@ -70,6 +70,17 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   late bool obscureText;
 
   @override
+  void didUpdateWidget(covariant CustomTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.fieldType != widget.fieldType) {
+      setState(() {
+        obscureText = widget.fieldType == .password;
+      });
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
 
@@ -177,19 +188,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       autovalidateMode: widget.autovalidateMode,
 
       /// Text style inside the field.
-      style: TextStyle(
-        color: AppColors.primaryColor,
-        fontSize: 14.sp,
-        fontFamily: "Joby",
-      ),
+      style: TextStyle(color: AppColors.primaryColor, fontSize: 14.sp),
 
       decoration: InputDecoration(
         hintText: widget.hintText,
 
-        hintStyle: const TextStyle(
-          color: Color(0x7F4A628A),
-          fontFamily: "BrunoAceSC",
-        ),
+        hintStyle: const TextStyle(color: Color(0x7F4A628A)),
 
         /// Optional prefix icon.
         prefixIcon: widget.prefixIcon != null
@@ -215,7 +219,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         ),
 
         /// Password visibility toggle button.
-        suffixIcon: widget.fieldType == FieldType.password
+        suffixIcon: widget.fieldType == .password
             ? IconButton(
                 onPressed: () {
                   setState(() {

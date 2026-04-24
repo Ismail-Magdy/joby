@@ -72,6 +72,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
             color: Colors.black87,
             fontSize: 20.sp,
             fontWeight: .bold,
+            fontFamily: "BrunoAceSC",
           ),
         ),
       ),
@@ -136,7 +137,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
                       final charCount = value.text.length;
                       final isNearLimit = charCount > _maxChars * 0.85;
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: .end,
                         children: [
                           TextField(
                             controller: _messageController,

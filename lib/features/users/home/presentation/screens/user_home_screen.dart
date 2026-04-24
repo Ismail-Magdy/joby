@@ -178,6 +178,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                 color: Colors.white,
                                 fontSize: 20.sp,
                                 fontWeight: .bold,
+                                fontFamily: "BrunoAceSC",
                               ),
                             ),
                             //

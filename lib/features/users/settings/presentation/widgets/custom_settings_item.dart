@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../../../core/themes/app_colors.dart';
 
 class CustomSettingsItem extends StatelessWidget {
@@ -39,6 +38,7 @@ class CustomSettingsItem extends StatelessWidget {
         title: Text(
           label,
           style: TextStyle(
+            fontFamily: "BrunoAceSC",
             fontSize: 16.sp,
             color: isLogout ?? false ? Colors.red : Colors.black87,
             fontWeight: isLogout ?? false ? .bold : .normal,

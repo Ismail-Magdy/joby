@@ -3,7 +3,6 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/extensions.dart";
-
 import "../widgets/custom_settings_item.dart";
 
 class UserSettingsScreen extends StatelessWidget {
@@ -13,6 +12,7 @@ class UserSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      //
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
@@ -23,12 +23,14 @@ class UserSettingsScreen extends StatelessWidget {
             color: Colors.black87,
             fontWeight: .bold,
             fontSize: 20.sp,
+            fontFamily: "BrunoAceSC",
           ),
         ),
         centerTitle: true,
       ),
+      //
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        padding: .symmetric(horizontal: 20.w, vertical: 20.h),
         child: Column(
           children: [
             CustomSettingsItem(
