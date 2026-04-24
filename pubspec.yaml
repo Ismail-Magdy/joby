@@ -18,6 +18,10 @@ dependencies:
   google_fonts: ^6.2.1
   font_awesome_flutter: ^10.7.0
   flutter_native_splash: ^2.4.7
+  shimmer: ^3.0.0
+  flutter_offline: ^6.0.0
+  connectivity_plus: ^7.0.0
+  cached_network_image: ^3.4.1
 
   # ==========================================
   # State Management
@@ -60,6 +64,7 @@ dependencies:
   google_generative_ai: ^0.4.7
   http_parser: ^4.1.2
   url_launcher: ^6.3.0
+  # ===============================
 
 dev_dependencies:
   flutter_test:
@@ -108,7 +113,23 @@ flutter:
       fonts:
         - asset: assets/fonts/BrunoAceSC-Regular.ttf
 
-    - family: Jost
+    - family: Poppins
       fonts:
-        - asset: assets/fonts/Jost-Italic-VariableFont_wght.ttf
-        - asset: assets/fonts/Jost-VariableFont_wght.ttf
+        - asset: assets/fonts/Poppins-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Poppins-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Poppins-Black.ttf
+          weight: 900

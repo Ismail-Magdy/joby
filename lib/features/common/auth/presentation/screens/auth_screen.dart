@@ -8,7 +8,6 @@ import "package:joby/core/themes/app_colors.dart";
 import "package:joby/features/common/auth/manager/auth_cubit.dart";
 import "package:joby/features/common/auth/manager/auth_state.dart";
 import "package:joby/features/common/auth/presentation/widgets/custom_divider.dart";
-
 import "../../../../../core/helpers/extensions.dart";
 import "../../../../../core/widgets/custom_text_field.dart";
 
@@ -63,7 +62,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   content: Center(
                     child: Text(
                       "Welcome ${state.user.name}!",
-                      style: TextStyle(fontSize: 14.sp),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontFamily: "BrunoAceSC",
+                      ),
                     ),
                   ),
                   backgroundColor: Colors.green,
@@ -93,7 +95,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   content: Center(
                     child: Text(
                       state.message,
-                      style: TextStyle(fontSize: 14.sp),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontFamily: "BrunoAceSC",
+                      ),
                     ),
                   ),
                   backgroundColor: Colors.red,
@@ -108,7 +113,7 @@ class _AuthScreenState extends State<AuthScreen> {
           builder: (context, state) {
             final cubit = context.read<AuthCubit>();
             return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
+              padding: .symmetric(horizontal: 24.w, vertical: 30.h),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -124,6 +129,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: Colors.grey.shade600,
+                        fontFamily: "BrunoAceSC",
                       ),
                     ),
                     //
@@ -218,6 +224,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     SizedBox(height: 30.h),
                     //
                     if (!isLogin) ...[
+                      //
                       CustomTextFormField(
                         controller: _nameController,
                         hintText: "Full Name",
@@ -329,6 +336,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             fontSize: 15.sp,
                             fontWeight: .w600,
                             color: Colors.black87,
+                            fontFamily: "BrunoAceSC",
                           ),
                         ),
                       ),

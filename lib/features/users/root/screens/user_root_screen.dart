@@ -4,7 +4,6 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/features/users/ai/manager/ai_chat_cubit.dart";
-
 import "../../../../core/helpers/spacing.dart";
 import "../../../../core/themes/app_colors.dart";
 import "../../ai/presentation/screens/ai_chat_screen.dart";

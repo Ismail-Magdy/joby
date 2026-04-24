@@ -20,7 +20,7 @@ class JobyApp extends StatelessWidget {
       builder: (context, child) => GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
-          theme: ThemeData(useMaterial3: true, fontFamily: "BrunoAceSC"),
+          theme: ThemeData(useMaterial3: true, fontFamily: "Poppins"),
           initialRoute: initialRoute,
           onGenerateRoute: appRouter.generateRoute,
           debugShowCheckedModeBanner: false,

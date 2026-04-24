@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/themes/app_colors.dart';
 
 class CustomSendButton extends StatelessWidget {
@@ -16,7 +16,7 @@ class CustomSendButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: .infinity,
       height: 56.h,
       child: ElevatedButton.icon(
         onPressed: onPressed,
@@ -37,13 +37,19 @@ class CustomSendButton extends StatelessWidget {
                   strokeWidth: 2,
                 ),
               )
-            : Icon(Ionicons.send_outline, color: Colors.white, size: 20.sp),
+            : SvgPicture.asset(
+                "assets/svgs/send.svg",
+                colorFilter: .mode(Colors.white, .srcIn),
+                height: 25.h,
+              ),
+
         label: Text(
           isLoading ? "Sending..." : "Send Feedback",
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.sp,
             fontWeight: .bold,
+            fontFamily: "BrunoAceSC",
           ),
         ),
       ),

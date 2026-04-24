@@ -145,8 +145,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           "Complete Your Profile",
           style: TextStyle(
             color: Colors.black87,
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontSize: 18.sp,
+            fontFamily: "BrunoAceSC",
           ),
         ),
         centerTitle: true,

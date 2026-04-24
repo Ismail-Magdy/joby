@@ -65,6 +65,7 @@ class UserTypeCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: .bold,
+                      fontFamily: "BrunoAceSC",
                       color: isSelected
                           ? const Color(0xFF096DCA)
                           : Colors.black87,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/helpers/spacing.dart';
 import '../../../../../core/themes/app_colors.dart';
 
@@ -12,28 +12,28 @@ class CustomHeadSection extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Container(
-            padding: .all(22.r),
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withValues(alpha: 0.08),
-              shape: .circle,
-            ),
-            child: Icon(
-              Ionicons.chatbubble_ellipses_outline,
-              color: AppColors.primaryColor,
-              size: 42.sp,
-            ),
-          ),
           verticalSpace(18),
+          //
+          SvgPicture.asset(
+            "assets/svgs/feedback.svg",
+            colorFilter: .mode(AppColors.primaryColor, .srcIn),
+            height: 45.h,
+          ),
+          //
+          verticalSpace(18),
+          //
           Text(
             "Your Voice Matters",
             style: TextStyle(
               fontSize: 22.sp,
               fontWeight: .bold,
               color: Colors.black87,
+              fontFamily: "BrunoAceSC",
             ),
           ),
+          //
           verticalSpace(10),
+          //
           Text(
             "We read every suggestion.\nHelp us make Joby even better",
             textAlign: .center,
@@ -43,6 +43,7 @@ class CustomHeadSection extends StatelessWidget {
               height: 1.55,
             ),
           ),
+          //
         ],
       ),
     );
