@@ -1,12 +1,9 @@
 import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
-import "package:joby/core/di/dependency_injection.dart";
-import "package:joby/features/users/ai/manager/ai_chat_cubit.dart";
+import "package:joby/features/users/points/presentation/screens/points_screen.dart";
 import "../../../../core/helpers/spacing.dart";
 import "../../../../core/themes/app_colors.dart";
-import "../../ai/presentation/screens/ai_chat_screen.dart";
 import "../../home/presentation/screens/user_home_screen.dart";
 import "../../settings/presentation/screens/user_settings_screen.dart";
 
@@ -28,12 +25,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
         index: currentIndex,
         children: [
           const UserHomeScreen(),
-          // AiChatCubit is a LazySingleton in GetIt — same instance reused,
-          // history is preserved in Hive across sessions.
-          BlocProvider(
-            create: (_) => getIt<AiChatCubit>(),
-            child: const AiChatScreen(),
-          ),
+          const PointsScreen(),
           const UserSettingsScreen(),
         ],
       ),
@@ -56,8 +48,8 @@ class _UserRootScreenState extends State<UserRootScreen> {
               ),
               _navItem(
                 index: 1,
-                icon: "assets/svgs/chat.svg",
-                title: "Ask Joby",
+                icon: "assets/svgs/points.svg",
+                title: "Points",
               ),
               _navItem(
                 index: 2,

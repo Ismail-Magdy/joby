@@ -44,7 +44,7 @@ class UserSettingsScreen extends StatelessWidget {
             //
             CustomSettingsItem(
               icon: "assets/svgs/advice.svg",
-              label: "Advice?",
+              label: "FeedBack?",
               onTap: () => context.pushNamed(Routes.adviceScreen),
             ),
             //
