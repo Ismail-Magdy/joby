@@ -6,6 +6,7 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:ionicons/ionicons.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "package:joby/core/routes/routes.dart";
+import "package:joby/core/widgets/home_shimmer_loading.dart";
 import "package:joby/features/users/home/presentation/widgets/build_contact_icon_button.dart";
 import "package:open_filex/open_filex.dart";
 import "package:path_provider/path_provider.dart";
@@ -130,9 +131,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       body: BlocBuilder<UserHomeCubit, UserHomeState>(
         builder: (context, state) {
           if (state is UserHomeLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryColor),
-            );
+            return const HomeShimmerLoading();
           } else if (state is UserHomeError) {
             return Center(child: Text(state.message));
           } else if (state is UserHomeSuccess) {
