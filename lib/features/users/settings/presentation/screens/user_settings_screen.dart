@@ -15,6 +15,8 @@ class UserSettingsScreen extends StatelessWidget {
       //
       appBar: AppBar(
         backgroundColor: Colors.white,
+        leading: SizedBox.shrink(),
+        leadingWidth: 0,
         scrolledUnderElevation: 0,
         elevation: 0,
         title: Text(
