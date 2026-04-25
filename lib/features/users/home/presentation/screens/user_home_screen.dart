@@ -184,8 +184,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             //
                             // Pen Button
                             GestureDetector(
-                              onTap: () =>
-                                  context.pushNamed(Routes.editProfileScreen),
+                              onTap: () async {
+                                final result = await context.pushNamed(
+                                  Routes.editProfileScreen,
+                                );
+                                if (result == true && mounted) {
+                                  context.read<UserHomeCubit>().getUserData();
+                                }
+                              },
                               child: SvgPicture.asset(
                                 "assets/svgs/pen.svg",
                                 colorFilter: .mode(Colors.white, .srcIn),

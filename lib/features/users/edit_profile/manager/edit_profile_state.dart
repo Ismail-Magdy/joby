@@ -4,14 +4,20 @@ abstract class EditProfileState {}
 
 class EditProfileInitial extends EditProfileState {}
 
-// حالة اختيار الـ CV
+// Avatar picked from gallery
+class EditProfileAvatarPicked extends EditProfileState {
+  final File file;
+  EditProfileAvatarPicked({required this.file});
+}
+
+// CV file picked
 class EditProfileCvPicked extends EditProfileState {
   final File file;
   final String fileName;
   EditProfileCvPicked({required this.file, required this.fileName});
 }
 
-// حالات الحفظ (Loading, Success, Error)
+// Save states
 class EditProfileLoading extends EditProfileState {}
 
 class EditProfileSuccess extends EditProfileState {}
