@@ -50,6 +50,9 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   }
 
   /// Save all profile changes to Supabase.
+  ///
+  /// All fields are optional — only non-empty values are sent to the database.
+  /// Existing data is preserved for any field the user didn't change.
   Future<void> saveChanges({
     required String name,
     required String jobTitle,
@@ -59,17 +62,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     required String linkedin,
     required String github,
   }) async {
-    // Validation
-    if (name.trim().isEmpty) {
-      emit(EditProfileError("Name is required"));
-      return;
-    }
-
-    if (whatsapp.trim().isEmpty) {
-      emit(EditProfileError("WhatsApp number is required"));
-      return;
-    }
-
     emit(EditProfileLoading());
 
     try {
@@ -95,7 +87,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         }
       }
 
-      // Update all profile data in the database
+      // Update profile data — only non-empty fields are sent
       final success = await editProfileRepo.updateUserInfo(
         userId: userId,
         name: name.trim(),
