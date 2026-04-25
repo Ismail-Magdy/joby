@@ -78,7 +78,7 @@ class UserSettingsScreen extends StatelessWidget {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () => context.pop(),
+                        onPressed: () => Navigator.pop(context, false),
                         child: Text(
                           "Cancel",
                           style: TextStyle(
@@ -89,7 +89,7 @@ class UserSettingsScreen extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () => context.pop(),
+                        onPressed: () => Navigator.pop(context, true),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           shape: RoundedRectangleBorder(
