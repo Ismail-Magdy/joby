@@ -9,9 +9,6 @@ import '../../features/common/on_boarding/data/repositories/user_type_repository
 import '../../features/users/advice/data/repos/advice_repo.dart';
 import '../../features/users/advice/data/repos/advice_repo_impl.dart';
 import '../../features/users/advice/manager/advice_cubit.dart';
-import '../../features/users/ai/data/repos/ai_chat_repo.dart';
-import '../../features/users/ai/data/repos/ai_chat_repo_impl.dart';
-import '../../features/users/ai/manager/ai_chat_cubit.dart';
 import '../../features/users/edit_profile/data/repos/edit_profile_repo.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/home/data/repos/user_home_repo.dart';
@@ -67,16 +64,6 @@ Future<void> initGetIt() async {
   );
   getIt.registerFactory<EditProfileCubit>(
     () => EditProfileCubit(getIt<EditProfileRepo>(), getIt<SupabaseClient>()),
-  );
-
-  /// AI Chat Feature
-  // LazySingleton so the same cubit instance (with its Hive-backed history)
-  // is reused every time it is requested from GetIt.
-  getIt.registerLazySingleton<AiChatRepo>(
-    () => AiChatRepoImpl(supabaseClient: getIt<SupabaseClient>()),
-  );
-  getIt.registerLazySingleton<AiChatCubit>(
-    () => AiChatCubit(getIt<AiChatRepo>()),
   );
 
   /// Advice (Feedback) Feature
