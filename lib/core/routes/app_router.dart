@@ -9,6 +9,7 @@ import 'package:joby/core/di/dependency_injection.dart';
 import 'package:joby/features/company/home/company_home_screen.dart';
 import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
 import 'package:joby/features/users/advice/presentation/screens/advice_screen.dart';
+import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import '../../features/users/advice/manager/advice_cubit.dart';
 
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
@@ -63,10 +64,11 @@ class AppRouter {
 
       /// Edit Profile Screen
       case Routes.editProfileScreen:
+        final userInfo = settings.arguments as UserInfoModel?;
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) => getIt<EditProfileCubit>(),
-            child: const EditProfileScreen(),
+            child: EditProfileScreen(currentUserInfo: userInfo),
           ),
         );
 

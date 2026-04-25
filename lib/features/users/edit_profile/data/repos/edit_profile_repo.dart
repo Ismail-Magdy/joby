@@ -88,6 +88,9 @@ class EditProfileRepo {
   }
 
   /// Updates the user's profile info in the database.
+  ///
+  /// Only non-empty fields are sent — existing data is preserved
+  /// for any field the user didn't modify.
   Future<bool> updateUserInfo({
     required String userId,
     required String name,
@@ -101,17 +104,20 @@ class EditProfileRepo {
     String? avatarUrl,
   }) async {
     try {
-      final dataToUpdate = {
-        'name': name,
-        'job_title': jobTitle,
-        'level': level,
-        'type_of_work': typeOfWork,
-        'whatsapp': whatsapp,
+      final dataToUpdate = <String, dynamic>{
+        if (name.isNotEmpty) 'name': name,
+        if (jobTitle.isNotEmpty) 'job_title': jobTitle,
+        if (level.isNotEmpty) 'level': level,
+        if (typeOfWork.isNotEmpty) 'type_of_work': typeOfWork,
+        if (whatsapp.isNotEmpty) 'whatsapp': whatsapp,
         if (linkedin != null && linkedin.isNotEmpty) 'linkedin': linkedin,
         if (github != null && github.isNotEmpty) 'github': github,
         if (cvUrl != null) 'cv_url': cvUrl,
         if (avatarUrl != null) 'avatar_url': avatarUrl,
       };
+
+      // Nothing to update
+      if (dataToUpdate.isEmpty) return true;
 
       await _supabaseClient
           .from(AppConstants.usersTable)

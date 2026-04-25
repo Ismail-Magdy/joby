@@ -187,6 +187,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               onTap: () async {
                                 final result = await context.pushNamed(
                                   Routes.editProfileScreen,
+                                  arguments: user,
                                 );
                                 if (result == true && mounted) {
                                   context.read<UserHomeCubit>().getUserData();
@@ -407,6 +408,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ],
                     ),
                   ),
+                  //
                 ],
               ),
             );
