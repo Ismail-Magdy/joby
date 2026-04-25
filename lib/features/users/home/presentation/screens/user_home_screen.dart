@@ -160,9 +160,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           children: [
                             // Manager Button
                             GestureDetector(
-                              onTap: () {
-                                // TODO: Company View
-                              },
+                              onTap: () =>
+                                  context.pushNamed(Routes.companyViewScreen),
                               child: SvgPicture.asset(
                                 "assets/svgs/manager.svg",
                                 colorFilter: .mode(Colors.white, .srcIn),

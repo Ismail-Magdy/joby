@@ -9,9 +9,9 @@ import 'package:joby/core/di/dependency_injection.dart';
 import 'package:joby/features/company/home/company_home_screen.dart';
 import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
 import 'package:joby/features/users/advice/presentation/screens/advice_screen.dart';
+import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import '../../features/users/advice/manager/advice_cubit.dart';
-
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/edit_profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/users/home/manager/user_home_cubit.dart';
@@ -72,9 +72,13 @@ class AppRouter {
           ),
         );
 
-      /// About Us Screen (static — no cubit needed)
+      /// About Us Screen
       case Routes.aboutUsScreen:
         return MaterialPageRoute(builder: (_) => const AboutUsScreen());
+
+      /// Company View Screen
+      case Routes.companyViewScreen:
+        return MaterialPageRoute(builder: (_) => const CompanyViewScreen());
 
       /// Advice / Feedback Screen
       case Routes.adviceScreen:
@@ -84,7 +88,16 @@ class AppRouter {
             child: const AdviceScreen(),
           ),
         );
+
+      /// Default Case
+      default:
+        return MaterialPageRoute(
+          builder: (_) => Scaffold(
+            body: Center(
+              child: Text("No Page Found For This ${settings.name}"),
+            ),
+          ),
+        );
     }
-    return null;
   }
 }
