@@ -33,28 +33,96 @@ class UserSettingsScreen extends StatelessWidget {
         padding: .symmetric(horizontal: 20.w, vertical: 20.h),
         child: Column(
           children: [
+            //
             CustomSettingsItem(
               icon: "assets/svgs/about-us.svg",
               label: "About Us",
               onTap: () => context.pushNamed(Routes.aboutUsScreen),
             ),
+            //
             CustomSettingsItem(
               icon: "assets/svgs/advice.svg",
               label: "Advice?",
               onTap: () => context.pushNamed(Routes.adviceScreen),
             ),
+            //
             CustomSettingsItem(
               isLogout: true,
               icon: "assets/svgs/logout.svg",
               label: "Logout",
               onTap: () async {
-                await Supabase.instance.client.auth.signOut();
-                if (!context.mounted) return;
-                Navigator.of(
-                  context,
-                ).pushNamedAndRemoveUntil(Routes.authScreen, (route) => false);
+                final bool? confirmLogout = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: .circular(20.r),
+                    ),
+                    title: Text(
+                      "Logout",
+                      style: TextStyle(
+                        fontFamily: "BrunoAceSC",
+                        fontSize: 18.sp,
+                        fontWeight: .bold,
+                      ),
+                    ),
+                    content: Text(
+                      "Are you sure you want to log out of your account?",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.grey.shade700,
+                        height: 1.5,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => context.pop(),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14.sp,
+                            fontWeight: .w600,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => context.pop(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: .circular(12.r),
+                          ),
+                          elevation: 0,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 10.h,
+                          ),
+                        ),
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                            fontWeight: .w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirmLogout == true && context.mounted) {
+                  await Supabase.instance.client.auth.signOut();
+                  if (!context.mounted) return;
+                  context.pushNamedAndRemoveUntil(
+                    Routes.authScreen,
+                    predicate: (route) => false,
+                  );
+                }
               },
             ),
+            //
           ],
         ),
       ),
