@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
-
 import '../../../../../core/themes/app_colors.dart';
 
 class BuildTextField extends StatelessWidget {
@@ -12,28 +11,31 @@ class BuildTextField extends StatelessWidget {
     required this.hint,
     required this.icon,
     required this.iconColor,
+    this.keyboardType,
   });
   final TextEditingController controller;
   final String label;
   final String hint;
   final IconData icon;
   final Color iconColor;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
+            fontWeight: .w600,
             color: Colors.grey.shade700,
           ),
         ),
         verticalSpace(8),
         TextFormField(
+          keyboardType: keyboardType,
           controller: controller,
           decoration: InputDecoration(
             hintText: hint,
@@ -41,16 +43,13 @@ class BuildTextField extends StatelessWidget {
             prefixIcon: Icon(icon, color: iconColor, size: 22.sp),
             filled: true,
             fillColor: Colors.grey.shade50,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 20.w,
-              vertical: 16.h,
-            ),
+            contentPadding: .symmetric(horizontal: 20.w, vertical: 16.h),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14.r),
-              borderSide: BorderSide.none,
+              borderRadius: .circular(14.r),
+              borderSide: .none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: .circular(14.r),
               borderSide: BorderSide(color: Colors.grey.shade200),
             ),
             focusedBorder: OutlineInputBorder(

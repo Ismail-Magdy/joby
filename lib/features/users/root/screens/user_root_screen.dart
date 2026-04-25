@@ -37,6 +37,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
           const UserSettingsScreen(),
         ],
       ),
+      //
       bottomNavigationBar: Padding(
         padding: .only(left: 40.w, right: 40.w, bottom: 25.h),
         child: Container(
@@ -67,6 +68,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
           ),
         ),
       ),
+      //
     );
   }
 

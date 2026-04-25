@@ -169,6 +169,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 child: Text(
                                   "Login",
                                   style: TextStyle(
+                                    fontFamily: "BrunoAceSC",
                                     fontSize: 16.sp,
                                     fontWeight: isLogin ? .bold : .w500,
                                     color: isLogin
@@ -206,6 +207,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 child: Text(
                                   "Sign Up",
                                   style: TextStyle(
+                                    fontFamily: "BrunoAceSC",
                                     fontSize: 16.sp,
                                     fontWeight: !isLogin ? .bold : .w500,
                                     color: !isLogin
@@ -260,9 +262,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       Align(
                         alignment: .centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            // TODO: ADD Forgot Password
+                          },
                           child: Text(
-                            "Forgot Password?",
+                            "Forgot Password? (will work soon)",
                             style: TextStyle(
                               color: Colors.grey.shade700,
                               fontSize: 13.sp,
