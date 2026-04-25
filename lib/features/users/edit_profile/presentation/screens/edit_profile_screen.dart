@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_cubit.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_state.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/build_text_field.dart';
+import 'package:joby/features/users/edit_profile/presentation/widgets/drop_down_widget.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -17,14 +19,38 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  // Personal info controllers
+  final _nameController = TextEditingController();
+  final _jobTitleController = TextEditingController();
+
+  // Social link controllers
   final _whatsappController = TextEditingController();
   final _linkedinController = TextEditingController();
   final _githubController = TextEditingController();
 
+  // Dropdown selections
+  String? _selectedLevel;
+  String? _selectedWorkType;
+
+  // Avatar
+  File? _pickedAvatarFile;
+
+  // CV
   String? _pickedCvName;
+
+  // Dropdown options (same as user_info_screen.dart)
+  static const List<String> _levelOptions = [
+    "Junior",
+    "Mid-Level",
+    "Senior",
+    "Lead",
+  ];
+  static const List<String> _workTypeOptions = ["Remote", "On-site", "Hybrid"];
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _jobTitleController.dispose();
     _whatsappController.dispose();
     _linkedinController.dispose();
     _githubController.dispose();
@@ -58,7 +84,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       //
       body: BlocConsumer<EditProfileCubit, EditProfileState>(
         listener: (context, state) {
-          if (state is EditProfileCvPicked) {
+          if (state is EditProfileAvatarPicked) {
+            setState(() {
+              _pickedAvatarFile = state.file;
+            });
+          } else if (state is EditProfileCvPicked) {
             setState(() {
               _pickedCvName = state.fileName;
             });
@@ -70,9 +100,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: Colors.green,
               ),
             );
-            // TODO: ريفريش داتا الهوم (محتاجة نبعت داتا الهوم كيوبت هنا أو نستخدم IndexedStack)
-            // context.read<UserHomeCubit>().getUserData(); // لو عاملIndexedStack مش هتحتاج دي
-            Navigator.pop(context);
+            // Pop with `true` so the home screen knows to refresh
+            Navigator.pop(context, true);
           } else if (state is EditProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -92,6 +121,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               crossAxisAlignment: .start,
               children: [
+                // Avatar
                 Center(
                   child: Stack(
                     alignment: .bottomRight,
@@ -100,25 +130,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       CircleAvatar(
                         radius: 50.r,
                         backgroundColor: Colors.grey.shade100,
-                        child: Icon(
-                          Ionicons.person,
-                          size: 50.sp,
-                          color: Colors.grey.shade400,
-                        ),
+                        backgroundImage: _pickedAvatarFile != null
+                            ? FileImage(_pickedAvatarFile!)
+                            : null,
+                        child: _pickedAvatarFile == null
+                            ? Icon(
+                                Ionicons.person,
+                                size: 50.sp,
+                                color: Colors.grey.shade400,
+                              )
+                            : null,
                       ),
                       //
-                      // Camera Icon
-                      Container(
-                        padding: .all(8.r),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          shape: .circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                        child: SvgPicture.asset(
-                          "assets/svgs/camera.svg",
-                          colorFilter: .mode(Colors.white, .srcIn),
-                          height: 18.h,
+                      // Camera Icon — opens gallery
+                      GestureDetector(
+                        onTap: isLoading ? null : () => cubit.pickAvatar(),
+                        child: Container(
+                          padding: .all(8.r),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            shape: .circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: SvgPicture.asset(
+                            "assets/svgs/camera.svg",
+                            colorFilter: .mode(Colors.white, .srcIn),
+                            height: 18.h,
+                          ),
                         ),
                       ),
                       //
@@ -128,6 +166,67 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 //
                 verticalSpace(40),
                 //
+                //  Personal Info Section
+                Text(
+                  "Personal Info",
+                  style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
+                ),
+                //
+                verticalSpace(20),
+                //
+                // Name
+                BuildTextField(
+                  controller: _nameController,
+                  label: "Full Name (Required)",
+                  hint: "eg. Ahmed Mohamed",
+                  icon: Ionicons.person_outline,
+                  iconColor: AppColors.primaryColor,
+                ),
+                //
+                verticalSpace(15),
+                //
+                // Job Title
+                BuildTextField(
+                  controller: _jobTitleController,
+                  label: "Job Title",
+                  hint: "eg. Flutter Developer",
+                  icon: Ionicons.briefcase_outline,
+                  iconColor: AppColors.primaryColor,
+                ),
+                //
+                verticalSpace(15),
+                //
+                // Level Dropdown
+                _buildSectionLabel("Level"),
+                //
+                verticalSpace(8),
+                //
+                DropDownWidget(
+                  value: _selectedLevel,
+                  hint: "Select your level",
+                  icon: Ionicons.stats_chart_outline,
+                  items: _levelOptions,
+                  onChanged: (val) => setState(() => _selectedLevel = val),
+                ),
+                //
+                verticalSpace(15),
+                //
+                // Work Type Dropdown
+                _buildSectionLabel("Type of Work"),
+                //
+                verticalSpace(8),
+                //
+                DropDownWidget(
+                  value: _selectedWorkType,
+                  hint: "Select work type",
+                  icon: Ionicons.location_outline,
+                  items: _workTypeOptions,
+                  onChanged: (val) => setState(() => _selectedWorkType = val),
+                ),
+                //
+                verticalSpace(30),
+                //
+                //  Social Links Section
                 Text(
                   "Social Links",
                   style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
@@ -166,17 +265,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 //
                 verticalSpace(30),
                 //
+                //  CV Section
                 Text(
                   "CV",
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
                 ),
                 //
                 verticalSpace(15),
-
-                // CV
+                //
+                // CV Upload
                 GestureDetector(
                   onTap: isLoading ? null : () => cubit.pickCv(),
                   child: Container(
@@ -221,6 +318,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 //
                 verticalSpace(50),
                 //
+                //  Save Button
                 SizedBox(
                   width: .infinity,
                   height: 55.h,
@@ -236,6 +334,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ? null
                         : () {
                             cubit.saveChanges(
+                              name: _nameController.text,
+                              jobTitle: _jobTitleController.text,
+                              level: _selectedLevel ?? "",
+                              typeOfWork: _selectedWorkType ?? "",
                               whatsapp: _whatsappController.text,
                               linkedin: _linkedinController.text,
                               github: _githubController.text,
@@ -259,6 +361,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  // Helper Widgets
+
+  /// Builds a styled section label for dropdown fields.
+  Widget _buildSectionLabel(String label) {
+    return Text(
+      label,
+      style: TextStyle(
+        fontSize: 14.sp,
+        fontWeight: .w600,
+        color: Colors.grey.shade700,
       ),
     );
   }
