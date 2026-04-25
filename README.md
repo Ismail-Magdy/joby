@@ -64,6 +64,31 @@ This project strictly follows **Clean Architecture** principles to ensure scalab
 - Saves feedback directly to a Supabase `feedback` table.
 - **Automated Notifications:** Utilizes Supabase's `pg_net` extension and PostgreSQL Triggers to instantly forward user feedback directly to a Telegram Bot.
 
+### 6. 🌐 Global Offline Mode
+
+- Monitors internet connectivity continuously in the background using `flutter_offline`.
+- Displays a non-intrusive, seamless full-screen "You're Offline" overlay instantly across the entire application whenever connectivity drops.
+
+### 7. ⚙️ Advanced UX & Profile Management
+
+- **Shimmer Loaders:** Replaces generic circular loading indicators with custom `ShimmerBox` placeholders that exactly mirror the UI layout (e.g., Profile header, badges, CV cards) for a premium, non-blocking feeling.
+- **Smart Editing:** Users can edit Name, Level, Job Title, Work Types, and direct links without losing any pre-existing text. Unchanged fields are perfectly preserved.
+- **Image Avatars:** Allows dynamic profile picture uploading using device gallery, saved securely to Supabase `avatars` bucket.
+- **Unsaved Changes Guard:** Prevents accidental data loss by prompting users with a custom unified intercept dialog when hitting 'Back' with pending UI edits.
+- **Polished Logout Flow:** Uses an explicit `AlertDialog` intercept before signing out to prevent accidental session termination.
+
+---
+
+## 📸 Screenshots
+
+*(To add screenshots to your GitHub repository: Create a `docs/screenshots` folder inside this project, place your `.png` or `.jpg` files there, and then update this section using the markdown format: `![Description](docs/screenshots/image_name.png)`)*
+
+| Login Screen | Home (Profile) | AI Chat |
+| :---: | :---: | :---: |
+| *(Image 1)* | *(Image 2)* | *(Image 3)* |
+| **Settings** | **Edit Profile** | **Offline Mode** |
+| *(Image 4)* | *(Image 5)* | *(Image 6)* |
+
 ---
 
 ## 🛠️ Developer Guidelines
