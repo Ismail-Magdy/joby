@@ -11,6 +11,9 @@ class UserInfoModel {
   final String? avatarUrl;
   final int totalPoints;
   final String? lastCheckIn;
+  final String locationName;
+  final double latitude;
+  final double longitude;
 
   UserInfoModel({
     required this.name,
@@ -25,6 +28,9 @@ class UserInfoModel {
     this.avatarUrl,
     this.totalPoints = 0,
     this.lastCheckIn,
+    required this.locationName,
+    required this.latitude,
+    required this.longitude,
   });
 
   Map<String, dynamic> toMap() {
@@ -41,6 +47,9 @@ class UserInfoModel {
       if (avatarUrl != null) "avatar_url": avatarUrl,
       "total_points": totalPoints,
       if (lastCheckIn != null) "last_check_in": lastCheckIn,
+      "location_name": locationName,
+      "latitude": latitude,
+      "longitude": longitude,
     };
   }
 
@@ -58,6 +67,9 @@ class UserInfoModel {
       avatarUrl: json["avatar_url"],
       totalPoints: json["total_points"] ?? 0,
       lastCheckIn: json["last_check_in"],
+      locationName: json["location_name"] ?? "",
+      latitude: (json["latitude"] as num?)?.toDouble() ?? 0.0,
+      longitude: (json["longitude"] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
