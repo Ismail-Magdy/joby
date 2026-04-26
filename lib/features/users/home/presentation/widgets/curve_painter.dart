@@ -6,7 +6,7 @@ class CurvePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
     paint.color = AppColors.primaryColor;
-    paint.style = PaintingStyle.fill;
+    paint.style = .fill;
 
     var path = Path();
     path.moveTo(0, size.height * 0.8);

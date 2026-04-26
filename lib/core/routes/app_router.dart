@@ -18,10 +18,14 @@ import '../../features/users/home/manager/user_home_cubit.dart';
 import '../../features/users/root/screens/user_root_screen.dart';
 import '../../features/users/user_info/manager/user_info_cubit.dart';
 import '../../features/users/user_info/presentation/screens/user_info_screen.dart';
+import '../../features/users/points/manager/points_cubit.dart';
+import '../../features/users/points/presentation/screens/points_screen.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      /// User Part
+
       /// OnBoarding Screen
       case Routes.onBoardingScreen:
         return MaterialPageRoute(
@@ -52,15 +56,18 @@ class AppRouter {
       /// User Root Screen
       case Routes.userRootScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<UserHomeCubit>(
-            create: (context) => getIt<UserHomeCubit>(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<UserHomeCubit>(
+                create: (context) => getIt<UserHomeCubit>(),
+              ),
+              BlocProvider<PointsCubit>(
+                create: (context) => getIt<PointsCubit>(),
+              ),
+            ],
             child: const UserRootScreen(),
           ),
         );
-
-      /// Company Home Screen
-      case Routes.companyHomeScreen:
-        return MaterialPageRoute(builder: (_) => const CompanyHomeScreen());
 
       /// Edit Profile Screen
       case Routes.editProfileScreen:
@@ -88,6 +95,16 @@ class AppRouter {
             child: const AdviceScreen(),
           ),
         );
+
+      /// Points Screen
+      case Routes.pointsScreen:
+        return MaterialPageRoute(builder: (_) => const PointsScreen());
+
+      /// Company Part
+
+      /// Company Home Screen
+      case Routes.companyHomeScreen:
+        return MaterialPageRoute(builder: (_) => const CompanyHomeScreen());
 
       /// Default Case
       default:

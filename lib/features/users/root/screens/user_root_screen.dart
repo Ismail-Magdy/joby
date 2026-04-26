@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
+import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
 import "package:joby/features/users/points/presentation/screens/points_screen.dart";
 import "../../../../core/helpers/spacing.dart";
 import "../../../../core/themes/app_colors.dart";
-import "../../home/presentation/screens/user_home_screen.dart";
 import "../../settings/presentation/screens/user_settings_screen.dart";
 
 class UserRootScreen extends StatefulWidget {

@@ -10,21 +10,21 @@ class BuildContactIconButton extends StatelessWidget {
   });
   final IconData icon;
   final Color color;
-  final VoidCallback onTap;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(12.r),
+        padding: .all(12.r),
         decoration: BoxDecoration(
           color: Colors.white,
-          shape: BoxShape.circle,
+          shape: .circle,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 10,
+              blurRadius: 10.r,
               spreadRadius: 1,
               offset: const Offset(0, 2),
             ),
