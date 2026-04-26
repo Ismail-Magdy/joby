@@ -5,6 +5,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:image_picker/image_picker.dart";
+import "package:intl_phone_field/country_picker_dialog.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
@@ -14,6 +15,7 @@ import "../../data/models/user_info_model.dart";
 import "../../manager/user_info_cubit.dart";
 import "../../manager/user_info_state.dart";
 import "package:file_picker/file_picker.dart";
+import "package:intl_phone_field/intl_phone_field.dart";
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -40,6 +42,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   File? _cvFile;
   File? _pickedAvatarFile;
 
+  String _completeWhatsappNumber = "";
+
+  bool get _canSubmit {
+    if (_currentStep != 2) return true;
+    return _cvFile != null && _whatsappController.text.isNotEmpty;
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -64,72 +73,32 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   void _submitData(UserInfoCubit cubit) {
     if (_formKey.currentState!.validate()) {
-      if (_pickedAvatarFile == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Center(
-              child: Text(
-                "Please upload your profile picture",
-                style: TextStyle(fontSize: 14.sp),
-              ),
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
-      //
-      if (_selectedLevel == null || _selectedWorkType == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Center(
-              child: Text(
-                "Please select your Level and Type of Work",
-                style: TextStyle(fontSize: 14.sp),
-              ),
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
+      if (_cvFile == null || _whatsappController.text.isEmpty) return;
 
-      //
-      if (_cvFile == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Center(
-              child: Text(
-                "Please upload your CV",
-                style: TextStyle(fontSize: 14.sp),
-              ),
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
-      //
+      final linkedinText = _linkedinController.text.trim();
+      final githubText = _githubController.text.trim();
+
       final userInfo = UserInfoModel(
-        name: _nameController.text,
-        jobCategory: _jobCategoryController.text,
-        jobTitle: _jobTitleController.text,
+        name: _nameController.text.trim(),
+        jobCategory: _jobCategoryController.text.trim(),
+        jobTitle: _jobTitleController.text.trim(),
         level: _selectedLevel!,
         typeOfWork: _selectedWorkType!,
-        whatsapp: _whatsappController.text,
-        linkedin: _linkedinController.text,
-        github: _githubController.text,
+        whatsapp: _completeWhatsappNumber,
+        linkedin: linkedinText.isEmpty
+            ? "https://www.linkedin.com"
+            : linkedinText,
+        github: githubText.isEmpty ? "https://github.com" : githubText,
         cvUrl: null,
         avatarUrl: null,
       );
-      //
+
       cubit.saveUserInfo(
         userInfo,
         avatarFile: _pickedAvatarFile,
         cvFile: _cvFile,
       );
     }
-    //
   }
 
   @override
@@ -141,6 +110,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         elevation: 0,
+        leading: SizedBox.shrink(),
+        leadingWidth: 0,
         title: Text(
           "Complete Your Profile",
           style: TextStyle(
@@ -161,7 +132,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               SnackBar(
                 content: Center(
                   child: Text(
-                    "Profile saved successfully!",
+                    "Profile saved successfully",
                     style: TextStyle(fontSize: 14.sp),
                   ),
                 ),
@@ -206,10 +177,42 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 onStepTapped: (step) => setState(() => _currentStep = step),
                 onStepContinue: () {
                   final isLastStep = _currentStep == 2;
-                  if (isLastStep) {
-                    _submitData(cubit);
-                  } else {
+
+                  if (_currentStep == 0) {
+                    if (_pickedAvatarFile == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Center(
+                            child: Text(
+                              "Please upload your profile picture",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    if (!_formKey.currentState!.validate()) return;
                     setState(() => _currentStep += 1);
+                  } else if (_currentStep == 1) {
+                    if (_selectedLevel == null || _selectedWorkType == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Center(
+                            child: Text(
+                              "Please select your Level and Type of Work",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    setState(() => _currentStep += 1);
+                  } else if (isLastStep) {
+                    _submitData(cubit);
                   }
                 },
                 onStepCancel: _currentStep == 0
@@ -225,7 +228,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         //
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: state is UserInfoLoading
+                            onPressed:
+                                (state is UserInfoLoading ||
+                                    (isLastStep && !_canSubmit))
                                 ? null
                                 : details.onStepContinue,
                             style: ElevatedButton.styleFrom(
@@ -236,9 +241,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               ),
                             ),
                             child: state is UserInfoLoading && isLastStep
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
+                                ? SizedBox(
+                                    height: 20.h,
+                                    width: 20.w,
                                     child: CircularProgressIndicator(
                                       color: Colors.white,
                                       strokeWidth: 2,
@@ -382,6 +387,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     content: Column(
                       children: [
                         //
+                        verticalSpace(10),
+                        //
                         DropdownButtonFormField<String>(
                           icon: Icon(
                             Icons.keyboard_arrow_down_rounded,
@@ -499,14 +506,32 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     content: Column(
                       children: [
                         //
-                        TextFormField(
+                        verticalSpace(10),
+                        //
+                        IntlPhoneField(
+                          cursorColor: AppColors.primaryColor,
                           controller: _whatsappController,
-                          keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            labelText: "WhatsApp Number",
-                            prefixIcon: Icon(Icons.phone_android_outlined),
+                          initialCountryCode: "EG",
+                          // ===================================
+                          pickerDialogStyle: PickerDialogStyle(
+                            backgroundColor: Colors.white,
                           ),
-                          validator: (val) => val!.isEmpty ? "Required" : null,
+                          // ===================================
+                          decoration: InputDecoration(
+                            labelText: "WhatsApp Number",
+                            counterText: "",
+                            border: OutlineInputBorder(
+                              borderRadius: .circular(12.r),
+                            ),
+                          ),
+                          onChanged: (phone) {
+                            setState(() {
+                              _completeWhatsappNumber = phone.completeNumber;
+                            });
+                          },
+                          onCountryChanged: (country) {
+                            setState(() {});
+                          },
                         ),
                         //
                         verticalSpace(15),
@@ -587,6 +612,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       ],
                     ),
                   ),
+                  //
                 ],
               ),
             ),
