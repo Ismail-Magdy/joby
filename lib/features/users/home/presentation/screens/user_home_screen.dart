@@ -337,6 +337,32 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ),
                     ),
                     //
+                    if (user.locationName.isNotEmpty) ...[
+                      //
+                      verticalSpace(8),
+                      //
+                      Row(
+                        mainAxisAlignment: .center,
+                        children: [
+                          Icon(
+                            Ionicons.location_sharp,
+                            color: Colors.grey.shade500,
+                            size: 16.sp,
+                          ),
+                          horizontalSpace(4),
+                          Text(
+                            user.locationName,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey.shade600,
+                              fontWeight: .w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      //
+                    ],
+                    //
                     verticalSpace(15),
                     //  Total Points Gamification Widget
                     GestureDetector(
@@ -369,7 +395,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     ),
                     //
                     verticalSpace(25),
-                    // Level & Work Type
+                    // Level, Job Category, & Work Type
                     Row(
                       mainAxisAlignment: .center,
                       children: [
@@ -377,11 +403,39 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           icon: Ionicons.stats_chart_outline,
                           text: user.level,
                         ),
-                        horizontalSpace(30),
+                        //
+                        horizontalSpace(15),
+                        //
+                        Container(
+                          padding: .symmetric(horizontal: 14.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: .circular(20.r),
+                            border: Border.all(
+                              color: AppColors.primaryColor.withValues(
+                                alpha: 0.3,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            user.jobCategory,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                        //
+                        horizontalSpace(15),
+                        //
                         BuildBadgeWidget(
-                          icon: Ionicons.location_outline,
+                          icon: Ionicons.business_outline,
                           text: user.typeOfWork,
                         ),
+                        //
                       ],
                     ),
                     //

@@ -16,6 +16,10 @@ import "../../manager/user_info_cubit.dart";
 import "../../manager/user_info_state.dart";
 import "package:file_picker/file_picker.dart";
 import "package:intl_phone_field/intl_phone_field.dart";
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -44,8 +48,91 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   String _completeWhatsappNumber = "";
 
+  double _latitude = 30.0444; // Default to Cairo
+  double _longitude = 31.2357;
+  String _locationName = "Detecting location...";
+  final MapController _mapController = MapController();
+  bool _isLoadingLocation = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
+
+  Future<void> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (mounted) {
+        setState(() => _locationName = "Location services disabled");
+      }
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        if (mounted) {
+          setState(() => _locationName = "Location permissions denied");
+        }
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      if (mounted) {
+        setState(
+          () => _locationName = "Location permissions permanently denied.",
+        );
+      }
+      return;
+    }
+
+    try {
+      Position position = await Geolocator.getCurrentPosition();
+      if (mounted) {
+        setState(() {
+          _latitude = position.latitude;
+          _longitude = position.longitude;
+        });
+        _mapController.move(LatLng(_latitude, _longitude), 14.0);
+        await _updateLocationName(_latitude, _longitude);
+      }
+    } catch (e) {
+      if (mounted) setState(() => _locationName = "Error getting location.");
+    }
+  }
+
+  Future<void> _updateLocationName(double lat, double lng) async {
+    try {
+      if (mounted) setState(() => _isLoadingLocation = true);
+      List<geocoding.Placemark> placemarks = await geocoding
+          .placemarkFromCoordinates(lat, lng);
+      if (placemarks.isNotEmpty) {
+        geocoding.Placemark place = placemarks[0];
+        String loc = place.administrativeArea ?? "";
+        if (place.country != null) {
+          loc += (loc.isNotEmpty ? ", " : "") + place.country!;
+        }
+        if (mounted) {
+          setState(
+            () => _locationName = loc.isNotEmpty ? loc : "Unknown Location",
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) setState(() => _locationName = "Unknown Location");
+    } finally {
+      if (mounted) setState(() => _isLoadingLocation = false);
+    }
+  }
+
   bool get _canSubmit {
-    if (_currentStep != 2) return true;
+    if (_currentStep != 2 && _currentStep != 3) return true;
     return _cvFile != null && _whatsappController.text.isNotEmpty;
   }
 
@@ -91,6 +178,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         github: githubText.isEmpty ? "https://github.com" : githubText,
         cvUrl: null,
         avatarUrl: null,
+        locationName: _locationName,
+        latitude: _latitude,
+        longitude: _longitude,
       );
 
       cubit.saveUserInfo(
@@ -176,7 +266,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 currentStep: _currentStep,
                 onStepTapped: (step) => setState(() => _currentStep = step),
                 onStepContinue: () {
-                  final isLastStep = _currentStep == 2;
+                  final isLastStep = _currentStep == 3;
 
                   if (_currentStep == 0) {
                     if (_pickedAvatarFile == null) {
@@ -211,6 +301,23 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       return;
                     }
                     setState(() => _currentStep += 1);
+                  } else if (_currentStep == 2) {
+                    // Check step 2 valid before proceeding
+                    if (_cvFile == null || _whatsappController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Center(
+                            child: Text(
+                              "Please fill WhatsApp and upload CV",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    setState(() => _currentStep += 1);
                   } else if (isLastStep) {
                     _submitData(cubit);
                   }
@@ -219,7 +326,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     ? null
                     : () => setState(() => _currentStep -= 1),
                 controlsBuilder: (context, details) {
-                  final isLastStep = _currentStep == 2;
+                  final isLastStep = _currentStep == 3;
                   //
                   return Padding(
                     padding: .only(top: 20.h),
@@ -612,6 +719,101 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       ],
                     ),
                   ),
+                  // Step Four
+                  Step(
+                    isActive: _currentStep >= 3,
+                    title: Text(
+                      "Location",
+                      style: TextStyle(fontSize: 16.sp, fontWeight: .bold),
+                    ),
+                    content: Column(
+                      children: [
+                        verticalSpace(10),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: AppColors.primaryColor,
+                              size: 24.sp,
+                            ),
+                            horizontalSpace(8),
+                            Expanded(
+                              child: Text(
+                                _locationName,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: .w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            if (_isLoadingLocation)
+                              SizedBox(
+                                width: 16.w,
+                                height: 16.h,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                          ],
+                        ),
+                        verticalSpace(15),
+                        Container(
+                          height: 250.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: .circular(12.r),
+                            border: .all(color: Colors.grey.shade300),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: .circular(12.r),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                FlutterMap(
+                                  mapController: _mapController,
+                                  options: MapOptions(
+                                    initialCenter: LatLng(
+                                      _latitude,
+                                      _longitude,
+                                    ),
+                                    initialZoom: 14.0,
+                                    onPositionChanged: (camera, hasGesture) {
+                                      if (hasGesture) {
+                                        _latitude = camera.center.latitude;
+                                        _longitude = camera.center.longitude;
+                                      }
+                                    },
+                                    onMapEvent: (event) {
+                                      if (event is MapEventMoveEnd) {
+                                        _updateLocationName(
+                                          _latitude,
+                                          _longitude,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  children: [
+                                    TileLayer(
+                                      urlTemplate:
+                                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                      userAgentPackageName: 'com.example.joby',
+                                    ),
+                                  ],
+                                ),
+                                Icon(
+                                  Icons.location_pin,
+                                  color: Colors.red,
+                                  size: 40.sp,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   //
                 ],
               ),
@@ -622,4 +824,4 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 }
-// 600
+// 827

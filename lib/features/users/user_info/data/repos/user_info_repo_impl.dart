@@ -78,6 +78,9 @@ class UserInfoRepoImpl implements UserInfoRepo {
         github: userInfo.github,
         cvUrl: finalCvUrl,
         avatarUrl: finalAvatarUrl,
+        locationName: userInfo.locationName,
+        latitude: userInfo.latitude,
+        longitude: userInfo.longitude,
       );
 
       await supabaseClient.from("users").upsert({
