@@ -17,6 +17,9 @@ import '../../features/users/home/manager/user_home_cubit.dart';
 import '../../features/users/user_info/data/repos/user_info_repo.dart';
 import '../../features/users/user_info/data/repos/user_info_repo_impl.dart';
 import '../../features/users/user_info/manager/user_info_cubit.dart';
+import '../../features/users/points/data/repos/points_repo.dart';
+import '../../features/users/points/data/repos/points_repo_impl.dart';
+import '../../features/users/points/manager/points_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -41,6 +44,8 @@ Future<void> initGetIt() async {
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(authRepo: getIt<AuthRepo>()),
   );
+
+  /// User Part
 
   /// User Info Feature
   getIt.registerLazySingleton<UserInfoRepo>(
@@ -73,4 +78,17 @@ Future<void> initGetIt() async {
   getIt.registerFactory<AdviceCubit>(
     () => AdviceCubit(adviceRepo: getIt<AdviceRepo>()),
   );
+
+  /// Points Feature
+  getIt.registerLazySingleton<PointsRepo>(
+    () => PointsRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+  );
+  getIt.registerFactory<PointsCubit>(
+    () => PointsCubit(
+      pointsRepo: getIt<PointsRepo>(),
+      sharedPrefs: getIt<SharedPreferences>(),
+    ),
+  );
+
+  ///
 }

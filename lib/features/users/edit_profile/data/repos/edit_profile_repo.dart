@@ -112,8 +112,8 @@ class EditProfileRepo {
         if (whatsapp.isNotEmpty) 'whatsapp': whatsapp,
         if (linkedin != null && linkedin.isNotEmpty) 'linkedin': linkedin,
         if (github != null && github.isNotEmpty) 'github': github,
-        if (cvUrl != null) 'cv_url': cvUrl,
-        if (avatarUrl != null) 'avatar_url': avatarUrl,
+        'cv_url': ?cvUrl,
+        'avatar_url': ?avatarUrl,
       };
 
       // Nothing to update

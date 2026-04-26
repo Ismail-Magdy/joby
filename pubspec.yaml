@@ -22,6 +22,8 @@ dependencies:
   flutter_offline: ^6.0.0
   connectivity_plus: ^7.0.0
   cached_network_image: ^3.4.1
+  confetti: ^0.8.0
+  lottie: ^3.3.3
 
   # ==========================================
   # State Management
@@ -64,6 +66,7 @@ dependencies:
   google_generative_ai: ^0.4.7
   http_parser: ^4.1.2
   url_launcher: ^6.3.0
+
   # ===============================
 
 dev_dependencies:
@@ -104,6 +107,7 @@ flutter:
     - assets/images/
     - assets/svgs/
     - assets/icons/
+    - assets/lotties/
 
   # ==========================================
   # Custom Fonts

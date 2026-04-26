@@ -10,11 +10,11 @@ class BuildBadgeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+      padding: .symmetric(horizontal: 14.w, vertical: 7.h),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: .circular(20.r),
+        border: .all(color: Colors.grey.shade200),
       ),
       child: Row(
         children: [
@@ -24,7 +24,7 @@ class BuildBadgeWidget extends StatelessWidget {
             text,
             style: TextStyle(
               fontSize: 13.sp,
-              fontWeight: FontWeight.w600,
+              fontWeight: .w600,
               color: Colors.grey.shade800,
             ),
           ),

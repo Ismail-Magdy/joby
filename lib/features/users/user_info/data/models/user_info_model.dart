@@ -9,6 +9,8 @@ class UserInfoModel {
   final String? github;
   final String? cvUrl;
   final String? avatarUrl;
+  final int totalPoints;
+  final String? lastCheckIn;
 
   UserInfoModel({
     required this.name,
@@ -21,6 +23,8 @@ class UserInfoModel {
     this.github,
     this.cvUrl,
     this.avatarUrl,
+    this.totalPoints = 0,
+    this.lastCheckIn,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +39,8 @@ class UserInfoModel {
       if (github != null && github!.isNotEmpty) "github": github,
       if (cvUrl != null) "cv_url": cvUrl,
       if (avatarUrl != null) "avatar_url": avatarUrl,
+      "total_points": totalPoints,
+      if (lastCheckIn != null) "last_check_in": lastCheckIn,
     };
   }
 
@@ -50,6 +56,8 @@ class UserInfoModel {
       github: json["github"],
       cvUrl: json["cv_url"],
       avatarUrl: json["avatar_url"],
+      totalPoints: json["total_points"] ?? 0,
+      lastCheckIn: json["last_check_in"],
     );
   }
 }
