@@ -6,6 +6,7 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:ionicons/ionicons.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "package:joby/core/routes/routes.dart";
+import "package:joby/core/widgets/error_screen.dart";
 import "package:joby/core/widgets/home_shimmer_loading.dart";
 import "package:joby/features/users/home/presentation/widgets/build_contact_icon_button.dart";
 import "package:joby/features/users/points/manager/points_cubit.dart";
@@ -18,8 +19,9 @@ import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "../../manager/user_home_cubit.dart";
 import "../../manager/user_home_state.dart";
-import "../widgets/build_badge_widget.dart";
-import "../widgets/curve_painter.dart";
+import '../widgets/build_badge_widget.dart';
+import '../widgets/curve_painter.dart';
+import '../../../../../core/errors/error_handler.dart';
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -62,9 +64,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (!await launchUrl(url, mode: .externalApplication)) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
+              shape: RoundedRectangleBorder(
+                borderRadius: .all(.circular(10.r)),
+              ),
               behavior: .floating,
-              content: Center(child: Text("Could not launch the link")),
+              content: Center(child: const Text("Could not launch the link")),
               backgroundColor: Colors.red,
             ),
           );
@@ -74,8 +79,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
             behavior: .floating,
-            content: Center(child: Text("Invalid link format")),
+            content: Center(child: const Text("Invalid link format")),
             backgroundColor: Colors.red,
           ),
         );
@@ -102,9 +108,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (result.type != .done) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
+              shape: RoundedRectangleBorder(
+                borderRadius: .all(.circular(10.r)),
+              ),
               behavior: .floating,
-              content: Center(child: Text("No app found to open PDF files")),
+              content: Center(
+                child: const Text("No app found to open PDF files"),
+              ),
               backgroundColor: Colors.orange,
             ),
           );
@@ -114,8 +125,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
             behavior: .floating,
-            content: Center(child: Text("Error opening CV: $error")),
+            content: Center(child: Text(ErrorHandler.handleError(error))),
             backgroundColor: Colors.red,
           ),
         );
@@ -139,6 +151,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         //
         listener: (context, state) {
           if (state is PointsClaimCelebration) {
+            //
             showGeneralDialog(
               context: context,
               barrierDismissible: true,
@@ -149,9 +162,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 );
               },
             );
+            //
           } else if (state is PointsClaimError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+                shape: RoundedRectangleBorder(
+                  borderRadius: .all(.circular(10.r)),
+                ),
                 behavior: .floating,
                 content: Center(
                   child: Text(
@@ -164,15 +181,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             );
           } else if (state is PointsClaimAlreadyClaimed) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
+              SnackBar(
+                shape: RoundedRectangleBorder(
+                  borderRadius: .all(.circular(10.r)),
+                ),
                 behavior: .floating,
                 content: Center(
-                  child: Text(
-                    "Already claimed",
+                  child: const Text(
+                    "Points Already claimed",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                backgroundColor: Colors.orange,
+                backgroundColor: AppColors.primaryColor,
               ),
             );
           }
@@ -194,7 +214,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             }
             // Error State
             else if (state is UserHomeError) {
-              return Center(child: Text(state.message));
+              return ErrorScreen(errorText: state.message);
             }
             // Success State
             else if (state is UserHomeSuccess) {
@@ -301,7 +321,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       user.name,
                       style: TextStyle(
                         fontSize: 22.sp,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                         color: Colors.black87,
                       ),
                     ),
@@ -313,7 +333,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: .w500,
                       ),
                     ),
                     //

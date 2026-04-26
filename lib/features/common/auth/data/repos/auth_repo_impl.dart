@@ -4,6 +4,7 @@ import "package:google_sign_in/google_sign_in.dart";
 import "../models/auth_credentials.dart";
 import "../models/user_model.dart";
 import "auth_repo.dart";
+import "../../../../../core/errors/error_handler.dart";
 
 class AuthRepoImpl implements AuthRepo {
   final SupabaseClient supabaseClient;
@@ -29,12 +30,10 @@ class AuthRepoImpl implements AuthRepo {
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Sign up failed. Please try again.");
+        return const Left("Sign up failed. Please try again");
       }
-    } on AuthException catch (e) {
-      return Left(e.message);
     } catch (e) {
-      return Left("An unexpected error occurred: $e");
+      return Left(ErrorHandler.handleError(e));
     }
   }
 
@@ -52,12 +51,10 @@ class AuthRepoImpl implements AuthRepo {
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Sign in failed. Check your credentials.");
+        return const Left("Sign in failed. Check your credentials");
       }
-    } on AuthException catch (e) {
-      return Left(e.message);
     } catch (e) {
-      return Left("An unexpected error occurred: $e");
+      return Left(ErrorHandler.handleError(e));
     }
   }
 
@@ -72,7 +69,7 @@ class AuthRepoImpl implements AuthRepo {
       final googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
-        return const Left("Google sign in was canceled.");
+        return const Left("Google sign in was canceled");
       }
 
       final googleAuth = await googleUser.authentication;
@@ -80,7 +77,7 @@ class AuthRepoImpl implements AuthRepo {
       final idToken = googleAuth.idToken;
 
       if (accessToken == null || idToken == null) {
-        return const Left("Failed to get Google tokens.");
+        return const Left("Failed to get Google tokens");
       }
 
       final AuthResponse response = await supabaseClient.auth.signInWithIdToken(
@@ -94,10 +91,8 @@ class AuthRepoImpl implements AuthRepo {
       } else {
         return const Left("Google sign in failed in Supabase.");
       }
-    } on AuthException catch (e) {
-      return Left(e.message);
-    } catch (e) {
-      return Left("An unexpected error occurred: $e");
+    } catch (error) {
+      return Left(ErrorHandler.handleError(error));
     }
   }
 
@@ -125,7 +120,7 @@ class AuthRepoImpl implements AuthRepo {
       // if (companyData != null) return "company";
 
       return "none";
-    } catch (e) {
+    } catch (error) {
       return "none";
     }
   }

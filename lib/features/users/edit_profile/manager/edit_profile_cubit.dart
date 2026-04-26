@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/repos/edit_profile_repo.dart';
 import 'edit_profile_state.dart';
+import '../../../../core/errors/error_handler.dart';
 
 class EditProfileCubit extends Cubit<EditProfileState> {
   final EditProfileRepo editProfileRepo;
@@ -20,14 +21,14 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   Future<void> pickAvatar() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await picker.pickImage(source: .gallery);
 
       if (image != null) {
         _pickedAvatarFile = File(image.path);
         emit(EditProfileAvatarPicked(file: _pickedAvatarFile!));
       }
-    } catch (e) {
-      emit(EditProfileError("Error picking image"));
+    } catch (error) {
+      emit(EditProfileError(ErrorHandler.handleError(error)));
     }
   }
 
@@ -35,8 +36,8 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   Future<void> pickCv() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
+        type: .custom,
+        allowedExtensions: ["pdf"],
       );
 
       if (result != null && result.files.single.path != null) {
@@ -44,8 +45,8 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         final fileName = result.files.single.name;
         emit(EditProfileCvPicked(file: _pickedCvFile!, fileName: fileName));
       }
-    } catch (e) {
-      emit(EditProfileError("Error picking file"));
+    } catch (error) {
+      emit(EditProfileError(ErrorHandler.handleError(error)));
     }
   }
 
@@ -106,8 +107,8 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       } else {
         emit(EditProfileError("Failed to update profile data."));
       }
-    } catch (e) {
-      emit(EditProfileError("An unexpected error occurred."));
+    } catch (error) {
+      emit(EditProfileError(ErrorHandler.handleError(error)));
     }
   }
 }
