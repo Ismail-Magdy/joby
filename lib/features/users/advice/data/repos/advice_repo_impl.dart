@@ -1,6 +1,7 @@
 import "package:dartz/dartz.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "advice_repo.dart";
+import "../../../../../core/errors/error_handler.dart";
 
 class AdviceRepoImpl implements AdviceRepo {
   final SupabaseClient supabaseClient;
@@ -18,10 +19,8 @@ class AdviceRepoImpl implements AdviceRepo {
       });
 
       return const Right(unit);
-    } on PostgrestException catch (e) {
-      return Left(e.message);
-    } catch (e) {
-      return Left("An unexpected error occurred: $e");
+    } catch (error) {
+      return Left(ErrorHandler.handleError(error));
     }
   }
 }

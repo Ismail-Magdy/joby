@@ -3,6 +3,7 @@ import "package:dartz/dartz.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "../models/user_info_model.dart";
 import "user_info_repo.dart";
+import "../../../../../core/errors/error_handler.dart";
 
 class UserInfoRepoImpl implements UserInfoRepo {
   final SupabaseClient supabaseClient;
@@ -85,12 +86,8 @@ class UserInfoRepoImpl implements UserInfoRepo {
       });
 
       return const Right(null);
-    } on PostgrestException catch (e) {
-      return Left(e.message);
-    } on StorageException catch (e) {
-      return Left("Storage Error: ${e.message}");
     } catch (e) {
-      return Left("An unexpected error occurred: $e");
+      return Left(ErrorHandler.handleError(e));
     }
   }
 }

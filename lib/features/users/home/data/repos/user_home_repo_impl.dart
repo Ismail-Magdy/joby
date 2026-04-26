@@ -2,6 +2,7 @@ import "package:dartz/dartz.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "../../../user_info/data/models/user_info_model.dart";
 import "user_home_repo.dart";
+import "../../../../../core/errors/error_handler.dart";
 
 class UserHomeRepoImpl implements UserHomeRepo {
   final SupabaseClient supabaseClient;
@@ -24,10 +25,8 @@ class UserHomeRepoImpl implements UserHomeRepo {
           .single();
 
       return Right(UserInfoModel.fromJson(data));
-    } on PostgrestException catch (e) {
-      return Left(e.message);
-    } catch (e) {
-      return Left("An unexpected error occurred: $e");
+    } catch (error) {
+      return Left(ErrorHandler.handleError(error));
     }
   }
 }

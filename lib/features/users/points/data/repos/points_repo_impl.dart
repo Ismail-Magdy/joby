@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'points_repo.dart';
+import '../../../../../core/errors/error_handler.dart';
 
 class PointsRepoImpl implements PointsRepo {
   final SupabaseClient supabaseClient;
@@ -12,10 +13,8 @@ class PointsRepoImpl implements PointsRepo {
     try {
       final response = await supabaseClient.rpc("claim_daily_points");
       return Right(response);
-    } on PostgrestException catch (error) {
-      return Left(error.message);
     } catch (error) {
-      return Left("An unexpected error occurred: $error");
+      return Left(ErrorHandler.handleError(error));
     }
   }
 }
