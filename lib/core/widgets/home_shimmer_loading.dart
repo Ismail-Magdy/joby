@@ -73,13 +73,15 @@ class HomeShimmerLoading extends StatelessWidget {
             //
             verticalSpace(25),
             //
-            //  Level & Work Type Badges
+            //  Level, Job Category & Work Type Badges
             Row(
               mainAxisAlignment: .center,
               children: [
-                ShimmerBox(width: 100.w, height: 36.h, borderRadius: 20),
-                horizontalSpace(30),
-                ShimmerBox(width: 100.w, height: 36.h, borderRadius: 20),
+                ShimmerBox(width: 90.w, height: 36.h, borderRadius: 20),
+                horizontalSpace(15),
+                ShimmerBox(width: 110.w, height: 36.h, borderRadius: 20),
+                horizontalSpace(15),
+                ShimmerBox(width: 90.w, height: 36.h, borderRadius: 20),
               ],
             ),
             //
@@ -105,6 +107,26 @@ class HomeShimmerLoading extends StatelessWidget {
               child: ShimmerBox(
                 width: .infinity,
                 height: 70.h,
+                borderRadius: 16.r,
+              ),
+            ),
+            //
+            verticalSpace(30),
+            //  Location Title Label
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ShimmerBox(width: 80.w, height: 18.h, borderRadius: 8.r),
+              ),
+            ),
+            verticalSpace(15),
+            //  Map Box
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: ShimmerBox(
+                width: double.infinity,
+                height: 200.h,
                 borderRadius: 16.r,
               ),
             ),

@@ -1,5 +1,7 @@
 import "package:dio/dio.dart";
 import "package:flutter/material.dart";
+import "package:flutter_map/flutter_map.dart";
+import "package:latlong2/latlong.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -337,32 +339,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ),
                     ),
                     //
-                    if (user.locationName.isNotEmpty) ...[
-                      //
-                      verticalSpace(8),
-                      //
-                      Row(
-                        mainAxisAlignment: .center,
-                        children: [
-                          Icon(
-                            Ionicons.location_sharp,
-                            color: Colors.grey.shade500,
-                            size: 16.sp,
-                          ),
-                          horizontalSpace(4),
-                          Text(
-                            user.locationName,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.grey.shade600,
-                              fontWeight: .w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      //
-                    ],
-                    //
                     verticalSpace(15),
                     //  Total Points Gamification Widget
                     GestureDetector(
@@ -484,7 +460,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ],
                     ),
                     //
-                    verticalSpace(30),
+                    verticalSpace(20),
                     // CV Section
                     Padding(
                       padding: .symmetric(horizontal: 24.w),
@@ -579,6 +555,99 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         ],
                       ),
                     ),
+                    // Location Map
+                    if (user.locationName.isNotEmpty &&
+                        user.latitude != 0.0) ...[
+                      verticalSpace(30),
+                      Padding(
+                        padding: .symmetric(horizontal: 24.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Location",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            verticalSpace(15),
+                            Container(
+                              height: 200.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16.r),
+                                child: Stack(
+                                  children: [
+                                    FlutterMap(
+                                      options: MapOptions(
+                                        initialCenter: LatLng(
+                                          user.latitude,
+                                          user.longitude,
+                                        ),
+                                        initialZoom: 14.0,
+                                        interactionOptions:
+                                            const InteractionOptions(
+                                              flags: InteractiveFlag.none,
+                                            ),
+                                      ),
+                                      children: [
+                                        TileLayer(
+                                          urlTemplate:
+                                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                          userAgentPackageName:
+                                              'com.example.joby',
+                                        ),
+                                      ],
+                                    ),
+                                    Center(
+                                      child: Icon(
+                                        Icons.location_pin,
+                                        color: Colors.red,
+                                        size: 40.sp,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 10.h,
+                                      left: 10.w,
+                                      right: 10.w,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w,
+                                          vertical: 8.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.9,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            8.r,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          user.locationName,
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     //
                   ],
                 ),
