@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_cubit.dart';
@@ -146,7 +147,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               style: TextStyle(
                 color: Colors.red.shade400,
                 fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
+                fontWeight: .w600,
               ),
             ),
           ),
@@ -176,7 +177,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (result == "save") {
       _triggerSave();
-      return false; // Don't pop — let the save listener handle it
+      return false;
     }
 
     return result == "discard";
@@ -209,16 +210,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      //
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         final shouldPop = await _onWillPop();
         if (shouldPop && context.mounted) {
-          Navigator.pop(context);
+          context.pop();
         }
       },
+      //
       child: Scaffold(
         backgroundColor: Colors.white,
-        //
+        // App Bar
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -238,13 +241,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () async {
               final shouldPop = await _onWillPop();
               if (shouldPop && context.mounted) {
-                Navigator.pop(context);
+                context.pop();
               }
             },
           ),
         ),
         //
         body: BlocConsumer<EditProfileCubit, EditProfileState>(
+          //
           listener: (context, state) {
             if (state is EditProfileAvatarPicked) {
               setState(() {
@@ -257,10 +261,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             } else if (state is EditProfileSuccess) {
               //
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   behavior: .floating,
                   content: Center(child: Text("Profile updated successfully")),
                   backgroundColor: Colors.green,
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
               // Pop with `true` so the home screen knows to refresh
@@ -272,11 +278,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   behavior: .floating,
                   content: Center(child: Text(state.message)),
                   backgroundColor: Colors.red,
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
               //
             }
           },
+          //
           builder: (context, state) {
             final cubit = context.read<EditProfileCubit>();
             final isLoading = state is EditProfileLoading;
@@ -291,7 +300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: Stack(
                       alignment: .bottomRight,
                       children: [
-                        // Image — shows picked file, or network avatar, or fallback icon
+                        // Image - shows picked file, or network avatar, or fallback icon
                         CircleAvatar(
                           radius: 50.r,
                           backgroundColor: Colors.grey.shade100,
@@ -305,7 +314,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               : null,
                         ),
                         //
-                        // Camera Icon — opens gallery
+                        // Camera Icon - opens gallery
                         GestureDetector(
                           onTap: isLoading ? null : () => cubit.pickAvatar(),
                           child: Container(
@@ -516,8 +525,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
-
-  //  Helper Methods
 
   /// Returns the appropriate avatar image provider.
   ImageProvider? _buildAvatarImage() {

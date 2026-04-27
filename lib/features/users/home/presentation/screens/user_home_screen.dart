@@ -1,7 +1,6 @@
 import "package:dio/dio.dart";
 import "package:flutter/material.dart";
-import "package:flutter_map/flutter_map.dart";
-import "package:latlong2/latlong.dart";
+import "package:joby/features/users/home/presentation/widgets/location_map_section.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -67,12 +66,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              shape: RoundedRectangleBorder(
-                borderRadius: .all(.circular(10.r)),
-              ),
               behavior: .floating,
               content: Center(child: const Text("Could not launch the link")),
               backgroundColor: Colors.red,
+              margin: .all(20.r),
+              shape: RoundedRectangleBorder(
+                borderRadius: .all(.circular(10.r)),
+              ),
             ),
           );
         }
@@ -81,10 +81,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
             behavior: .floating,
             content: Center(child: const Text("Invalid link format")),
             backgroundColor: Colors.red,
+            margin: .all(20.r),
+            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
           ),
         );
       }
@@ -111,14 +112,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              shape: RoundedRectangleBorder(
-                borderRadius: .all(.circular(10.r)),
-              ),
               behavior: .floating,
               content: Center(
                 child: const Text("No app found to open PDF files"),
               ),
               backgroundColor: Colors.orange,
+              margin: .all(20.r),
+              shape: RoundedRectangleBorder(
+                borderRadius: .all(.circular(10.r)),
+              ),
             ),
           );
         }
@@ -127,10 +129,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
             behavior: .floating,
             content: Center(child: Text(ErrorHandler.handleError(error))),
             backgroundColor: Colors.red,
+            margin: .all(20.r),
+            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
           ),
         );
       }
@@ -168,9 +171,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           } else if (state is PointsClaimError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                shape: RoundedRectangleBorder(
-                  borderRadius: .all(.circular(10.r)),
-                ),
                 behavior: .floating,
                 content: Center(
                   child: Text(
@@ -179,14 +179,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
                 backgroundColor: Colors.red,
+                margin: .all(20.r),
+                shape: RoundedRectangleBorder(
+                  borderRadius: .all(.circular(10.r)),
+                ),
               ),
             );
           } else if (state is PointsClaimAlreadyClaimed) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                shape: RoundedRectangleBorder(
-                  borderRadius: .all(.circular(10.r)),
-                ),
                 behavior: .floating,
                 content: Center(
                   child: const Text(
@@ -195,6 +196,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
                 backgroundColor: AppColors.primaryColor,
+                margin: .all(20.r),
+                shape: RoundedRectangleBorder(
+                  borderRadius: .all(.circular(10.r)),
+                ),
               ),
             );
           }
@@ -558,95 +563,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     // Location Map
                     if (user.locationName.isNotEmpty &&
                         user.latitude != 0.0) ...[
+                      //
                       verticalSpace(30),
-                      Padding(
-                        padding: .symmetric(horizontal: 24.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Location",
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            verticalSpace(15),
-                            Container(
-                              height: 200.h,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: Colors.grey.shade300),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16.r),
-                                child: Stack(
-                                  children: [
-                                    FlutterMap(
-                                      options: MapOptions(
-                                        initialCenter: LatLng(
-                                          user.latitude,
-                                          user.longitude,
-                                        ),
-                                        initialZoom: 14.0,
-                                        interactionOptions:
-                                            const InteractionOptions(
-                                              flags: InteractiveFlag.none,
-                                            ),
-                                      ),
-                                      children: [
-                                        TileLayer(
-                                          urlTemplate:
-                                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                          userAgentPackageName:
-                                              'com.example.joby',
-                                        ),
-                                      ],
-                                    ),
-                                    Center(
-                                      child: Icon(
-                                        Icons.location_pin,
-                                        color: Colors.red,
-                                        size: 40.sp,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 10.h,
-                                      left: 10.w,
-                                      right: 10.w,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12.w,
-                                          vertical: 8.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.9,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          user.locationName,
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      //
+                      LocationMapSection(
+                        latitude: user.latitude,
+                        longitude: user.longitude,
+                        locationName: user.locationName,
                       ),
+                      //
                     ],
                     //
                   ],
