@@ -23,8 +23,21 @@ import '../../features/users/points/presentation/screens/points_screen.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
+    // Intercept Supabase Email Verification Deep Links
+    if (settings.name != null &&
+        (settings.name!.contains("code=") ||
+            settings.name!.contains("login-callback"))) {
+      return MaterialPageRoute(
+        builder: (_) => BlocProvider<AuthCubit>(
+          create: (context) => getIt<AuthCubit>(),
+          child: const AuthScreen(),
+        ),
+      );
+    }
+    //
+
     switch (settings.name) {
-      /// User Part
+      //// Job Seeker Part
 
       /// OnBoarding Screen
       case Routes.onBoardingScreen:
@@ -100,7 +113,7 @@ class AppRouter {
       case Routes.pointsScreen:
         return MaterialPageRoute(builder: (_) => const PointsScreen());
 
-      /// Company Part
+      //// Company Part
 
       /// Company Home Screen
       case Routes.companyHomeScreen:

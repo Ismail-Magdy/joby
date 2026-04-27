@@ -1,8 +1,15 @@
+import "dart:async";
 import "package:flutter/material.dart";
+import "package:joby/core/helpers/spacing.dart";
+import "package:joby/features/common/auth/presentation/widgets/custom_google_button.dart";
+import "package:joby/features/common/auth/presentation/widgets/forgot_password_widget.dart";
+import "package:joby/features/common/auth/presentation/widgets/show_success_dialog.dart";
+import "package:joby/features/common/auth/presentation/widgets/show_verification_dialog.dart";
+import "package:joby/features/common/auth/presentation/widgets/two_auth_options.dart";
+import "package:supabase_flutter/supabase_flutter.dart" as supabase;
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
-import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/features/common/auth/manager/auth_cubit.dart";
@@ -26,8 +33,46 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
+  StreamSubscription<supabase.AuthState>? _authSubscription;
+  bool _isAuthInProgress = false;
+
+  ///
+  @override
+  void initState() {
+    super.initState();
+    _authSubscription = supabase.Supabase.instance.client.auth.onAuthStateChange
+        .listen((data) {
+          final supabase.AuthChangeEvent event = data.event;
+          if (event == supabase.AuthChangeEvent.signedIn &&
+              !_isAuthInProgress) {
+            if (!mounted) return;
+            // Success State
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return Dialog(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: .circular(16.r)),
+                  child: ShowSuccessDialog(
+                    onPressed: () {
+                      supabase.Supabase.instance.client.auth.signOut();
+                      context.pop();
+                      setState(() => isLogin = true);
+                    },
+                  ),
+                );
+              },
+            );
+            //
+          }
+        });
+  }
+
+  //
   @override
   void dispose() {
+    _authSubscription?.cancel();
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
@@ -36,6 +81,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _submitForm(AuthCubit cubit) {
     if (_formKey.currentState!.validate()) {
+      _isAuthInProgress = true;
       if (isLogin) {
         cubit.signInWithEmail(_emailController.text, _passwordController.text);
       } else {
@@ -51,7 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
@@ -61,7 +107,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 SnackBar(
                   content: Center(
                     child: Text(
-                      "Welcome ${state.user.name}!",
+                      "Welcome ${state.user.name}",
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontFamily: "BrunoAceSC",
@@ -69,9 +115,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                   backgroundColor: Colors.green,
-                  behavior: .floating,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                  behavior: SnackBarBehavior.floating,
+                  margin: EdgeInsets.all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                 ),
               );
               //
@@ -88,28 +134,49 @@ class _AuthScreenState extends State<AuthScreen> {
                   context.pushReplacementNamed(Routes.userInfoScreen);
                 }
               }
+            } else if (state is AuthSignUpRequiresVerification) {
+              _isAuthInProgress = false;
+              // Verification Dialog
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return Dialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: .circular(16.r),
+                    ),
+                    child: ShowVerificationDialog(
+                      onPressed: () {
+                        context.pop();
+                        setState(() => isLogin = true);
+                      },
+                    ),
+                  );
+                },
+              );
+              //
             } else if (state is AuthError) {
+              _isAuthInProgress = false;
               //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Center(
                     child: Text(
                       state.message,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontFamily: "BrunoAceSC",
-                      ),
+                      style: TextStyle(fontSize: 14.sp),
                     ),
                   ),
                   backgroundColor: Colors.red,
-                  behavior: .floating,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                  behavior: SnackBarBehavior.floating,
+                  margin: EdgeInsets.all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                 ),
               );
               //
             }
           },
+          //
           builder: (context, state) {
             final cubit = context.read<AuthCubit>();
             return SingleChildScrollView(
@@ -122,7 +189,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     //
                     SvgPicture.asset("assets/svgs/joby_logo.svg"),
                     //
-                    SizedBox(height: 10.h),
+                    verticalSpace(10),
                     //
                     Text(
                       "Go ahead and set up your account",
@@ -133,97 +200,15 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     //
-                    SizedBox(height: 40.h),
+                    verticalSpace(40),
                     // Two Auth Options
-                    Container(
-                      height: 55.h,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: .circular(28.r),
-                      ),
-                      child: Row(
-                        children: [
-                          // Login Option
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => setState(() => isLogin = true),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                margin: .all(4.r),
-                                decoration: BoxDecoration(
-                                  color: isLogin
-                                      ? Colors.white
-                                      : Colors.transparent,
-                                  borderRadius: .circular(24.r),
-                                  boxShadow: isLogin
-                                      ? [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            spreadRadius: 1,
-                                          ),
-                                        ]
-                                      : [],
-                                ),
-                                alignment: .center,
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    fontFamily: "BrunoAceSC",
-                                    fontSize: 16.sp,
-                                    fontWeight: isLogin ? .bold : .w500,
-                                    color: isLogin
-                                        ? AppColors.primaryColor
-                                        : Colors.grey.shade600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            //
-                          ),
-                          // SignUp Option
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => setState(() => isLogin = false),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                margin: .all(4.r),
-                                decoration: BoxDecoration(
-                                  color: !isLogin
-                                      ? Colors.white
-                                      : Colors.transparent,
-                                  borderRadius: .circular(24.r),
-                                  boxShadow: !isLogin
-                                      ? [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            spreadRadius: 1,
-                                          ),
-                                        ]
-                                      : [],
-                                ),
-                                alignment: .center,
-                                child: Text(
-                                  "Sign Up",
-                                  style: TextStyle(
-                                    fontFamily: "BrunoAceSC",
-                                    fontSize: 16.sp,
-                                    fontWeight: !isLogin ? .bold : .w500,
-                                    color: !isLogin
-                                        ? AppColors.primaryColor
-                                        : Colors.grey.shade600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          //
-                        ],
-                      ),
+                    TwoAuthOptions(
+                      isLogin: isLogin,
+                      onTapLogin: () => setState(() => isLogin = true),
+                      onTapsignUp: () => setState(() => isLogin = false),
                     ),
                     //
-                    SizedBox(height: 30.h),
+                    verticalSpace(30),
                     //
                     if (!isLogin) ...[
                       //
@@ -236,7 +221,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             val!.isEmpty ? "Please enter your name" : null,
                       ),
                       //
-                      SizedBox(height: 16.h),
+                      verticalSpace(16),
                       //
                     ],
                     // Email
@@ -247,7 +232,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       prefixIcon: Icons.email_outlined,
                     ),
                     //
-                    SizedBox(height: 16.h),
+                    verticalSpace(16),
                     // Password
                     CustomTextFormField(
                       controller: _passwordController,
@@ -256,26 +241,13 @@ class _AuthScreenState extends State<AuthScreen> {
                       prefixIcon: Icons.lock_outline,
                     ),
                     //
-                    SizedBox(height: 10.h),
+                    verticalSpace(10),
                     //
                     if (isLogin)
-                      Align(
-                        alignment: .centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            // TODO: ADD Forgot Password
-                          },
-                          child: Text(
-                            "Forgot Password? (will work soon)",
-                            style: TextStyle(
-                              color: Colors.grey.shade700,
-                              fontSize: 13.sp,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Forgot Password Logic & Widget
+                      ForgotPasswordWidget(),
                     //
-                    SizedBox(height: isLogin ? 10.h : 30.h),
+                    verticalSpace(isLogin ? 10 : 30),
                     // Button
                     SizedBox(
                       width: double.infinity,
@@ -306,44 +278,19 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     //
-                    SizedBox(height: 30.h),
+                    verticalSpace(30),
                     // Custom Divider
                     CustomDivider(),
                     //
-                    SizedBox(height: 25.h),
+                    verticalSpace(25),
                     // Google Button
-                    SizedBox(
-                      width: .infinity,
-                      height: 55.h,
-                      child: OutlinedButton.icon(
-                        onPressed: state is AuthLoading
-                            ? null
-                            : () => cubit.signInWithGoogle(),
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: .circular(14.r),
-                          ),
-                        ),
-                        icon: const FaIcon(
-                          FontAwesomeIcons.google,
-                          color: Colors.black,
-                          size: 20,
-                        ),
-                        label: Text(
-                          "Google",
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: .w600,
-                            color: Colors.black87,
-                            fontFamily: "BrunoAceSC",
-                          ),
-                        ),
-                      ),
+                    CustomGoogleButton(
+                      onPressed: state is AuthLoading
+                          ? null
+                          : () {
+                              _isAuthInProgress = true;
+                              cubit.signInWithGoogle();
+                            },
                     ),
                     //
                   ],
@@ -351,6 +298,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
             );
           },
+          //
         ),
       ),
     );
