@@ -42,7 +42,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
           ),
           backgroundColor: Colors.orange,
           behavior: .floating,
-          margin: EdgeInsets.all(20.r),
+          margin: .all(20.r),
           shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
         ),
       );
@@ -139,6 +139,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
                       return Column(
                         crossAxisAlignment: .end,
                         children: [
+                          //
                           TextField(
                             controller: _messageController,
                             maxLines: 8,
@@ -185,6 +186,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
                             ),
                           ),
                           verticalSpace(4),
+                          //
                           Text(
                             "$charCount / $_maxChars",
                             style: TextStyle(

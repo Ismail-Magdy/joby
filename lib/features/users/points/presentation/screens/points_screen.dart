@@ -249,4 +249,3 @@ class PointsScreen extends StatelessWidget {
     );
   }
 }
-// 154

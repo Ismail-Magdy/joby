@@ -60,6 +60,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     _determinePosition();
   }
 
+  /// Determine Position
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -73,9 +74,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
 
     permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
+    if (permission == .denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
+      if (permission == .denied) {
         if (mounted) {
           setState(() => _locationName = "Location permissions denied");
         }
@@ -83,7 +84,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       }
     }
 
-    if (permission == LocationPermission.deniedForever) {
+    if (permission == .deniedForever) {
       if (mounted) {
         setState(
           () => _locationName = "Location permissions permanently denied.",
@@ -107,6 +108,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
+  /// Update Location Name
   Future<void> _updateLocationName(double lat, double lng) async {
     try {
       if (mounted) setState(() => _isLoadingLocation = true);
@@ -131,6 +133,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
+  ///
   bool get _canSubmit {
     if (_currentStep != 2 && _currentStep != 3) return true;
     return _cvFile != null && _whatsappController.text.isNotEmpty;
@@ -147,9 +150,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     super.dispose();
   }
 
+  /// Pick Avatar
   Future<void> _pickAvatar() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await picker.pickImage(source: .gallery);
 
     if (image != null) {
       setState(() {
@@ -158,6 +162,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
+  /// Submit Data
   void _submitData(UserInfoCubit cubit) {
     if (_formKey.currentState!.validate()) {
       if (_cvFile == null || _whatsappController.text.isEmpty) return;
@@ -227,6 +232,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   ),
                 ),
                 backgroundColor: Colors.green,
+                margin: .all(20.r),
+                shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
               ),
             );
             //
@@ -244,6 +251,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   child: Text(state.message, style: TextStyle(fontSize: 14.sp)),
                 ),
                 backgroundColor: Colors.red,
+                margin: .all(20.r),
+                shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
               ),
             );
             //
@@ -270,6 +279,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
                   if (_currentStep == 0) {
                     if (_pickedAvatarFile == null) {
+                      //
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Center(
@@ -279,14 +289,20 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                           ),
                           backgroundColor: Colors.red,
+                          margin: .all(20.r),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: .circular(10.r),
+                          ),
                         ),
                       );
+                      //
                       return;
                     }
                     if (!_formKey.currentState!.validate()) return;
                     setState(() => _currentStep += 1);
                   } else if (_currentStep == 1) {
                     if (_selectedLevel == null || _selectedWorkType == null) {
+                      //
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Center(
@@ -296,6 +312,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                           ),
                           backgroundColor: Colors.red,
+                          margin: .all(20.r),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: .circular(10.r),
+                          ),
                         ),
                       );
                       return;
@@ -313,10 +333,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                           ),
                           backgroundColor: Colors.red,
+                          margin: .all(20.r),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: .circular(10.r),
+                          ),
                         ),
                       );
                       return;
                     }
+                    //
                     setState(() => _currentStep += 1);
                   } else if (isLastStep) {
                     _submitData(cubit);
@@ -728,7 +753,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     ),
                     content: Column(
                       children: [
+                        //
                         verticalSpace(10),
+                        //
                         Row(
                           children: [
                             Icon(
@@ -736,7 +763,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               color: AppColors.primaryColor,
                               size: 24.sp,
                             ),
+                            //
                             horizontalSpace(8),
+                            //
                             Expanded(
                               child: Text(
                                 _locationName,
@@ -758,10 +787,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               ),
                           ],
                         ),
+                        //
                         verticalSpace(15),
+                        //
                         Container(
                           height: 250.h,
-                          width: double.infinity,
+                          width: .infinity,
                           decoration: BoxDecoration(
                             borderRadius: .circular(12.r),
                             border: .all(color: Colors.grey.shade300),
@@ -769,7 +800,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           child: ClipRRect(
                             borderRadius: .circular(12.r),
                             child: Stack(
-                              alignment: Alignment.center,
+                              alignment: .center,
                               children: [
                                 FlutterMap(
                                   mapController: _mapController,
@@ -811,6 +842,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                           ),
                         ),
+                        //
                       ],
                     ),
                   ),
@@ -824,4 +856,3 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 }
-// 827
