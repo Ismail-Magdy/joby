@@ -66,10 +66,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              behavior: .floating,
+              behavior: SnackBarBehavior.floating,
               content: Center(child: const Text("Could not launch the link")),
               backgroundColor: Colors.red,
-              margin: .all(20.r),
+              margin: EdgeInsets.all(20.r),
               shape: RoundedRectangleBorder(
                 borderRadius: .all(.circular(10.r)),
               ),
@@ -81,10 +81,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            behavior: .floating,
+            behavior: SnackBarBehavior.floating,
             content: Center(child: const Text("Invalid link format")),
             backgroundColor: Colors.red,
-            margin: .all(20.r),
+            margin: EdgeInsets.all(20.r),
             shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
           ),
         );
@@ -112,12 +112,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              behavior: .floating,
+              behavior: SnackBarBehavior.floating,
               content: Center(
                 child: const Text("No app found to open PDF files"),
               ),
               backgroundColor: Colors.orange,
-              margin: .all(20.r),
+              margin: EdgeInsets.all(20.r),
               shape: RoundedRectangleBorder(
                 borderRadius: .all(.circular(10.r)),
               ),
@@ -129,10 +129,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            behavior: .floating,
+            behavior: SnackBarBehavior.floating,
             content: Center(child: Text(ErrorHandler.handleError(error))),
             backgroundColor: Colors.red,
-            margin: .all(20.r),
+            margin: EdgeInsets.all(20.r),
             shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
           ),
         );
@@ -171,7 +171,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           } else if (state is PointsClaimError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                behavior: .floating,
+                behavior: SnackBarBehavior.floating,
                 content: Center(
                   child: Text(
                     "RPC Error: ${state.message}",
@@ -179,7 +179,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
                 backgroundColor: Colors.red,
-                margin: .all(20.r),
+                margin: EdgeInsets.all(20.r),
                 shape: RoundedRectangleBorder(
                   borderRadius: .all(.circular(10.r)),
                 ),
@@ -188,7 +188,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           } else if (state is PointsClaimAlreadyClaimed) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                behavior: .floating,
+                behavior: SnackBarBehavior.floating,
                 content: Center(
                   child: const Text(
                     "Points Already claimed",
@@ -196,7 +196,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
                 backgroundColor: AppColors.primaryColor,
-                margin: .all(20.r),
+                margin: EdgeInsets.all(20.r),
                 shape: RoundedRectangleBorder(
                   borderRadius: .all(.circular(10.r)),
                 ),

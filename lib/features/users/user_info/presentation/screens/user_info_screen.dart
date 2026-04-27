@@ -232,8 +232,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   ),
                 ),
                 backgroundColor: Colors.green,
-                margin: .all(20.r),
-                shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                behavior: SnackBarBehavior.floating,
+                margin: EdgeInsets.all(20.r),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
               ),
             );
             //
@@ -251,8 +252,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   child: Text(state.message, style: TextStyle(fontSize: 14.sp)),
                 ),
                 backgroundColor: Colors.red,
-                margin: .all(20.r),
-                shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                behavior: SnackBarBehavior.floating,
+                margin: EdgeInsets.all(20.r),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
               ),
             );
             //
@@ -289,9 +291,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                           ),
                           backgroundColor: Colors.red,
-                          margin: .all(20.r),
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: .circular(10.r),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
                       );
@@ -312,9 +315,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                           ),
                           backgroundColor: Colors.red,
-                          margin: .all(20.r),
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: .circular(10.r),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
                       );
@@ -333,9 +337,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                           ),
                           backgroundColor: Colors.red,
-                          margin: .all(20.r),
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: .circular(10.r),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
                       );

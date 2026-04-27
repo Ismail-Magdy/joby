@@ -262,10 +262,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  behavior: .floating,
+                  behavior: SnackBarBehavior.floating,
                   content: Center(child: Text("Profile updated successfully")),
                   backgroundColor: Colors.green,
-                  margin: .all(20.r),
+                  margin: EdgeInsets.all(20.r),
                   shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
@@ -275,10 +275,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  behavior: .floating,
+                  behavior: SnackBarBehavior.floating,
                   content: Center(child: Text(state.message)),
                   backgroundColor: Colors.red,
-                  margin: .all(20.r),
+                  margin: EdgeInsets.all(20.r),
                   shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );

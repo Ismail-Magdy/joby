@@ -19,7 +19,8 @@ import "../../../../../core/helpers/extensions.dart";
 import "../../../../../core/widgets/custom_text_field.dart";
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  final bool isDeepLink;
+  const AuthScreen({super.key, this.isDeepLink = false});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -40,33 +41,44 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    _authSubscription = supabase.Supabase.instance.client.auth.onAuthStateChange
-        .listen((data) {
-          final supabase.AuthChangeEvent event = data.event;
-          if (event == supabase.AuthChangeEvent.signedIn &&
-              !_isAuthInProgress) {
-            if (!mounted) return;
-            // Success State
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return Dialog(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: .circular(16.r)),
-                  child: ShowSuccessDialog(
-                    onPressed: () {
-                      supabase.Supabase.instance.client.auth.signOut();
-                      context.pop();
-                      setState(() => isLogin = true);
-                    },
-                  ),
-                );
-              },
-            );
-            //
-          }
-        });
+    if (widget.isDeepLink) {
+      _authSubscription = supabase
+          .Supabase
+          .instance
+          .client
+          .auth
+          .onAuthStateChange
+          .listen((data) {
+            final supabase.AuthChangeEvent event = data.event;
+            if (event == supabase.AuthChangeEvent.signedIn &&
+                !_isAuthInProgress) {
+              if (!mounted) return;
+              if (!ModalRoute.of(context)!.isCurrent) return;
+              _authSubscription?.cancel();
+              // Success State
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return Dialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: .circular(16.r),
+                    ),
+                    child: ShowSuccessDialog(
+                      onPressed: () {
+                        supabase.Supabase.instance.client.auth.signOut();
+                        context.pop();
+                        setState(() => isLogin = true);
+                      },
+                    ),
+                  );
+                },
+              );
+              //
+            }
+          });
+    }
   }
 
   //
@@ -115,23 +127,35 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                   backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  behavior: .floating,
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
               //
               if (state.hasProfile) {
                 if (state.userType == "company") {
-                  context.pushReplacementNamed(Routes.companyHomeScreen);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.companyHomeScreen,
+                    (route) => false,
+                  );
                 } else {
-                  context.pushReplacementNamed(Routes.userRootScreen);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.userRootScreen,
+                    (route) => false,
+                  );
                 }
               } else {
                 if (state.userType == "company") {
-                  context.pushReplacementNamed(Routes.companyHomeScreen);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.companyHomeScreen,
+                    (route) => false,
+                  );
                 } else {
-                  context.pushReplacementNamed(Routes.userInfoScreen);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.userInfoScreen,
+                    (route) => false,
+                  );
                 }
               }
             } else if (state is AuthSignUpRequiresVerification) {
@@ -170,7 +194,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   backgroundColor: Colors.red,
                   behavior: SnackBarBehavior.floating,
                   margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
               );
               //

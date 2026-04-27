@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "202946347612",
+    "project_id": "joby-ed128",
+    "storage_bucket": "joby-ed128.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202946347612:android:14a051c6497db08af41c99",
+        "android_client_info": {
+          "package_name": "com.example.joby"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYN3mv_MmDZWgMtJP3t3ODDbVOQcCJ1Rw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

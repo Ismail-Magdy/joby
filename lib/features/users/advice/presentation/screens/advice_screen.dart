@@ -41,8 +41,8 @@ class _AdviceScreenState extends State<AdviceScreen> {
             ),
           ),
           backgroundColor: Colors.orange,
-          behavior: .floating,
-          margin: .all(20.r),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(20.r),
           shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
         ),
       );
@@ -90,7 +90,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
                 ),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
-                margin: .all(20.r),
+                margin: EdgeInsets.all(20.r),
                 shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
               ),
             );
