@@ -30,7 +30,7 @@ class AppRouter {
       return MaterialPageRoute(
         builder: (_) => BlocProvider<AuthCubit>(
           create: (context) => getIt<AuthCubit>(),
-          child: const AuthScreen(),
+          child: const AuthScreen(isDeepLink: true),
         ),
       );
     }
