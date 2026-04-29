@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,6 +48,11 @@ class LocationMapSection extends StatelessWidget {
               borderRadius: .circular(16.r),
               child: Stack(
                 children: [
+                  // Loading background
+                  Container(
+                    color: Colors.grey.shade100,
+                    child: const Center(child: CupertinoActivityIndicator()),
+                  ),
                   //
                   FlutterMap(
                     options: MapOptions(

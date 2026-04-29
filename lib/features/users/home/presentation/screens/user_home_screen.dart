@@ -33,6 +33,8 @@ class UserHomeScreen extends StatefulWidget {
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
   bool _isDownloadingCv = false;
+  bool _isAvatarLoading = false;
+  String? _loadedAvatarUrl;
 
   @override
   void initState() {
@@ -212,6 +214,34 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         child: BlocConsumer<UserHomeCubit, UserHomeState>(
           listener: (context, userState) {
             if (userState is UserHomeSuccess) {
+              // Track avatar loading
+              if (userState.userInfo.avatarUrl != null &&
+                  userState.userInfo.avatarUrl != _loadedAvatarUrl) {
+                setState(() {
+                  _isAvatarLoading = true;
+                });
+
+                precacheImage(
+                      NetworkImage(userState.userInfo.avatarUrl!),
+                      context,
+                    )
+                    .then((_) {
+                      if (mounted) {
+                        setState(() {
+                          _isAvatarLoading = false;
+                          _loadedAvatarUrl = userState.userInfo.avatarUrl;
+                        });
+                      }
+                    })
+                    .catchError((_) {
+                      if (mounted) {
+                        setState(() {
+                          _isAvatarLoading = false;
+                        });
+                      }
+                    });
+              }
+
               // Pass the exact contextual instance of UserHomeCubit so UI updates instantly
               context.read<PointsCubit>().claimDailyPoints(
                 context.read<UserHomeCubit>(),
@@ -220,7 +250,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           },
           builder: (context, state) {
             // Loading State
-            if (state is UserHomeLoading) {
+            if (state is UserHomeLoading || _isAvatarLoading) {
               return const HomeShimmerLoading();
             }
             // Error State
@@ -356,6 +386,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ),
                     ),
                   ),
+                  //
                 ],
               );
             }
