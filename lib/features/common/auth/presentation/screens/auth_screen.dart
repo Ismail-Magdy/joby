@@ -1,6 +1,7 @@
 import "dart:async";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:joby/core/helpers/app_regex.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/features/common/auth/presentation/widgets/custom_google_button.dart";
 import "package:joby/features/common/auth/presentation/widgets/forgot_password_widget.dart";
@@ -265,6 +266,27 @@ class _AuthScreenState extends State<AuthScreen> {
                       hintText: "Password",
                       fieldType: .password,
                       prefixIcon: Icons.lock_outline,
+                      validator: isLogin
+                          ? null // Login: use default validator (just not empty + 6 chars)
+                          : (val) {
+                              final v = val?.trim() ?? "";
+                              if (v.isEmpty) return "Please enter a password";
+                              if (v.length < 8) return "At least 8 characters";
+                              if (!AppRegex.hasUpperCase(v)) {
+                                return "Include an uppercase letter";
+                              }
+                              if (!AppRegex.hasLowerCase(v)) {
+                                return "Include a lowercase letter";
+                              }
+                              if (!AppRegex.hasNumber(v)) {
+                                return "Include a number";
+                              }
+                              if (!AppRegex.hasSpecialCharacter(v)) {
+                                return "Include a special character (!@#\$%^&*)";
+                              }
+
+                              return null;
+                            },
                     ),
                     //
                     verticalSpace(10),
@@ -276,7 +298,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     verticalSpace(isLogin ? 10 : 30),
                     // Button
                     SizedBox(
-                      width: double.infinity,
+                      width: .infinity,
                       height: 55.h,
                       child: ElevatedButton(
                         onPressed: state is AuthLoading
