@@ -1,4 +1,5 @@
 import "dart:async";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/features/common/auth/presentation/widgets/custom_google_button.dart";
@@ -81,7 +82,6 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  //
   @override
   void dispose() {
     _authSubscription?.cancel();
@@ -290,7 +290,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           elevation: 0,
                         ),
                         child: state is AuthLoading
-                            ? const CircularProgressIndicator(
+                            ? const CupertinoActivityIndicator(
                                 color: Colors.white,
                               )
                             : Text(

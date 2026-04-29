@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,13 +30,8 @@ class CustomSendButton extends StatelessWidget {
           elevation: 0,
         ),
         icon: isLoading
-            ? SizedBox(
-                width: 20.sp,
-                height: 20.sp,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
+            ? CupertinoActivityIndicator(
+                color: Colors.white,
               )
             : SvgPicture.asset(
                 "assets/svgs/send.svg",
