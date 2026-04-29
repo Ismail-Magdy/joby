@@ -1,15 +1,16 @@
 import "package:dio/dio.dart";
 import "package:flutter/material.dart";
+import "package:joby/features/users/home/presentation/widgets/custom_info_row.dart";
+import "package:joby/features/users/home/presentation/widgets/cv_section.dart";
 import "package:joby/features/users/home/presentation/widgets/location_map_section.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:flutter_svg/flutter_svg.dart";
-import "package:ionicons/ionicons.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/widgets/error_screen.dart";
 import "package:joby/core/widgets/home_shimmer_loading.dart";
-import "package:joby/features/users/home/presentation/widgets/build_contact_icon_button.dart";
+import "package:joby/features/users/home/presentation/widgets/social_media_row.dart";
+import "package:joby/features/users/home/presentation/widgets/total_points_container.dart";
 import "package:joby/features/users/points/manager/points_cubit.dart";
 import "package:joby/features/users/points/manager/points_state.dart";
 import "package:joby/features/users/points/presentation/widgets/points_celebration_dialog.dart";
@@ -20,8 +21,7 @@ import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "../../manager/user_home_cubit.dart";
 import "../../manager/user_home_state.dart";
-import '../widgets/build_badge_widget.dart';
-import '../widgets/curve_painter.dart';
+import '../widgets/profile_header_delegate.dart';
 import '../../../../../core/errors/error_handler.dart';
 
 class UserHomeScreen extends StatefulWidget {
@@ -230,362 +230,133 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             // Success State
             else if (state is UserHomeSuccess) {
               final user = state.userInfo;
-              return SingleChildScrollView(
-                padding: .only(bottom: 120.h),
-                child: Column(
-                  children: [
-                    // Header
-                    Stack(
-                      clipBehavior: .none,
-                      alignment: .center,
-                      children: [
-                        // Custom Circle
-                        CustomPaint(
-                          size: Size(.infinity, 120.h),
-                          painter: CurvePainter(),
-                        ),
-                        // Custom App Bar
-                        Positioned(
-                          top: 40.h,
-                          left: 20.w,
-                          right: 20.w,
-                          child: Row(
-                            mainAxisAlignment: .spaceBetween,
-                            children: [
-                              // Manager Button
-                              GestureDetector(
-                                onTap: () =>
-                                    context.pushNamed(Routes.companyViewScreen),
-                                child: SvgPicture.asset(
-                                  "assets/svgs/manager.svg",
-                                  colorFilter: .mode(Colors.white, .srcIn),
-                                  height: 22.h,
-                                ),
-                              ),
-                              //
-                              // App Bar Title
-                              Text(
-                                "My Profile",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.sp,
-                                  fontWeight: .bold,
-                                  fontFamily: "BrunoAceSC",
-                                ),
-                              ),
-                              //
-                              // Pen Button
-                              GestureDetector(
-                                onTap: () async {
-                                  final result = await context.pushNamed(
-                                    Routes.editProfileScreen,
-                                    arguments: user,
-                                  );
-                                  if (result == true && mounted) {
-                                    // ignore: use_build_context_synchronously
-                                    context.read<UserHomeCubit>().getUserData();
-                                  }
-                                },
-                                child: SvgPicture.asset(
-                                  "assets/svgs/pen.svg",
-                                  colorFilter: .mode(Colors.white, .srcIn),
-                                  height: 22.h,
-                                ),
-                              ),
-                              //
-                            ],
-                          ),
-                        ),
-                        // Image
-                        Positioned(
-                          top: 80.h,
-                          child: Container(
-                            padding: .all(2.r),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: .circle,
-                            ),
-                            child: CircleAvatar(
-                              radius: 55.r,
-                              backgroundColor: Colors.grey.shade100,
-                              backgroundImage: user.avatarUrl != null
-                                  ? NetworkImage(user.avatarUrl!)
-                                  : null,
-                              child: user.avatarUrl == null
-                                  ? Icon(
-                                      Ionicons.person,
-                                      size: 40.sp,
-                                      color: Colors.grey.shade400,
-                                    )
-                                  : null,
-                            ),
-                          ),
-                        ),
-                        //
-                      ],
+              return CustomScrollView(
+                slivers: [
+                  // Animated collapsing header
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: ProfileHeaderDelegate(
+                      avatarUrl: user.avatarUrl,
+                      title: "My Profile",
+                      onManagerTap: () =>
+                          context.pushNamed(Routes.companyViewScreen),
+                      onEditTap: () async {
+                        final result = await context.pushNamed(
+                          Routes.editProfileScreen,
+                          arguments: user,
+                        );
+                        if (result == true && mounted) {
+                          // ignore: use_build_context_synchronously
+                          context.read<UserHomeCubit>().getUserData();
+                        }
+                      },
                     ),
-                    //
-                    verticalSpace(95),
-                    //
-                    // Name
-                    Text(
-                      user.name,
-                      style: TextStyle(
-                        fontSize: 22.sp,
-                        fontWeight: .bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    //
-                    verticalSpace(5),
-                    // Job Title
-                    Text(
-                      user.jobTitle,
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        color: Colors.grey.shade600,
-                        fontWeight: .w500,
-                      ),
-                    ),
-                    //
-                    verticalSpace(15),
-                    //  Total Points Gamification Widget
-                    Container(
-                      padding: .symmetric(horizontal: 16.w, vertical: 8.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withValues(alpha: 0.05),
-                        borderRadius: .circular(20.r),
-                        border: .all(
-                          color: AppColors.primaryColor.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: .min,
+                  ),
+                  // Body content
+                  SliverPadding(
+                    padding: .only(bottom: 140.h),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
                         children: [
+                          //
+                          verticalSpace(70),
+                          // Name
                           Text(
-                            "${user.totalPoints} Points",
+                            user.name,
+                            style: TextStyle(
+                              fontSize: 22.sp,
+                              fontWeight: .bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          verticalSpace(5),
+                          // Job Title
+                          Text(
+                            user.jobTitle,
                             style: TextStyle(
                               fontSize: 15.sp,
-                              fontWeight: .bold,
-                              color: AppColors.primaryColor,
+                              color: Colors.grey.shade600,
+                              fontWeight: .w500,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    //
-                    verticalSpace(25),
-                    // Level, Job Category, & Work Type
-                    SingleChildScrollView(
-                      scrollDirection: .horizontal,
-                      physics: BouncingScrollPhysics(),
-                      child: Padding(
-                        padding: .symmetric(horizontal: 10.w),
-                        child: Row(
-                          mainAxisAlignment: .center,
-                          children: [
-                            //
-                            BuildBadgeWidget(
-                              icon: Ionicons.stats_chart_outline,
-                              text: user.level,
-                            ),
-                            //
-                            horizontalSpace(15),
-                            //
-                            Container(
-                              padding: .symmetric(
-                                horizontal: 14.w,
-                                vertical: 8.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor.withValues(
-                                  alpha: 0.1,
-                                ),
-                                borderRadius: .circular(20.r),
-                                border: Border.all(
-                                  color: AppColors.primaryColor.withValues(
-                                    alpha: 0.3,
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                user.jobCategory,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                ),
-                              ),
-                            ),
-                            //
-                            horizontalSpace(15),
-                            //
-                            BuildBadgeWidget(
-                              icon: Ionicons.business_outline,
-                              text: user.typeOfWork,
-                            ),
-                            //
-                          ],
-                        ),
-                      ),
-                    ),
-                    //
-                    verticalSpace(50),
-                    // Social Media
-                    Row(
-                      mainAxisAlignment: .center,
-                      children: [
-                        // Whatsapp
-                        BuildContactIconButton(
-                          icon: Ionicons.logo_whatsapp,
-                          color: Colors.green,
-                          onTap: () {
-                            if (user.whatsapp.isNotEmpty) {
-                              _launchUrl(user.whatsapp, isPhone: true);
-                            }
-                          },
-                        ),
-                        //
-                        horizontalSpace(20),
-                        // Linkedin
-                        BuildContactIconButton(
-                          icon: Ionicons.logo_linkedin,
-                          color: const Color(0xff0077B5),
-                          onTap: () {
-                            if (user.linkedin != null &&
-                                user.linkedin!.isNotEmpty) {
-                              _launchUrl(user.linkedin!);
-                            }
-                          },
-                        ),
-                        //
-                        horizontalSpace(20),
-                        // Github
-                        BuildContactIconButton(
-                          icon: Ionicons.logo_github,
-                          color: const Color(0xff333333),
-                          onTap: () {
-                            if (user.github != null &&
-                                user.github!.isNotEmpty) {
-                              _launchUrl(user.github!);
-                            }
-                          },
-                        ),
-                        //
-                      ],
-                    ),
-                    //
-                    verticalSpace(20),
-                    // CV Section
-                    Padding(
-                      padding: .symmetric(horizontal: 24.w),
-                      child: Column(
-                        crossAxisAlignment: .start,
-                        children: [
-                          verticalSpace(30),
-                          //   CV
-                          if (user.cvUrl != null)
-                            //
-                            GestureDetector(
-                              onTap: _isDownloadingCv
-                                  ? null
-                                  : () {
-                                      _downloadAndOpenCV(user.cvUrl!);
-                                    },
-                              child: Container(
-                                padding: .symmetric(
-                                  horizontal: 18.w,
-                                  vertical: 14.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.primaryColor.withValues(
-                                    alpha: 0.06,
-                                  ),
-                                  borderRadius: .circular(16.r),
-                                  border: .all(
-                                    color: AppColors.primaryColor.withValues(
-                                      alpha: 0.15,
-                                    ),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: .all(10.r),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: .circular(10.r),
-                                      ),
-                                      child: Icon(
-                                        Ionicons.document_text_outline,
-                                        color: AppColors.primaryColor,
-                                        size: 26.sp,
-                                      ),
-                                    ),
-                                    //
-                                    horizontalSpace(15),
-                                    //
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: .start,
-                                        children: [
-                                          //
-                                          Text(
-                                            "My Resume",
-                                            style: TextStyle(
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                          //
-                                          verticalSpace(3),
-                                          //
-                                          Text(
-                                            "PDF Document",
-                                            style: TextStyle(
-                                              fontSize: 13.sp,
-                                              color: Colors.grey.shade600,
-                                            ),
-                                          ),
-                                          //
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    SvgPicture.asset(
-                                      "assets/svgs/eye.svg",
-                                      colorFilter: .mode(
-                                        AppColors.primaryColor,
-                                        .srcIn,
-                                      ),
-                                      height: 22.h,
-                                    ),
-                                    //
-                                  ],
-                                ),
-                              ),
-                            ),
                           //
+                          verticalSpace(15),
+                          // Total Points
+                          TotalPointsContainer(
+                            text: user.totalPoints.toString(),
+                          ),
+                          //
+                          verticalSpace(25),
+                          // Level, Job Category, & Work Type
+                          SingleChildScrollView(
+                            scrollDirection: .horizontal,
+                            physics: BouncingScrollPhysics(),
+                            child: CustomInfoRow(
+                              levelText: user.level,
+                              jobCategoryText: user.jobCategory,
+                              typeOfWorkText: user.typeOfWork,
+                            ),
+                          ),
+                          //
+                          verticalSpace(50),
+                          // Social Media
+                          SocialMediaRow(
+                            whatsappTap: () {
+                              if (user.whatsapp.isNotEmpty) {
+                                _launchUrl(user.whatsapp, isPhone: true);
+                              }
+                            },
+                            linkedinTap: () {
+                              if (user.linkedin != null &&
+                                  user.linkedin!.isNotEmpty) {
+                                _launchUrl(user.linkedin!);
+                              }
+                            },
+                            githubTap: () {
+                              if (user.github != null &&
+                                  user.github!.isNotEmpty) {
+                                _launchUrl(user.github!);
+                              }
+                            },
+                          ),
+                          //
+                          verticalSpace(20),
+                          // CV Section
+                          Padding(
+                            padding: .symmetric(horizontal: 24.w),
+                            child: Column(
+                              crossAxisAlignment: .start,
+                              children: [
+                                //
+                                verticalSpace(30),
+                                //
+                                if (user.cvUrl != null)
+                                  //
+                                  CvSection(
+                                    onTap: _isDownloadingCv
+                                        ? null
+                                        : () => _downloadAndOpenCV(user.cvUrl!),
+                                  ),
+                                //
+                              ],
+                            ),
+                          ),
+                          //
+                          // Location Map
+                          if (user.locationName.isNotEmpty &&
+                              user.latitude != 0.0) ...[
+                            verticalSpace(30),
+                            LocationMapSection(
+                              latitude: user.latitude,
+                              longitude: user.longitude,
+                              locationName: user.locationName,
+                            ),
+                          ],
                         ],
                       ),
                     ),
-                    // Location Map
-                    if (user.locationName.isNotEmpty &&
-                        user.latitude != 0.0) ...[
-                      //
-                      verticalSpace(30),
-                      //
-                      LocationMapSection(
-                        latitude: user.latitude,
-                        longitude: user.longitude,
-                        locationName: user.locationName,
-                      ),
-                      //
-                    ],
-                    //
-                  ],
-                ),
+                  ),
+                ],
               );
             }
             return const SizedBox.shrink();
