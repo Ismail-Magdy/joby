@@ -12,7 +12,9 @@ import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
 import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
-import "../../../../../core/helpers/extensions.dart";
+import "package:joby/core/helpers/extensions.dart";
+import 'package:joby/core/helpers/job_suggestions.dart';
+import 'package:joby/core/widgets/autocomplete_text_field.dart';
 import "../../data/models/user_info_model.dart";
 import "../../manager/user_info_cubit.dart";
 import "../../manager/user_info_state.dart";
@@ -305,7 +307,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           ),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(20.r),
+                          margin: .all(20.r),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.r),
                           ),
@@ -494,28 +496,43 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             labelText: "Full Name",
                             prefixIcon: Icon(Icons.person_outline),
                           ),
-                          validator: (val) => val!.isEmpty ? "Required" : null,
+                          validator: (val) {
+                            final v = val?.trim() ?? "";
+                            if (v.isEmpty) return "Please enter your name";
+                            if (v.length < 2) {
+                              return "Name must be at least 2 characters.";
+                            }
+
+                            if (RegExp(r'[0-9]').hasMatch(v)) {
+                              return "Name cannot contain numbers.";
+                            }
+
+                            if (!RegExp(
+                              r'^[a-zA-Z\u0600-\u06FF\s]+$',
+                            ).hasMatch(v)) {
+                              return "Name can only contain letters.";
+                            }
+                            return null;
+                          },
                         ),
                         //
                         verticalSpace(15),
                         //
-                        TextFormField(
+                        AutocompleteTextField(
                           controller: _jobCategoryController,
-                          decoration: const InputDecoration(
-                            labelText: "Job Category (e.g. Graphic Design)",
-                            prefixIcon: Icon(Icons.category_outlined),
-                          ),
+                          labelText: "Job Category (e.g. Graphic Design)",
+                          prefixIcon: Icons.category_outlined,
+                          suggestions: JobSuggestions.categories,
                           validator: (val) => val!.isEmpty ? "Required" : null,
                         ),
                         //
                         verticalSpace(15),
                         //
-                        TextFormField(
+                        AutocompleteTextField(
                           controller: _jobTitleController,
-                          decoration: const InputDecoration(
-                            labelText: "Job Title (e.g. Flutter Developer)",
-                            prefixIcon: Icon(Icons.work_outline),
-                          ),
+                          labelText: "Job Title (e.g. Flutter Developer)",
+                          prefixIcon: Icons.work_outline,
+                          suggestions: JobSuggestions.titles,
                           validator: (val) => val!.isEmpty ? "Required" : null,
                         ),
                       ],
