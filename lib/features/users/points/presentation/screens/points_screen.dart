@@ -20,7 +20,6 @@ class PointsScreen extends StatelessWidget {
         if (state is UserHomeSuccess) {
           points = state.userInfo.totalPoints;
         }
-
         return Scaffold(
           backgroundColor: Colors.grey.shade50,
           body: CustomScrollView(
@@ -237,11 +236,12 @@ class PointsScreen extends StatelessWidget {
                       icon: Ionicons.diamond_outline,
                     ),
                     //
-                    verticalSpace(70),
+                    verticalSpace(90),
                     //
                   ]),
                 ),
               ),
+              //
             ],
           ),
         );
