@@ -169,6 +169,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             );
             //
           } else if (state is PointsClaimError) {
+            //
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 behavior: SnackBarBehavior.floating,
@@ -185,7 +186,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 ),
               ),
             );
+            //
           } else if (state is PointsClaimAlreadyClaimed) {
+            //
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 behavior: SnackBarBehavior.floating,
@@ -202,6 +205,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 ),
               ),
             );
+            //
           }
         },
         //
@@ -346,78 +350,84 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     //
                     verticalSpace(15),
                     //  Total Points Gamification Widget
-                    GestureDetector(
-                      onTap: () => context.pushNamed(Routes.pointsScreen),
-                      child: Container(
-                        padding: .symmetric(horizontal: 16.w, vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor.withValues(alpha: 0.05),
-                          borderRadius: .circular(20.r),
-                          border: .all(
-                            color: AppColors.primaryColor.withValues(
-                              alpha: 0.3,
+                    Container(
+                      padding: .symmetric(horizontal: 16.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withValues(alpha: 0.05),
+                        borderRadius: .circular(20.r),
+                        border: .all(
+                          color: AppColors.primaryColor.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: .min,
+                        children: [
+                          Text(
+                            "${user.totalPoints} Points",
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: .bold,
+                              color: AppColors.primaryColor,
                             ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: .min,
-                          children: [
-                            Text(
-                              "${user.totalPoints} Points",
-                              style: TextStyle(
-                                fontSize: 15.sp,
-                                fontWeight: .bold,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                     //
                     verticalSpace(25),
                     // Level, Job Category, & Work Type
-                    Row(
-                      mainAxisAlignment: .center,
-                      children: [
-                        BuildBadgeWidget(
-                          icon: Ionicons.stats_chart_outline,
-                          text: user.level,
-                        ),
-                        //
-                        horizontalSpace(15),
-                        //
-                        Container(
-                          padding: .symmetric(horizontal: 14.w, vertical: 8.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColor.withValues(
-                              alpha: 0.1,
+                    SingleChildScrollView(
+                      scrollDirection: .horizontal,
+                      physics: BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: .symmetric(horizontal: 10.w),
+                        child: Row(
+                          mainAxisAlignment: .center,
+                          children: [
+                            //
+                            BuildBadgeWidget(
+                              icon: Ionicons.stats_chart_outline,
+                              text: user.level,
                             ),
-                            borderRadius: .circular(20.r),
-                            border: Border.all(
-                              color: AppColors.primaryColor.withValues(
-                                alpha: 0.3,
+                            //
+                            horizontalSpace(15),
+                            //
+                            Container(
+                              padding: .symmetric(
+                                horizontal: 14.w,
+                                vertical: 8.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.1,
+                                ),
+                                borderRadius: .circular(20.r),
+                                border: Border.all(
+                                  color: AppColors.primaryColor.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                user.jobCategory,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                ),
                               ),
                             ),
-                          ),
-                          child: Text(
-                            user.jobCategory,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryColor,
+                            //
+                            horizontalSpace(15),
+                            //
+                            BuildBadgeWidget(
+                              icon: Ionicons.business_outline,
+                              text: user.typeOfWork,
                             ),
-                          ),
+                            //
+                          ],
                         ),
-                        //
-                        horizontalSpace(15),
-                        //
-                        BuildBadgeWidget(
-                          icon: Ionicons.business_outline,
-                          text: user.typeOfWork,
-                        ),
-                        //
-                      ],
+                      ),
                     ),
                     //
                     verticalSpace(50),
