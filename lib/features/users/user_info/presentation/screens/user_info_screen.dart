@@ -10,6 +10,8 @@ import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/themes/app_colors.dart";
+import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
+import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
 import "../../../../../core/helpers/extensions.dart";
 import "../../data/models/user_info_model.dart";
 import "../../manager/user_info_cubit.dart";
@@ -20,6 +22,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
+import 'location_picker_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -162,6 +165,28 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
+  /// Open the full-screen location picker
+  Future<void> _openLocationPicker() async {
+    final result = await Navigator.of(context).push<LocationPickerResult>(
+      MaterialPageRoute(
+        builder: (_) => LocationPickerScreen(
+          initialLatitude: _latitude,
+          initialLongitude: _longitude,
+          initialLocationName: _locationName,
+        ),
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _latitude = result.latitude;
+        _longitude = result.longitude;
+        _locationName = result.locationName;
+      });
+      _mapController.move(LatLng(_latitude, _longitude), 14.0);
+    }
+  }
+
   /// Submit Data
   void _submitData(UserInfoCubit cubit) {
     if (_formKey.currentState!.validate()) {
@@ -200,24 +225,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      //
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        leading: SizedBox.shrink(),
-        leadingWidth: 0,
-        title: Text(
-          "Complete Your Profile",
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: .bold,
-            fontSize: 18.sp,
-            fontFamily: "BrunoAceSC",
-          ),
-        ),
-        centerTitle: true,
-      ),
+      // App Bar
+      appBar: CustomAppBarWithNoLeading(text: "Complete Your Profile"),
       //
       body: BlocConsumer<UserInfoCubit, UserInfoState>(
         listener: (context, state) async {
@@ -234,7 +243,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 backgroundColor: Colors.green,
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.all(20.r),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
               ),
             );
             //
@@ -254,7 +265,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.all(20.r),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
               ),
             );
             //
@@ -378,13 +391,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               ),
                             ),
                             child: state is UserInfoLoading && isLastStep
-                                ? SizedBox(
-                                    height: 20.h,
-                                    width: 20.w,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
+                                ? CupertinoActivityIndicator(
+                                    color: Colors.white,
                                   )
                                 : Text(
                                     isLastStep ? "Submit" : "Next",
@@ -770,7 +778,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             //
                             horizontalSpace(8),
-                            //
+                            // Location Name
                             Expanded(
                               child: Text(
                                 _locationName,
@@ -781,69 +789,105 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ),
                               ),
                             ),
+                            //
                             if (_isLoadingLocation)
-                              SizedBox(
-                                width: 16.w,
-                                height: 16.h,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: AppColors.primaryColor,
-                                ),
+                              CupertinoActivityIndicator(
+                                color: AppColors.primaryColor,
                               ),
                           ],
                         ),
                         //
                         verticalSpace(15),
                         //
-                        Container(
-                          height: 250.h,
-                          width: .infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: .circular(12.r),
-                            border: .all(color: Colors.grey.shade300),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: .circular(12.r),
-                            child: Stack(
-                              alignment: .center,
-                              children: [
-                                FlutterMap(
-                                  mapController: _mapController,
-                                  options: MapOptions(
-                                    initialCenter: LatLng(
-                                      _latitude,
-                                      _longitude,
-                                    ),
-                                    initialZoom: 14.0,
-                                    onPositionChanged: (camera, hasGesture) {
-                                      if (hasGesture) {
-                                        _latitude = camera.center.latitude;
-                                        _longitude = camera.center.longitude;
-                                      }
-                                    },
-                                    onMapEvent: (event) {
-                                      if (event is MapEventMoveEnd) {
-                                        _updateLocationName(
+                        // Tappable Map Preview
+                        GestureDetector(
+                          onTap: _openLocationPicker,
+                          child: Container(
+                            height: 250.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.r),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  // Map Preview (non-interactive)
+                                  AbsorbPointer(
+                                    child: FlutterMap(
+                                      mapController: _mapController,
+                                      options: MapOptions(
+                                        initialCenter: LatLng(
                                           _latitude,
                                           _longitude,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  children: [
-                                    TileLayer(
-                                      urlTemplate:
-                                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                      userAgentPackageName: 'com.example.joby',
+                                        ),
+                                        initialZoom: 14.0,
+                                      ),
+                                      children: [
+                                        TileLayer(
+                                          urlTemplate:
+                                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                          userAgentPackageName:
+                                              'com.example.joby',
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                Icon(
-                                  Icons.location_pin,
-                                  color: Colors.red,
-                                  size: 40.sp,
-                                ),
-                              ],
+                                  ),
+                                  //
+                                  Icon(
+                                    Icons.location_pin,
+                                    color: Colors.red,
+                                    size: 40.sp,
+                                  ),
+                                  // "Tap to change" overlay
+                                  Positioned(
+                                    bottom: 10.h,
+                                    right: 10.w,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                        vertical: 6.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primaryColor,
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.15,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.edit_location_alt,
+                                            color: Colors.white,
+                                            size: 16.sp,
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Text(
+                                            "Change",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -861,3 +905,4 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 }
+ // 872
