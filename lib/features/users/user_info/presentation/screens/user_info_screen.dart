@@ -281,7 +281,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               data: Theme.of(context).copyWith(
                 colorScheme: Theme.of(context).colorScheme.copyWith(
                   primary: AppColors.primaryColor,
-                  onSurface: Colors.grey.shade400,
+                  onSurface: Colors.black87,
                 ),
               ),
               child: Stepper(
