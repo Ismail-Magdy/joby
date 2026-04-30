@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
-import 'package:joby/features/users/advice/manager/advice_cubit.dart';
-import 'package:joby/features/users/advice/manager/advice_state.dart';
-import 'package:joby/features/users/advice/presentation/widgets/advice_footer.dart';
-import 'package:joby/features/users/advice/presentation/widgets/custom_head_section.dart';
-import 'package:joby/features/users/advice/presentation/widgets/custom_send_button.dart';
-import 'package:joby/features/users/advice/presentation/widgets/success_state_widget.dart';
+import 'package:joby/features/users/feed_back/manager/advice_cubit.dart';
+import 'package:joby/features/users/feed_back/manager/advice_state.dart';
+import 'package:joby/features/users/feed_back/presentation/widgets/advice_footer.dart';
+import 'package:joby/features/users/feed_back/presentation/widgets/custom_head_section.dart';
+import 'package:joby/features/users/feed_back/presentation/widgets/custom_send_button.dart';
+import 'package:joby/features/users/feed_back/presentation/widgets/success_state_widget.dart';
 
 class AdviceScreen extends StatefulWidget {
   const AdviceScreen({super.key});
