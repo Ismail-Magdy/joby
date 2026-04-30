@@ -33,6 +33,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _whatsappController = TextEditingController();
   final _linkedinController = TextEditingController();
   final _githubController = TextEditingController();
+  final _behanceController = TextEditingController();
 
   // Dropdown selections
   String? _selectedLevel;
@@ -50,6 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late final String _initialWhatsapp;
   late final String _initialLinkedin;
   late final String _initialGithub;
+  late final String _initialBehance;
   late final String? _initialLevel;
   late final String? _initialWorkType;
 
@@ -78,6 +80,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _whatsappController.text = user.whatsapp;
       _linkedinController.text = user.linkedin ?? "";
       _githubController.text = user.github ?? "";
+      _behanceController.text = user.behance ?? "";
 
       // Only set dropdown if value is valid
       if (_levelOptions.contains(user.level)) {
@@ -94,6 +97,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _initialWhatsapp = _whatsappController.text;
     _initialLinkedin = _linkedinController.text;
     _initialGithub = _githubController.text;
+    _initialBehance = _behanceController.text;
     _initialLevel = _selectedLevel;
     _initialWorkType = _selectedWorkType;
   }
@@ -105,6 +109,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _whatsappController.text != _initialWhatsapp ||
         _linkedinController.text != _initialLinkedin ||
         _githubController.text != _initialGithub ||
+        _behanceController.text != _initialBehance ||
         _selectedLevel != _initialLevel ||
         _selectedWorkType != _initialWorkType ||
         _pickedAvatarFile != null ||
@@ -194,6 +199,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       whatsapp: _whatsappController.text,
       linkedin: _linkedinController.text,
       github: _githubController.text,
+      behance: _behanceController.text,
     );
   }
 
@@ -204,6 +210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _whatsappController.dispose();
     _linkedinController.dispose();
     _githubController.dispose();
+    _behanceController.dispose();
     super.dispose();
   }
 
@@ -436,6 +443,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     iconColor: const Color(0xff333333),
                   ),
                   //
+                  verticalSpace(15),
+                  //
+                  BuildTextField(
+                    controller: _behanceController,
+                    label: "Behance URL",
+                    hint: "https://behance.net/username",
+                    icon: Ionicons.logo_behance,
+                    iconColor: const Color(0xff1769FF),
+                  ),
+                  //
                   verticalSpace(30),
                   //
                   //  CV Section
@@ -505,7 +522,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       onPressed: isLoading ? null : _triggerSave,
                       child: isLoading
-                          ? const CupertinoActivityIndicator(color: Colors.white)
+                          ? const CupertinoActivityIndicator(
+                              color: Colors.white,
+                            )
                           : Text(
                               "Save Changes",
                               style: TextStyle(

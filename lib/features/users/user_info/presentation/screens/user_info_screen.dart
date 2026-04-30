@@ -43,6 +43,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   final TextEditingController _whatsappController = TextEditingController();
   final TextEditingController _linkedinController = TextEditingController();
   final TextEditingController _githubController = TextEditingController();
+  final TextEditingController _behanceController = TextEditingController();
 
   String? _selectedLevel;
   String? _selectedWorkType;
@@ -144,6 +145,34 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return _cvFile != null && _whatsappController.text.isNotEmpty;
   }
 
+  /// URL validators for social links
+  String? _validateLinkedinUrl(String? val) {
+    if (val == null || val.trim().isEmpty) return null; // optional
+    final v = val.trim().toLowerCase();
+    if (!v.contains('linkedin.com')) {
+      return "Please enter a valid LinkedIn URL";
+    }
+    return null;
+  }
+
+  String? _validateGithubUrl(String? val) {
+    if (val == null || val.trim().isEmpty) return null; // optional
+    final v = val.trim().toLowerCase();
+    if (!v.contains('github.com')) {
+      return "Please enter a valid GitHub URL";
+    }
+    return null;
+  }
+
+  String? _validateBehanceUrl(String? val) {
+    if (val == null || val.trim().isEmpty) return null; // optional
+    final v = val.trim().toLowerCase();
+    if (!v.contains('behance.net')) {
+      return "Please enter a valid Behance URL";
+    }
+    return null;
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -152,6 +181,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     _whatsappController.dispose();
     _linkedinController.dispose();
     _githubController.dispose();
+    _behanceController.dispose();
     super.dispose();
   }
 
@@ -196,6 +226,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
       final linkedinText = _linkedinController.text.trim();
       final githubText = _githubController.text.trim();
+      final behanceText = _behanceController.text.trim();
 
       final userInfo = UserInfoModel(
         name: _nameController.text.trim(),
@@ -204,10 +235,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         level: _selectedLevel!,
         typeOfWork: _selectedWorkType!,
         whatsapp: _completeWhatsappNumber,
-        linkedin: linkedinText.isEmpty
-            ? "https://www.linkedin.com"
-            : linkedinText,
-        github: githubText.isEmpty ? "https://github.com" : githubText,
+        linkedin: linkedinText.isEmpty ? null : linkedinText,
+        github: githubText.isEmpty ? null : githubText,
+        behance: behanceText.isEmpty ? null : behanceText,
         cvUrl: null,
         avatarUrl: null,
         locationName: _locationName,
@@ -290,7 +320,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 type: .vertical,
                 physics: const BouncingScrollPhysics(),
                 currentStep: _currentStep,
-                onStepTapped: (step) => setState(() => _currentStep = step),
+                onStepTapped: null, // Disable tapping on step numbers
                 onStepContinue: () {
                   final isLastStep = _currentStep == 3;
 
@@ -702,8 +732,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           controller: _linkedinController,
                           decoration: const InputDecoration(
                             labelText: "LinkedIn URL (Optional)",
+                            hintText: "https://linkedin.com/in/username",
                             prefixIcon: Icon(Icons.link),
                           ),
+                          validator: _validateLinkedinUrl,
                         ),
                         //
                         verticalSpace(15),
@@ -712,8 +744,22 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           controller: _githubController,
                           decoration: const InputDecoration(
                             labelText: "GitHub URL (Optional)",
+                            hintText: "https://github.com/username",
                             prefixIcon: Icon(Icons.code),
                           ),
+                          validator: _validateGithubUrl,
+                        ),
+                        //
+                        verticalSpace(15),
+                        //
+                        TextFormField(
+                          controller: _behanceController,
+                          decoration: const InputDecoration(
+                            labelText: "Behance URL (Optional)",
+                            hintText: "https://behance.net/username",
+                            prefixIcon: Icon(Icons.palette_outlined),
+                          ),
+                          validator: _validateBehanceUrl,
                         ),
                         //
                         verticalSpace(20),

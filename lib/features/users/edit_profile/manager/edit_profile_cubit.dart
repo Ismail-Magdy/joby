@@ -62,6 +62,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     required String whatsapp,
     required String linkedin,
     required String github,
+    required String behance,
   }) async {
     emit(EditProfileLoading());
 
@@ -98,6 +99,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         whatsapp: whatsapp.trim(),
         linkedin: linkedin.trim(),
         github: github.trim(),
+        behance: behance.trim(),
         cvUrl: finalCvUrl,
         avatarUrl: finalAvatarUrl,
       );

@@ -76,6 +76,7 @@ class UserInfoRepoImpl implements UserInfoRepo {
         whatsapp: userInfo.whatsapp,
         linkedin: userInfo.linkedin,
         github: userInfo.github,
+        behance: userInfo.behance,
         cvUrl: finalCvUrl,
         avatarUrl: finalAvatarUrl,
         locationName: userInfo.locationName,

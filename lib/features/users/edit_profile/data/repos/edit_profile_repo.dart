@@ -100,6 +100,7 @@ class EditProfileRepo {
     required String whatsapp,
     String? linkedin,
     String? github,
+    String? behance,
     String? cvUrl,
     String? avatarUrl,
   }) async {
@@ -112,6 +113,7 @@ class EditProfileRepo {
         if (whatsapp.isNotEmpty) 'whatsapp': whatsapp,
         if (linkedin != null && linkedin.isNotEmpty) 'linkedin': linkedin,
         if (github != null && github.isNotEmpty) 'github': github,
+        if (behance != null && behance.isNotEmpty) 'behance': behance,
         'cv_url': ?cvUrl,
         'avatar_url': ?avatarUrl,
       };

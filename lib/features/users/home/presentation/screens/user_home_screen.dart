@@ -336,16 +336,30 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                 _launchUrl(user.whatsapp, isPhone: true);
                               }
                             },
+                            showLinkedin:
+                                user.linkedin != null &&
+                                user.linkedin!.isNotEmpty,
                             linkedinTap: () {
                               if (user.linkedin != null &&
                                   user.linkedin!.isNotEmpty) {
                                 _launchUrl(user.linkedin!);
                               }
                             },
+                            showGithub:
+                                user.github != null && user.github!.isNotEmpty,
                             githubTap: () {
                               if (user.github != null &&
                                   user.github!.isNotEmpty) {
                                 _launchUrl(user.github!);
+                              }
+                            },
+                            showBehance:
+                                user.behance != null &&
+                                user.behance!.isNotEmpty,
+                            behanceTap: () {
+                              if (user.behance != null &&
+                                  user.behance!.isNotEmpty) {
+                                _launchUrl(user.behance!);
                               }
                             },
                           ),

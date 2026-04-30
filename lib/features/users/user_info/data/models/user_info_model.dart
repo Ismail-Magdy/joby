@@ -7,6 +7,7 @@ class UserInfoModel {
   final String whatsapp;
   final String? linkedin;
   final String? github;
+  final String? behance;
   final String? cvUrl;
   final String? avatarUrl;
   final int totalPoints;
@@ -24,6 +25,7 @@ class UserInfoModel {
     required this.whatsapp,
     this.linkedin,
     this.github,
+    this.behance,
     this.cvUrl,
     this.avatarUrl,
     this.totalPoints = 0,
@@ -43,6 +45,7 @@ class UserInfoModel {
       "whatsapp": whatsapp,
       if (linkedin != null && linkedin!.isNotEmpty) "linkedin": linkedin,
       if (github != null && github!.isNotEmpty) "github": github,
+      if (behance != null && behance!.isNotEmpty) "behance": behance,
       if (cvUrl != null) "cv_url": cvUrl,
       if (avatarUrl != null) "avatar_url": avatarUrl,
       "total_points": totalPoints,
@@ -63,6 +66,7 @@ class UserInfoModel {
       whatsapp: json["whatsapp"] ?? "",
       linkedin: json["linkedin"],
       github: json["github"],
+      behance: json["behance"],
       cvUrl: json["cv_url"],
       avatarUrl: json["avatar_url"],
       totalPoints: json["total_points"] ?? 0,
