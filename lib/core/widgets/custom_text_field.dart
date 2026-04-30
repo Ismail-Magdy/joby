@@ -201,7 +201,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             : null,
 
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.8),
+        fillColor: Colors.grey.withValues(alpha: 0.04),
         //
         border: OutlineInputBorder(
           borderRadius: .circular(14),

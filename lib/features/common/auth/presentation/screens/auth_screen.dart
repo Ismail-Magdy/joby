@@ -267,7 +267,12 @@ class _AuthScreenState extends State<AuthScreen> {
                       fieldType: .password,
                       prefixIcon: Icons.lock_outline,
                       validator: isLogin
-                          ? null // Login: use default validator (just not empty + 6 chars)
+                          ? (val) {
+                              final v = val?.trim() ?? "";
+                              if (v.isEmpty) return "Please enter a password";
+                              if (v.length < 8) return "At least 8 characters";
+                              return null;
+                            }
                           : (val) {
                               final v = val?.trim() ?? "";
                               if (v.isEmpty) return "Please enter a password";
