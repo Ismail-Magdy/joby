@@ -47,12 +47,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     Uri url;
 
     if (isPhone) {
+      bool hasCountryCode = urlString.trim().startsWith("+");
       String cleanedPhone = urlString.replaceAll(RegExp(r"\D"), "");
-      if (cleanedPhone.startsWith("01") && cleanedPhone.length == 11) {
-        cleanedPhone = "20${cleanedPhone.substring(1)}";
-      } else if (!cleanedPhone.startsWith("20") &&
-          !cleanedPhone.startsWith("+")) {
-        cleanedPhone = "20$cleanedPhone";
+
+      if (!hasCountryCode) {
+        if (cleanedPhone.startsWith("01") && cleanedPhone.length == 11) {
+          cleanedPhone = "20${cleanedPhone.substring(1)}";
+        } else if (!cleanedPhone.startsWith("20")) {
+          cleanedPhone = "20$cleanedPhone";
+        }
       }
       url = Uri.parse("https://wa.me/$cleanedPhone");
     } else {

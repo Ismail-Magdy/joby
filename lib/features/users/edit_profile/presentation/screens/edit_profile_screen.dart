@@ -14,6 +14,8 @@ import 'package:joby/features/users/edit_profile/manager/edit_profile_state.dart
 import 'package:joby/features/users/edit_profile/presentation/widgets/build_text_field.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/drop_down_widget.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
+import 'package:intl_phone_field/country_picker_dialog.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserInfoModel? currentUserInfo;
@@ -30,10 +32,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _jobTitleController = TextEditingController();
 
   // Social link controllers
-  final _whatsappController = TextEditingController();
   final _linkedinController = TextEditingController();
   final _githubController = TextEditingController();
   final _behanceController = TextEditingController();
+
+  String _completeWhatsappNumber = "";
 
   // Dropdown selections
   String? _selectedLevel;
@@ -71,13 +74,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _prefillFields();
   }
 
+  String _getInitialWhatsapp(String? dbWhatsapp) {
+    if (dbWhatsapp == null || dbWhatsapp.isEmpty) return "";
+    if (dbWhatsapp.startsWith("+")) return dbWhatsapp;
+    if (dbWhatsapp.startsWith("01") && dbWhatsapp.length == 11) {
+      return "+20${dbWhatsapp.substring(1)}";
+    }
+    if (dbWhatsapp.startsWith("20")) {
+      return "+$dbWhatsapp";
+    }
+    return "+20$dbWhatsapp";
+  }
+
   /// Pre-fill all controllers & dropdowns with existing user data.
   void _prefillFields() {
     final user = widget.currentUserInfo;
     if (user != null) {
       _nameController.text = user.name;
       _jobTitleController.text = user.jobTitle;
-      _whatsappController.text = user.whatsapp;
+
+      _completeWhatsappNumber = _getInitialWhatsapp(user.whatsapp);
+
       _linkedinController.text = user.linkedin ?? "";
       _githubController.text = user.github ?? "";
       _behanceController.text = user.behance ?? "";
@@ -94,7 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // Store initial values for change detection
     _initialName = _nameController.text;
     _initialJobTitle = _jobTitleController.text;
-    _initialWhatsapp = _whatsappController.text;
+    _initialWhatsapp = _completeWhatsappNumber;
     _initialLinkedin = _linkedinController.text;
     _initialGithub = _githubController.text;
     _initialBehance = _behanceController.text;
@@ -106,7 +123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool get _hasUnsavedChanges {
     return _nameController.text != _initialName ||
         _jobTitleController.text != _initialJobTitle ||
-        _whatsappController.text != _initialWhatsapp ||
+        _completeWhatsappNumber != _initialWhatsapp ||
         _linkedinController.text != _initialLinkedin ||
         _githubController.text != _initialGithub ||
         _behanceController.text != _initialBehance ||
@@ -196,7 +213,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       jobTitle: _jobTitleController.text,
       level: _selectedLevel ?? "",
       typeOfWork: _selectedWorkType ?? "",
-      whatsapp: _whatsappController.text,
+      whatsapp: _completeWhatsappNumber,
       linkedin: _linkedinController.text,
       github: _githubController.text,
       behance: _behanceController.text,
@@ -207,7 +224,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void dispose() {
     _nameController.dispose();
     _jobTitleController.dispose();
-    _whatsappController.dispose();
     _linkedinController.dispose();
     _githubController.dispose();
     _behanceController.dispose();
@@ -414,13 +430,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   //
                   verticalSpace(20),
                   //
-                  BuildTextField(
-                    controller: _whatsappController,
-                    label: "WhatsApp Number",
-                    hint: "eg. 01012345678",
-                    icon: Ionicons.logo_whatsapp,
-                    iconColor: Colors.green,
-                    keyboardType: .phone,
+                  IntlPhoneField(
+                    cursorColor: AppColors.primaryColor,
+                    initialValue: _initialWhatsapp.isNotEmpty
+                        ? _initialWhatsapp
+                        : null,
+                    initialCountryCode: _initialWhatsapp.isEmpty ? "EG" : null,
+                    pickerDialogStyle: PickerDialogStyle(
+                      backgroundColor: Colors.white,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: "WhatsApp Number",
+                      counterText: "",
+                      border: OutlineInputBorder(borderRadius: .circular(12.r)),
+                    ),
+                    onChanged: (phone) {
+                      setState(() {
+                        _completeWhatsappNumber = phone.completeNumber;
+                      });
+                    },
                   ),
                   //
                   verticalSpace(15),
