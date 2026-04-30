@@ -3,29 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
 class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String? avatarUrl;
   final String title;
+  final String name;
+  final String jobTitle;
   final VoidCallback onManagerTap;
   final VoidCallback onEditTap;
 
   ProfileHeaderDelegate({
     required this.avatarUrl,
     required this.title,
+    required this.name,
+    required this.jobTitle,
     required this.onManagerTap,
     required this.onEditTap,
   });
 
   @override
-  double get maxExtent => 170.h;
+  double get maxExtent => 160.h;
   @override
-  double get minExtent => 125.h;
+  double get minExtent => 120.h;
 
   @override
   bool shouldRebuild(covariant ProfileHeaderDelegate oldDelegate) =>
-      avatarUrl != oldDelegate.avatarUrl || title != oldDelegate.title;
+      avatarUrl != oldDelegate.avatarUrl ||
+      title != oldDelegate.title ||
+      name != oldDelegate.name ||
+      jobTitle != oldDelegate.jobTitle;
 
   @override
   Widget build(
@@ -39,6 +47,10 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     final double screenW = MediaQuery.of(context).size.width;
     final double currentHeight = max(maxExtent - shrinkOffset, minExtent);
 
+    // --- Opacities ---
+    final double expandedOpacity = max(0.0, 1.0 - t * 2.0); // Fades out early
+    final double collapsedOpacity = max(0.0, (t - 0.5) * 2.0); // Fades in late
+
     // --- Avatar sizes ---
     final double maxRadius = 60.r;
     final double minRadius = 25.r;
@@ -48,35 +60,36 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     // Expanded: centered horizontally, at the bottom of the blue area
     final double expandedAvatarCX = screenW / 2;
     final double expandedAvatarCY = maxExtent - maxRadius * 0.2;
-    // Collapsed: top-right corner
-    final double collapsedAvatarCX = screenW - 22.w - minRadius;
-    final double collapsedAvatarCY = statusBarH + 20.h + minRadius;
+    // Collapsed: left side
+    final double collapsedAvatarCX = 20.w + minRadius;
+    final double collapsedAvatarCY = statusBarH + (minExtent - statusBarH) / 2;
     // Lerp
     final double avatarCX =
         expandedAvatarCX + (collapsedAvatarCX - expandedAvatarCX) * t;
     final double avatarCY =
         expandedAvatarCY + (collapsedAvatarCY - expandedAvatarCY) * t;
 
-    //  Title position
-    // Expanded: centered   |   Collapsed: left
-    final double titleExpandedLeft = 0;
-    final double titleCollapsedLeft = 20.w;
-    final double titleLeft =
-        titleExpandedLeft + (titleCollapsedLeft - titleExpandedLeft) * t;
+    // --- Title "My Profile" position (only visible when expanded) ---
+    final double titleTop = statusBarH + 15.h;
 
-    //  Icons position
-    // Expanded: icon1 far-left, icon2 far-right (spread across screen)
-    // Collapsed: both grouped left
-    final double iconsTopY = statusBarH + 54.h;
+    // --- Name & Job Title position (only visible when collapsed) ---
+    final double infoLeft = collapsedAvatarCX + minRadius + 15.w;
+    final double infoTop = statusBarH + (minExtent - statusBarH) / 2 - 20.h;
+
+    // --- Icons position ---
+    final double iconsExpandedTop = statusBarH + 54.h;
+    final double iconsCollapsedTop =
+        statusBarH + (minExtent - statusBarH) / 2 - 11.h;
+
     // Manager icon
-    final double managerExpandedX = 30.w;
-    final double managerCollapsedX = 20.w;
-    final double managerX =
-        managerExpandedX + (managerCollapsedX - managerExpandedX) * t;
+    final double managerX = 30.w;
+
     // Edit icon
     final double editExpandedX = screenW - 30.w - 22.w;
-    final double editCollapsedX = 20.w + 22.h + 18.w; // after manager + spacing
+    final double editCollapsedX = screenW - 20.w - 22.w;
     final double editX = editExpandedX + (editCollapsedX - editExpandedX) * t;
+    final double editY =
+        iconsExpandedTop + (iconsCollapsedTop - iconsExpandedTop) * t;
 
     //  Blue background
     final double borderRadius = 24.r * (1 - t * 0.3);
@@ -105,41 +118,76 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
 
-          // Title "My Profile"
-          // Expanded: centered across full width | Collapsed: left-aligned
-          Positioned(
-            top: statusBarH + 15.h,
-            left: titleLeft,
-            right: 0,
-            child: Text(
-              title,
-              textAlign: t < 0.5 ? .center : .left,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.sp,
-                fontWeight: .bold,
-                fontFamily: "BrunoAceSC",
+          // Title "My Profile" - Fades out
+          if (expandedOpacity > 0)
+            Positioned(
+              top: titleTop,
+              left: 0,
+              right: 0,
+              child: Opacity(
+                opacity: expandedOpacity,
+                child: Text(
+                  title,
+                  textAlign: .center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.sp,
+                    fontWeight: .bold,
+                    fontFamily: "BrunoAceSC",
+                  ),
+                ),
               ),
             ),
-          ),
 
-          // Manager icon - animates from far-left to grouped-left
-          Positioned(
-            top: iconsTopY,
-            left: managerX,
-            child: GestureDetector(
-              onTap: onManagerTap,
-              child: SvgPicture.asset(
-                "assets/svgs/manager.svg",
-                colorFilter: const .mode(Colors.white, .srcIn),
-                height: 22.h,
+          // Name and Job Title - Fades in
+          if (collapsedOpacity > 0)
+            Positioned(
+              top: infoTop,
+              left: infoLeft,
+              child: Opacity(
+                opacity: collapsedOpacity,
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.sp,
+                        fontWeight: .bold,
+                      ),
+                    ),
+                    verticalSpace(3),
+                    Text(
+                      jobTitle,
+                      style: TextStyle(color: Colors.white70, fontSize: 12.sp),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // Edit icon - animates from far-right to grouped-left
+          // Manager icon - Fades out
+          if (expandedOpacity > 0)
+            Positioned(
+              top: iconsExpandedTop,
+              left: managerX,
+              child: Opacity(
+                opacity: expandedOpacity,
+                child: GestureDetector(
+                  onTap: onManagerTap,
+                  child: SvgPicture.asset(
+                    "assets/svgs/manager.svg",
+                    colorFilter: const .mode(Colors.white, .srcIn),
+                    height: 22.h,
+                  ),
+                ),
+              ),
+            ),
+
+          // Edit icon - Stays visible, moves
           Positioned(
-            top: iconsTopY,
+            top: editY,
             left: editX,
             child: GestureDetector(
               onTap: onEditTap,
@@ -151,7 +199,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
 
-          // Avatar - animates from center-bottom to top-right
+          // Avatar - Moves and scales
           Positioned(
             left: avatarCX - avatarRadius,
             top: avatarCY - avatarRadius,
@@ -184,6 +232,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
               ),
             ),
           ),
+          //
         ],
       ),
     );
