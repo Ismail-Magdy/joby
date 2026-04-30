@@ -20,6 +20,7 @@ import "../../manager/user_info_cubit.dart";
 import "../../manager/user_info_state.dart";
 import "package:file_picker/file_picker.dart";
 import "package:intl_phone_field/intl_phone_field.dart";
+import "package:intl_phone_field/countries.dart";
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
@@ -53,6 +54,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   File? _pickedAvatarFile;
 
   String _completeWhatsappNumber = "";
+  bool _isPhoneValid = false;
+  Country _selectedCountry = countries.firstWhere((c) => c.code == 'EG');
 
   double _latitude = 30.0444; // Default to Cairo
   double _longitude = 31.2357;
@@ -142,7 +145,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   ///
   bool get _canSubmit {
     if (_currentStep != 2 && _currentStep != 3) return true;
-    return _cvFile != null && _whatsappController.text.isNotEmpty;
+    return _cvFile != null && _whatsappController.text.isNotEmpty && _isPhoneValid;
   }
 
   /// URL validators for social links
@@ -704,6 +707,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           cursorColor: AppColors.primaryColor,
                           controller: _whatsappController,
                           initialCountryCode: "EG",
+                          invalidNumberMessage: "Invalid number for the selected country",
                           // ===================================
                           pickerDialogStyle: PickerDialogStyle(
                             backgroundColor: Colors.white,
@@ -719,12 +723,34 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           onChanged: (phone) {
                             setState(() {
                               _completeWhatsappNumber = phone.completeNumber;
+                              _isPhoneValid = phone.number.length >= _selectedCountry.minLength &&
+                                  phone.number.length <= _selectedCountry.maxLength;
                             });
                           },
                           onCountryChanged: (country) {
-                            setState(() {});
+                            setState(() {
+                              _selectedCountry = country;
+                              if (_whatsappController.text.isNotEmpty) {
+                                _isPhoneValid = _whatsappController.text.length >= _selectedCountry.minLength &&
+                                    _whatsappController.text.length <= _selectedCountry.maxLength;
+                              }
+                            });
                           },
                         ),
+                        if (_isPhoneValid && _whatsappController.text.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.only(top: 8.h),
+                            child: Row(
+                              children: [
+                                Icon(Icons.check_circle, color: Colors.green, size: 16.sp),
+                                SizedBox(width: 5.w),
+                                Text(
+                                  "Valid phone number format",
+                                  style: TextStyle(color: Colors.green, fontSize: 12.sp),
+                                ),
+                              ],
+                            ),
+                          ),
                         //
                         verticalSpace(15),
                         //
