@@ -30,13 +30,11 @@ class CustomSendButton extends StatelessWidget {
           elevation: 0,
         ),
         icon: isLoading
-            ? CupertinoActivityIndicator(
-                color: Colors.white,
-              )
+            ? CupertinoActivityIndicator(color: Colors.white)
             : SvgPicture.asset(
                 "assets/svgs/send.svg",
                 colorFilter: .mode(Colors.white, .srcIn),
-                height: 25.h,
+                height: 23.h,
               ),
 
         label: Text(
@@ -45,7 +43,6 @@ class CustomSendButton extends StatelessWidget {
             color: Colors.white,
             fontSize: 16.sp,
             fontWeight: .bold,
-            fontFamily: "BrunoAceSC",
           ),
         ),
       ),

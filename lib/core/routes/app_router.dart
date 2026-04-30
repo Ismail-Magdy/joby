@@ -9,10 +9,10 @@ import 'package:joby/features/common/auth/presentation/screens/auth_screen.dart'
 import 'package:joby/features/common/auth/manager/auth_cubit.dart';
 import 'package:joby/features/company/home/company_home_screen.dart';
 import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
-import 'package:joby/features/users/advice/presentation/screens/advice_screen.dart';
+import 'package:joby/features/users/feed_back/presentation/screens/advice_screen.dart';
 import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
-import '../../features/users/advice/manager/advice_cubit.dart';
+import '../../features/users/feed_back/manager/advice_cubit.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/edit_profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/users/home/manager/user_home_cubit.dart';
