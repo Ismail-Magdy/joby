@@ -268,6 +268,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     delegate: ProfileHeaderDelegate(
                       avatarUrl: user.avatarUrl,
                       title: "My Profile",
+                      name: user.name,
+                      jobTitle: user.jobTitle,
                       onManagerTap: () =>
                           context.pushNamed(Routes.companyViewScreen),
                       onEditTap: () async {
@@ -331,31 +333,31 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           verticalSpace(50),
                           // Social Media
                           SocialMediaRow(
+                            showLinkedin:
+                                user.linkedin != null &&
+                                user.linkedin!.isNotEmpty,
+                            showGithub:
+                                user.github != null && user.github!.isNotEmpty,
+                            showBehance:
+                                user.behance != null &&
+                                user.behance!.isNotEmpty,
                             whatsappTap: () {
                               if (user.whatsapp.isNotEmpty) {
                                 _launchUrl(user.whatsapp, isPhone: true);
                               }
                             },
-                            showLinkedin:
-                                user.linkedin != null &&
-                                user.linkedin!.isNotEmpty,
                             linkedinTap: () {
                               if (user.linkedin != null &&
                                   user.linkedin!.isNotEmpty) {
                                 _launchUrl(user.linkedin!);
                               }
                             },
-                            showGithub:
-                                user.github != null && user.github!.isNotEmpty,
                             githubTap: () {
                               if (user.github != null &&
                                   user.github!.isNotEmpty) {
                                 _launchUrl(user.github!);
                               }
                             },
-                            showBehance:
-                                user.behance != null &&
-                                user.behance!.isNotEmpty,
                             behanceTap: () {
                               if (user.behance != null &&
                                   user.behance!.isNotEmpty) {
