@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl_phone_field/countries.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
@@ -27,6 +28,8 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   // Personal info controllers
   final _nameController = TextEditingController();
   final _jobTitleController = TextEditingController();
@@ -37,6 +40,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _behanceController = TextEditingController();
 
   String _completeWhatsappNumber = "";
+  bool _isPhoneValid = true;
+  bool _isPhoneEmpty = false;
+  Country? _selectedCountry;
 
   // Dropdown selections
   String? _selectedLevel;
@@ -94,6 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _jobTitleController.text = user.jobTitle;
 
       _completeWhatsappNumber = _getInitialWhatsapp(user.whatsapp);
+      _isPhoneEmpty = user.whatsapp.isEmpty;
 
       _linkedinController.text = user.linkedin ?? "";
       _githubController.text = user.github ?? "";
@@ -199,8 +206,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
 
     if (result == "save") {
-      _triggerSave();
-      return false;
+      if (_formKey.currentState!.validate() && _isPhoneValid) {
+        _triggerSave();
+        return false;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text("Please fill required fields properly"),
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(20.r),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+          ),
+        );
+        return false;
+      }
     }
 
     return result == "discard";
@@ -208,6 +232,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   /// Trigger the save via cubit.
   void _triggerSave() {
+    if (!_formKey.currentState!.validate() || !_isPhoneValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(child: Text("Please fill required fields properly")),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(20.r),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+        ),
+      );
+      return;
+    }
     context.read<EditProfileCubit>().saveChanges(
       name: _nameController.text,
       jobTitle: _jobTitleController.text,
@@ -314,258 +352,368 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             final cubit = context.read<EditProfileCubit>();
             final isLoading = state is EditProfileLoading;
 
-            return SingleChildScrollView(
-              padding: .symmetric(horizontal: 24.w, vertical: 20.h),
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  // Avatar
-                  Center(
-                    child: Stack(
-                      alignment: .bottomRight,
-                      children: [
-                        // Image - shows picked file, or network avatar, or fallback icon
-                        CircleAvatar(
-                          radius: 50.r,
-                          backgroundColor: Colors.grey.shade100,
-                          backgroundImage: _buildAvatarImage(),
-                          child: _shouldShowAvatarPlaceholder()
-                              ? Icon(
-                                  Ionicons.person,
-                                  size: 50.sp,
-                                  color: Colors.grey.shade400,
-                                )
-                              : null,
-                        ),
-                        //
-                        // Camera Icon - opens gallery
-                        GestureDetector(
-                          onTap: isLoading ? null : () => cubit.pickAvatar(),
-                          child: Container(
-                            padding: .all(8.r),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              shape: .circle,
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/svgs/camera.svg",
-                              colorFilter: .mode(Colors.white, .srcIn),
-                              height: 18.h,
-                            ),
-                          ),
-                        ),
-                        //
-                      ],
-                    ),
-                  ),
-                  //
-                  verticalSpace(40),
-                  //
-                  //  Personal Info Section
-                  Text(
-                    "Personal Info",
-                    style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
-                  ),
-                  //
-                  verticalSpace(20),
-                  //
-                  // Name
-                  BuildTextField(
-                    controller: _nameController,
-                    label: "Full Name",
-                    hint: "eg. Ahmed Mohamed",
-                    icon: Ionicons.person_outline,
-                    iconColor: AppColors.primaryColor,
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  // Job Title
-                  BuildTextField(
-                    controller: _jobTitleController,
-                    label: "Job Title",
-                    hint: "eg. Flutter Developer",
-                    icon: Ionicons.briefcase_outline,
-                    iconColor: AppColors.primaryColor,
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  // Level Dropdown
-                  _buildSectionLabel("Level"),
-                  //
-                  verticalSpace(8),
-                  //
-                  DropDownWidget(
-                    value: _selectedLevel,
-                    hint: "Select your level",
-                    icon: Ionicons.stats_chart_outline,
-                    items: _levelOptions,
-                    onChanged: (val) => setState(() => _selectedLevel = val),
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  // Work Type Dropdown
-                  _buildSectionLabel("Type of Work"),
-                  //
-                  verticalSpace(8),
-                  //
-                  DropDownWidget(
-                    value: _selectedWorkType,
-                    hint: "Select work type",
-                    icon: Ionicons.location_outline,
-                    items: _workTypeOptions,
-                    onChanged: (val) => setState(() => _selectedWorkType = val),
-                  ),
-                  //
-                  verticalSpace(30),
-                  //
-                  //  Social Links Section
-                  Text(
-                    "Social Links",
-                    style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
-                  ),
-                  //
-                  verticalSpace(20),
-                  //
-                  IntlPhoneField(
-                    cursorColor: AppColors.primaryColor,
-                    initialValue: _initialWhatsapp.isNotEmpty
-                        ? _initialWhatsapp
-                        : null,
-                    initialCountryCode: _initialWhatsapp.isEmpty ? "EG" : null,
-                    pickerDialogStyle: PickerDialogStyle(
-                      backgroundColor: Colors.white,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: "WhatsApp Number",
-                      counterText: "",
-                      border: OutlineInputBorder(borderRadius: .circular(12.r)),
-                    ),
-                    onChanged: (phone) {
-                      setState(() {
-                        _completeWhatsappNumber = phone.completeNumber;
-                      });
-                    },
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  BuildTextField(
-                    controller: _linkedinController,
-                    label: "LinkedIn URL",
-                    hint: "https://linkedin.com/in/username",
-                    icon: Ionicons.logo_linkedin,
-                    iconColor: const Color(0xff0077B5),
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  BuildTextField(
-                    controller: _githubController,
-                    label: "GitHub URL",
-                    hint: "https://github.com/username",
-                    icon: Ionicons.logo_github,
-                    iconColor: const Color(0xff333333),
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  BuildTextField(
-                    controller: _behanceController,
-                    label: "Behance URL",
-                    hint: "https://behance.net/username",
-                    icon: Ionicons.logo_behance,
-                    iconColor: const Color(0xff1769FF),
-                  ),
-                  //
-                  verticalSpace(30),
-                  //
-                  //  CV Section
-                  Text(
-                    "CV",
-                    style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  // CV Upload
-                  GestureDetector(
-                    onTap: isLoading ? null : () => cubit.pickCv(),
-                    child: Container(
-                      width: .infinity,
-                      padding: .symmetric(
-                        vertical: _pickedCvName != null ? 15.h : 20.h,
-                        horizontal: 15.w,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withValues(alpha: 0.05),
-                        border: .all(
-                          color: AppColors.primaryColor.withValues(alpha: 0.3),
-                          width: 1.5,
-                        ),
-                        borderRadius: .circular(16.r),
-                      ),
-                      child: Column(
+            return Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                padding: .symmetric(horizontal: 24.w, vertical: 20.h),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    // Avatar
+                    Center(
+                      child: Stack(
+                        alignment: .bottomRight,
                         children: [
-                          Icon(
-                            _pickedCvName != null
-                                ? Ionicons.document_text
-                                : Ionicons.cloud_upload_outline,
-                            color: AppColors.primaryColor,
-                            size: 35.sp,
+                          // Image - shows picked file, or network avatar, or fallback icon
+                          CircleAvatar(
+                            radius: 50.r,
+                            backgroundColor: Colors.grey.shade100,
+                            backgroundImage: _buildAvatarImage(),
+                            child: _shouldShowAvatarPlaceholder()
+                                ? Icon(
+                                    Ionicons.person,
+                                    size: 50.sp,
+                                    color: Colors.grey.shade400,
+                                  )
+                                : null,
                           ),
-                          verticalSpace(10),
-                          Text(
-                            _pickedCvName ?? "Upload New CV (PDF)",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AppColors.primaryColor,
-                              fontWeight: .w600,
+                          //
+                          // Camera Icon - opens gallery
+                          GestureDetector(
+                            onTap: isLoading ? null : () => cubit.pickAvatar(),
+                            child: Container(
+                              padding: .all(8.r),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor,
+                                shape: .circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: SvgPicture.asset(
+                                "assets/svgs/camera.svg",
+                                colorFilter: .mode(Colors.white, .srcIn),
+                                height: 18.h,
+                              ),
                             ),
-                            textAlign: .center,
-                            maxLines: 1,
-                            overflow: .ellipsis,
                           ),
+                          //
                         ],
                       ),
                     ),
-                  ),
-                  //
-                  verticalSpace(50),
-                  //
-                  //  Save Button
-                  SizedBox(
-                    width: .infinity,
-                    height: 55.h,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: .circular(16.r),
-                        ),
-                        elevation: 0,
+                    //
+                    verticalSpace(40),
+                    //
+                    //  Personal Info Section
+                    Text(
+                      "Personal Info",
+                      style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
+                    ),
+                    //
+                    verticalSpace(20),
+                    //
+                    // Name
+                    BuildTextField(
+                      controller: _nameController,
+                      label: "Full Name",
+                      hint: "eg. Ahmed Mohamed",
+                      icon: Ionicons.person_outline,
+                      iconColor: AppColors.primaryColor,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (val) {
+                        final v = val?.trim() ?? "";
+                        if (v.isEmpty) return "Please enter your name";
+                        if (v.length < 2)
+                          return "Name must be at least 2 characters.";
+                        if (RegExp(r'[0-9]').hasMatch(v))
+                          return "Name cannot contain numbers.";
+                        if (!RegExp(
+                          r'^[a-zA-Z\u0600-\u06FF\s]+$',
+                        ).hasMatch(v)) {
+                          return "Name can only contain letters.";
+                        }
+                        return null;
+                      },
+                    ),
+                    //
+                    verticalSpace(15),
+                    //
+                    // Job Title
+                    BuildTextField(
+                      controller: _jobTitleController,
+                      label: "Job Title",
+                      hint: "eg. Flutter Developer",
+                      icon: Ionicons.briefcase_outline,
+                      iconColor: AppColors.primaryColor,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (val) {
+                        final v = val?.trim() ?? "";
+                        if (v.isEmpty) return "Please enter your job title";
+                        if (v.length < 2)
+                          return "Job title must be at least 2 characters";
+                        return null;
+                      },
+                    ),
+                    //
+                    verticalSpace(15),
+                    //
+                    // Level Dropdown
+                    _buildSectionLabel("Level"),
+                    //
+                    verticalSpace(8),
+                    //
+                    DropDownWidget(
+                      value: _selectedLevel,
+                      hint: "Select your level",
+                      icon: Ionicons.stats_chart_outline,
+                      items: _levelOptions,
+                      onChanged: (val) => setState(() => _selectedLevel = val),
+                    ),
+                    //
+                    verticalSpace(15),
+                    //
+                    // Work Type Dropdown
+                    _buildSectionLabel("Type of Work"),
+                    //
+                    verticalSpace(8),
+                    //
+                    DropDownWidget(
+                      value: _selectedWorkType,
+                      hint: "Select work type",
+                      icon: Ionicons.location_outline,
+                      items: _workTypeOptions,
+                      onChanged: (val) =>
+                          setState(() => _selectedWorkType = val),
+                    ),
+                    //
+                    verticalSpace(30),
+                    //
+                    //  Social Links Section
+                    Text(
+                      "Social Links",
+                      style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
+                    ),
+                    //
+                    verticalSpace(20),
+                    //
+                    IntlPhoneField(
+                      cursorColor: AppColors.primaryColor,
+                      initialValue: _initialWhatsapp.isNotEmpty
+                          ? _initialWhatsapp
+                          : null,
+                      initialCountryCode: _initialWhatsapp.isEmpty
+                          ? "EG"
+                          : null,
+                      invalidNumberMessage:
+                          "Invalid number for the selected country",
+                      pickerDialogStyle: PickerDialogStyle(
+                        backgroundColor: Colors.white,
                       ),
-                      onPressed: isLoading ? null : _triggerSave,
-                      child: isLoading
-                          ? const CupertinoActivityIndicator(
-                              color: Colors.white,
-                            )
-                          : Text(
-                              "Save Changes",
+
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: .circular(12.r),
+                          borderSide: BorderSide(
+                            color: _isPhoneValid
+                                ? AppColors.primaryColor
+                                : Colors.red.shade400,
+                            width: 2,
+                          ),
+                        ),
+                        labelText: "WhatsApp Number",
+                        labelStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14.sp,
+                          fontWeight: .w600,
+                        ),
+                        counterText: "",
+                        border: OutlineInputBorder(
+                          borderRadius: .circular(12.r),
+                          borderSide: BorderSide(
+                            color: _isPhoneValid
+                                ? Colors.grey.shade300
+                                : Colors.red.shade400,
+                          ),
+                        ),
+                      ),
+                      onChanged: (phone) {
+                        setState(() {
+                          _isPhoneEmpty = phone.number.isEmpty;
+                          _completeWhatsappNumber = phone.completeNumber;
+
+                          if (_selectedCountry != null) {
+                            _isPhoneValid =
+                                phone.number.length >=
+                                    _selectedCountry!.minLength &&
+                                phone.number.length <=
+                                    _selectedCountry!.maxLength;
+                          } else {
+                            try {
+                              _selectedCountry = countries.firstWhere(
+                                (c) => c.code == phone.countryISOCode,
+                              );
+                              _isPhoneValid =
+                                  phone.number.length >=
+                                      _selectedCountry!.minLength &&
+                                  phone.number.length <=
+                                      _selectedCountry!.maxLength;
+                            } catch (_) {
+                              _isPhoneValid = false;
+                            }
+                          }
+                        });
+                      },
+                      onCountryChanged: (country) {
+                        setState(() {
+                          _selectedCountry = country;
+                        });
+                      },
+                    ),
+                    // Show validation message if phone is invalid and not empty
+                    if (_isPhoneValid && !_isPhoneEmpty)
+                      // Show valid message
+                      Padding(
+                        padding: .only(top: 8.h),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                              size: 16.sp,
+                            ),
+                            //
+                            horizontalSpace(5),
+                            //
+                            Text(
+                              "Valid phone number format",
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: .bold,
+                                color: Colors.green,
+                                fontSize: 12.sp,
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                    //
+                    verticalSpace(15),
+                    //
+                    BuildTextField(
+                      controller: _linkedinController,
+                      label: "LinkedIn URL",
+                      hint: "https://linkedin.com/in/username",
+                      icon: Ionicons.logo_linkedin,
+                      iconColor: const Color(0xff0077B5),
                     ),
-                  ),
-                  //
-                  verticalSpace(30),
-                ],
+                    //
+                    verticalSpace(15),
+                    //
+                    BuildTextField(
+                      controller: _githubController,
+                      label: "GitHub URL",
+                      hint: "https://github.com/username",
+                      icon: Ionicons.logo_github,
+                      iconColor: const Color(0xff333333),
+                    ),
+                    //
+                    verticalSpace(15),
+                    //
+                    BuildTextField(
+                      controller: _behanceController,
+                      label: "Behance URL",
+                      hint: "https://behance.net/username",
+                      icon: Ionicons.logo_behance,
+                      iconColor: const Color(0xff1769FF),
+                    ),
+                    //
+                    verticalSpace(30),
+                    //
+                    //  CV Section
+                    Text(
+                      "CV",
+                      style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
+                    ),
+                    //
+                    verticalSpace(15),
+                    //
+                    // CV Upload
+                    GestureDetector(
+                      onTap: isLoading ? null : () => cubit.pickCv(),
+                      child: Container(
+                        width: .infinity,
+                        padding: .symmetric(
+                          vertical: _pickedCvName != null ? 15.h : 20.h,
+                          horizontal: 15.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor.withValues(alpha: 0.05),
+                          border: .all(
+                            color: AppColors.primaryColor.withValues(
+                              alpha: 0.3,
+                            ),
+                            width: 1.5,
+                          ),
+                          borderRadius: .circular(16.r),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              _pickedCvName != null
+                                  ? Ionicons.document_text
+                                  : Ionicons.cloud_upload_outline,
+                              color: AppColors.primaryColor,
+                              size: 35.sp,
+                            ),
+                            verticalSpace(10),
+                            Text(
+                              _pickedCvName ?? "Upload New CV (PDF)",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: AppColors.primaryColor,
+                                fontWeight: .w600,
+                              ),
+                              textAlign: .center,
+                              maxLines: 1,
+                              overflow: .ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    //
+                    verticalSpace(50),
+                    //
+                    //  Save Button
+                    SizedBox(
+                      width: .infinity,
+                      height: 55.h,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: .circular(16.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        onPressed: isLoading ? null : _triggerSave,
+                        child: isLoading
+                            ? const CupertinoActivityIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                "Save Changes",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: .bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                    //
+                    verticalSpace(30),
+                  ],
+                ),
               ),
             );
           },
