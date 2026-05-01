@@ -35,7 +35,8 @@ class PointsCubit extends Cubit<PointsState> {
     }
 
     // 2. Call RPC
-    final result = await pointsRepo.claimDailyPoints();
+    final result = await pointsRepo.claimDailyPoints(todayLocal);
+
     result.fold((errorMessage) => emit(PointsClaimError(errorMessage)), (
       response,
     ) async {
