@@ -12,6 +12,9 @@ class BuildTextField extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     this.keyboardType,
+    this.validator,
+    this.autovalidateMode,
+    this.onChanged,
   });
   final TextEditingController controller;
   final String label;
@@ -19,6 +22,9 @@ class BuildTextField extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
+  final AutovalidateMode? autovalidateMode;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +43,9 @@ class BuildTextField extends StatelessWidget {
         TextFormField(
           keyboardType: keyboardType,
           controller: controller,
+          validator: validator,
+          autovalidateMode: autovalidateMode,
+          onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13.sp),
@@ -46,15 +55,23 @@ class BuildTextField extends StatelessWidget {
             contentPadding: .symmetric(horizontal: 20.w, vertical: 16.h),
             border: OutlineInputBorder(
               borderRadius: .circular(14.r),
-              borderSide: .none,
+              borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: .circular(14.r),
               borderSide: BorderSide(color: Colors.grey.shade200),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: .circular(14.r),
               borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: .circular(14.r),
+              borderSide: BorderSide(color: Colors.red, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: .circular(14.r),
+              borderSide: BorderSide(color: Colors.red, width: 1.5),
             ),
           ),
         ),
