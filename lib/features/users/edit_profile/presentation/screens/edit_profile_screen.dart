@@ -424,10 +424,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       validator: (val) {
                         final v = val?.trim() ?? "";
                         if (v.isEmpty) return "Please enter your name";
-                        if (v.length < 2)
+                        if (v.length < 2) {
                           return "Name must be at least 2 characters.";
-                        if (RegExp(r'[0-9]').hasMatch(v))
+                        }
+                        if (RegExp(r'[0-9]').hasMatch(v)) {
                           return "Name cannot contain numbers.";
+                        }
                         if (!RegExp(
                           r'^[a-zA-Z\u0600-\u06FF\s]+$',
                         ).hasMatch(v)) {
@@ -450,8 +452,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       validator: (val) {
                         final v = val?.trim() ?? "";
                         if (v.isEmpty) return "Please enter your job title";
-                        if (v.length < 2)
+                        if (v.length < 2) {
                           return "Job title must be at least 2 characters";
+                        }
                         return null;
                       },
                     ),

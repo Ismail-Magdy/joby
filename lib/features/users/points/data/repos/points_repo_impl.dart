@@ -9,9 +9,12 @@ class PointsRepoImpl implements PointsRepo {
   PointsRepoImpl({required this.supabaseClient});
 
   @override
-  Future<Either<String, dynamic>> claimDailyPoints() async {
+  Future<Either<String, dynamic>> claimDailyPoints(String localDate) async {
     try {
-      final response = await supabaseClient.rpc("claim_daily_points");
+      final response = await supabaseClient.rpc(
+        "claim_daily_points",
+        params: {'p_local_date': localDate},
+      );
       return Right(response);
     } catch (error) {
       return Left(ErrorHandler.handleError(error));
