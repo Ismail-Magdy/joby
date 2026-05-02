@@ -29,4 +29,32 @@ class UserHomeRepoImpl implements UserHomeRepo {
       return Left(ErrorHandler.handleError(error));
     }
   }
+
+  @override
+  Future<Either<String, void>> updateUserLocation({
+    required double latitude,
+    required double longitude,
+    required String locationName,
+  }) async {
+    try {
+      final userId = supabaseClient.auth.currentUser?.id;
+
+      if (userId == null) {
+        return const Left("User not found");
+      }
+
+      await supabaseClient
+          .from("users")
+          .update({
+            "latitude": latitude,
+            "longitude": longitude,
+            "location_name": locationName,
+          })
+          .eq("id", userId);
+
+      return const Right(null);
+    } catch (error) {
+      return Left(ErrorHandler.handleError(error));
+    }
+  }
 }

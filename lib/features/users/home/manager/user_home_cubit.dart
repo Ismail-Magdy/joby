@@ -17,4 +17,24 @@ class UserHomeCubit extends Cubit<UserHomeState> {
       (userInfo) => emit(UserHomeSuccess(userInfo)),
     );
   }
+
+  Future<String?> updateUserLocation({
+    required double latitude,
+    required double longitude,
+    required String locationName,
+  }) async {
+    final result = await userHomeRepo.updateUserLocation(
+      latitude: latitude,
+      longitude: longitude,
+      locationName: locationName,
+    );
+
+    return result.fold(
+      (errorMessage) => errorMessage, // Return error message if it fails
+      (_) {
+        getUserData(); // Refresh the profile quietly
+        return null; // Null means success
+      },
+    );
+  }
 }

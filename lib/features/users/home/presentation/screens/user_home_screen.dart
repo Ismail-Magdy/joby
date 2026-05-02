@@ -23,6 +23,8 @@ import "../../manager/user_home_cubit.dart";
 import "../../manager/user_home_state.dart";
 import '../widgets/profile_header_delegate.dart';
 import '../../../../../core/errors/error_handler.dart';
+import "package:joby/features/users/user_info/presentation/screens/location_picker_screen.dart";
+import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -40,6 +42,58 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   void initState() {
     super.initState();
     context.read<UserHomeCubit>().getUserData();
+  }
+
+  Future<void> _editLocation(
+    double currentLat,
+    double currentLng,
+    String currentLocationName,
+  ) async {
+    final result = await Navigator.of(context).push<LocationPickerResult>(
+      MaterialPageRoute(
+        builder: (_) => LocationPickerScreen(
+          initialLatitude: currentLat,
+          initialLongitude: currentLng,
+          initialLocationName: currentLocationName,
+        ),
+      ),
+    );
+
+    if (result != null && mounted) {
+      final error = await context.read<UserHomeCubit>().updateUserLocation(
+        latitude: result.latitude,
+        longitude: result.longitude,
+        locationName: result.locationName,
+      );
+
+      if (mounted) {
+        if (error != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.all(20.r),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text("Location updated successfully"),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.all(20.r),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+          );
+        }
+      }
+    }
   }
 
   ///
@@ -399,6 +453,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               latitude: user.latitude,
                               longitude: user.longitude,
                               locationName: user.locationName,
+                              onEditTap: () => _editLocation(
+                                user.latitude,
+                                user.longitude,
+                                user.locationName,
+                              ),
                             ),
                           ],
                         ],
