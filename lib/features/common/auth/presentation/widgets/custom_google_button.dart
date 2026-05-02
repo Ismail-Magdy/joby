@@ -3,8 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomGoogleButton extends StatelessWidget {
-  const CustomGoogleButton({super.key, required this.onPressed});
+  const CustomGoogleButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+  });
   final void Function()? onPressed;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,7 @@ class CustomGoogleButton extends StatelessWidget {
           size: 20,
         ),
         label: Text(
-          "Google",
+          text,
           style: TextStyle(
             fontSize: 15.sp,
             fontWeight: .w600,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import "package:dartz/dartz.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:google_sign_in/google_sign_in.dart";
@@ -14,6 +15,11 @@ class AuthRepoImpl implements AuthRepo {
   final String iosClientId =
       "39044447018-nefhnuaomgem3velpbl5hcue5c8n1j41.apps.googleusercontent.com";
 
+  late final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: iosClientId,
+    serverClientId: webClientId,
+  );
+
   AuthRepoImpl({required this.supabaseClient});
 
   @override
@@ -21,7 +27,7 @@ class AuthRepoImpl implements AuthRepo {
     AuthCredentials credentials,
   ) async {
     try {
-      final AuthResponse response = await supabaseClient.auth.signUp(
+      final response = await supabaseClient.auth.signUp(
         email: credentials.email,
         password: credentials.password,
         data: {"name": credentials.name},
@@ -42,11 +48,10 @@ class AuthRepoImpl implements AuthRepo {
     AuthCredentials credentials,
   ) async {
     try {
-      final AuthResponse response = await supabaseClient.auth
-          .signInWithPassword(
-            email: credentials.email,
-            password: credentials.password,
-          );
+      final response = await supabaseClient.auth.signInWithPassword(
+        email: credentials.email,
+        password: credentials.password,
+      );
 
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
@@ -59,37 +64,55 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Either<String, UserModel>> signInWithGoogle() async {
+  Future<Either<String, UserModel>> signInWithGoogleQuick() async {
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId: iosClientId,
-        serverClientId: webClientId,
-      );
-
-      final googleUser = await googleSignIn.signIn();
+      final googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
         return const Left("Google sign in was canceled");
       }
 
       final googleAuth = await googleUser.authentication;
-      final accessToken = googleAuth.accessToken;
-      final idToken = googleAuth.idToken;
 
-      if (accessToken == null || idToken == null) {
-        return const Left("Failed to get Google tokens");
-      }
-
-      final AuthResponse response = await supabaseClient.auth.signInWithIdToken(
+      final response = await supabaseClient.auth.signInWithIdToken(
         provider: OAuthProvider.google,
-        idToken: idToken,
-        accessToken: accessToken,
+        idToken: googleAuth.idToken!,
+        accessToken: googleAuth.accessToken!,
       );
 
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Google sign in failed in Supabase.");
+        return const Left("Google sign in failed");
+      }
+    } catch (error) {
+      return Left(ErrorHandler.handleError(error));
+    }
+  }
+
+  @override
+  Future<Either<String, UserModel>> signInWithGoogleChooseAccount() async {
+    try {
+      await _googleSignIn.disconnect();
+
+      final googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        return const Left("Google sign in was canceled");
+      }
+
+      final googleAuth = await googleUser.authentication;
+
+      final response = await supabaseClient.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: googleAuth.idToken!,
+        accessToken: googleAuth.accessToken!,
+      );
+
+      if (response.user != null) {
+        return Right(UserModel.fromSupabase(response.user!));
+      } else {
+        return const Left("Google sign in failed");
       }
     } catch (error) {
       return Left(ErrorHandler.handleError(error));
@@ -99,6 +122,13 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<void> signOut() async {
     await supabaseClient.auth.signOut();
+
+    try {
+      await _googleSignIn.signOut();
+      await _googleSignIn.disconnect();
+    } catch (error) {
+      debugPrint("Google SignOut Error: ${ErrorHandler.handleError(error)}");
+    }
   }
 
   @override
@@ -114,10 +144,6 @@ class AuthRepoImpl implements AuthRepo {
           .maybeSingle();
 
       if (seekerData != null) return "seeker";
-
-      // مستقبلاً لما نعمل جدول للشركات هنشيل الكومنت من هنا
-      // final companyData = await supabaseClient.from("companies").select("id").eq("id", userId).maybeSingle();
-      // if (companyData != null) return "company";
 
       return "none";
     } catch (error) {

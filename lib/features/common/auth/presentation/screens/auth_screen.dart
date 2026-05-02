@@ -2,6 +2,7 @@ import "dart:async";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:joby/core/helpers/app_regex.dart";
+import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/features/common/auth/presentation/widgets/custom_google_button.dart";
 import "package:joby/features/common/auth/presentation/widgets/forgot_password_widget.dart";
@@ -31,6 +32,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   bool isLogin = true;
   final _formKey = GlobalKey<FormState>();
+  bool hasSignedInWithGoogleBefore = false;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -40,9 +42,11 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isAuthInProgress = false;
 
   ///
+
   @override
   void initState() {
     super.initState();
+    _loadGoogleFlag();
     if (widget.isDeepLink) {
       _authSubscription = supabase
           .Supabase
@@ -105,6 +109,13 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       }
     }
+  }
+
+  Future<void> _loadGoogleFlag() async {
+    final value = await SharedPrefHelper.getBool("isGoogleSignedInBefore");
+    setState(() {
+      hasSignedInWithGoogleBefore = value;
+    });
   }
 
   @override
@@ -337,13 +348,50 @@ class _AuthScreenState extends State<AuthScreen> {
                     //
                     verticalSpace(25),
                     // Google Button
-                    CustomGoogleButton(
-                      onPressed: state is AuthLoading
-                          ? null
-                          : () {
-                              _isAuthInProgress = true;
-                              cubit.signInWithGoogle();
-                            },
+                    Column(
+                      children: [
+                        CustomGoogleButton(
+                          text: "Google",
+                          onPressed: state is AuthLoading
+                              ? null
+                              : () {
+                                  _isAuthInProgress = true;
+                                  cubit.signInWithGoogleQuick();
+                                },
+                        ),
+                        //
+                        if (hasSignedInWithGoogleBefore) ...[
+                          //
+                          verticalSpace(12),
+                          //
+                          OutlinedButton.icon(
+                            onPressed: state is AuthLoading
+                                ? null
+                                : () {
+                                    _isAuthInProgress = true;
+                                    cubit.signInWithGoogleChooseAccount();
+                                  },
+                            icon: Icon(
+                              Icons.switch_account,
+                              color: AppColors.primaryColor,
+                            ),
+                            label: Text(
+                              "Use another account",
+                              style: TextStyle(
+                                color: AppColors.primaryColor,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: Size(.infinity, 55.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: .circular(14.r),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     //
                   ],

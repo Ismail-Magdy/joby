@@ -25,30 +25,7 @@ class AuthCubit extends Cubit<AuthState> {
     final credentials = AuthCredentials(email: email, password: password);
     final result = await authRepo.signInWithEmail(credentials);
 
-    result.fold((errorMessage) => emit(AuthError(errorMessage)), (user) async {
-      final dbRole = await authRepo.getUserRole();
-      final rawRole = await SharedPrefHelper.getString("userType");
-      final selectedRole = _normalizeRole(rawRole);
-
-      if (dbRole != "none" && selectedRole != null && dbRole != selectedRole) {
-        await authRepo.signOut();
-        final roleName = dbRole == "seeker" ? "Job Seeker" : "Company";
-        emit(AuthError("This email is already registered as a $roleName"));
-        return;
-      }
-
-      if (dbRole != "none") {
-        await SharedPrefHelper.setData("isUserInfoCompleted", true);
-      }
-
-      emit(
-        AuthSuccess(
-          user: user,
-          hasProfile: dbRole != "none",
-          userType: dbRole != "none" ? dbRole : (selectedRole ?? "seeker"),
-        ),
-      );
-    });
+    _handleResult(result);
   }
 
   Future<void> signUpWithEmail(
@@ -65,31 +42,26 @@ class AuthCubit extends Cubit<AuthState> {
     );
     final result = await authRepo.signUpWithEmail(credentials);
 
-    result.fold((errorMessage) => emit(AuthError(errorMessage)), (user) async {
-      final dbRole = await authRepo.getUserRole();
-      final rawRole = await SharedPrefHelper.getString("userType");
-      final selectedRole = _normalizeRole(rawRole);
-
-      if (dbRole != "none" && selectedRole != null && dbRole != selectedRole) {
-        await authRepo.signOut();
-        final roleName = dbRole == "seeker" ? "Job Seeker" : "Company";
-        emit(AuthError("This email is already registered as a $roleName"));
-        return;
-      }
-
-      if (dbRole != "none") {
-        await SharedPrefHelper.setData("isUserInfoCompleted", true);
-      }
-
-      emit(AuthSignUpRequiresVerification());
-    });
+    result.fold(
+      (error) => emit(AuthError(error)),
+      (_) => emit(AuthSignUpRequiresVerification()),
+    );
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogleQuick() async {
     emit(AuthLoading());
+    final result = await authRepo.signInWithGoogleQuick();
+    _handleResult(result);
+  }
 
-    final result = await authRepo.signInWithGoogle();
+  Future<void> signInWithGoogleChooseAccount() async {
+    emit(AuthLoading());
+    final result = await authRepo.signInWithGoogleChooseAccount();
+    _handleResult(result);
+  }
 
+  // ignore: strict_top_level_inference
+  void _handleResult(result) async {
     result.fold((errorMessage) => emit(AuthError(errorMessage)), (user) async {
       final dbRole = await authRepo.getUserRole();
       final rawRole = await SharedPrefHelper.getString("userType");
@@ -105,6 +77,8 @@ class AuthCubit extends Cubit<AuthState> {
       if (dbRole != "none") {
         await SharedPrefHelper.setData("isUserInfoCompleted", true);
       }
+
+      await SharedPrefHelper.setData("isGoogleSignedInBefore", true);
 
       emit(
         AuthSuccess(
