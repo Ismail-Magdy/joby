@@ -3,23 +3,23 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:flutter_svg/svg.dart";
 import "package:image_picker/image_picker.dart";
-import "package:intl_phone_field/country_picker_dialog.dart";
-import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
+import "package:joby/features/users/user_info/presentation/components/step_four_content.dart";
+import "package:joby/features/users/user_info/presentation/components/step_one_content.dart";
+import "package:joby/features/users/user_info/presentation/components/step_three_content.dart";
+import "package:joby/features/users/user_info/presentation/components/step_two_content.dart";
+import "package:joby/features/users/user_info/presentation/widgets/custom_two_buttons_row.dart";
 import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
 import "package:joby/core/helpers/extensions.dart";
-import 'package:joby/core/helpers/job_suggestions.dart';
-import 'package:joby/core/widgets/autocomplete_text_field.dart';
+import "package:joby/features/users/user_info/presentation/widgets/step_title.dart";
 import "../../data/models/user_info_model.dart";
 import "../../manager/user_info_cubit.dart";
 import "../../manager/user_info_state.dart";
 import "package:file_picker/file_picker.dart";
-import "package:intl_phone_field/intl_phone_field.dart";
 import "package:intl_phone_field/countries.dart";
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -378,6 +378,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   } else if (_currentStep == 2) {
                     // Check step 2 valid before proceeding
                     if (_cvFile == null || _whatsappController.text.isEmpty) {
+                      //
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Center(
@@ -394,6 +395,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           ),
                         ),
                       );
+                      //
                       return;
                     }
                     //
@@ -408,600 +410,127 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 controlsBuilder: (context, details) {
                   final isLastStep = _currentStep == 3;
                   //
-                  return Padding(
-                    padding: .only(top: 20.h),
-                    child: Row(
-                      children: [
-                        //
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed:
-                                (state is UserInfoLoading ||
-                                    (isLastStep && !_canSubmit))
-                                ? null
-                                : details.onStepContinue,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              padding: .symmetric(vertical: 12.h),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: .circular(8.r),
-                              ),
-                            ),
-                            child: state is UserInfoLoading && isLastStep
-                                ? CupertinoActivityIndicator(
-                                    color: Colors.white,
-                                  )
-                                : Text(
-                                    isLastStep ? "Submit" : "Next",
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: .bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                        //
-                        if (_currentStep != 0) ...[
-                          //
-                          horizontalSpace(12),
-                          //
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: details.onStepCancel,
-                              style: OutlinedButton.styleFrom(
-                                padding: .symmetric(vertical: 12.h),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: .circular(8.r),
-                                ),
-                              ),
-                              child: Text(
-                                "Back",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.black87,
-                                ),
-                              ),
+                  return CustomTwoButtonsRow(
+                    onPressed:
+                        (state is UserInfoLoading ||
+                            (isLastStep && !_canSubmit))
+                        ? null
+                        : details.onStepContinue,
+                    currentStep: _currentStep,
+                    onStepCancelpressed: details.onStepCancel,
+                    child: state is UserInfoLoading && isLastStep
+                        ? CupertinoActivityIndicator(color: Colors.white)
+                        : Text(
+                            isLastStep ? "Submit" : "Next",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: .bold,
+                              color: Colors.white,
                             ),
                           ),
-                          //
-                        ],
-                      ],
-                    ),
                   );
+                  //
                 },
                 steps: [
+                  //
                   // Step One
                   Step(
                     state: _currentStep > 0 ? .complete : .indexed,
                     isActive: _currentStep >= 0,
-                    title: Text(
-                      "Basic Information",
-                      style: TextStyle(fontSize: 16.sp, fontWeight: .bold),
-                    ),
-                    content: Column(
-                      children: [
-                        Center(
-                          child: Stack(
-                            alignment: .bottomRight,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: .circle,
-                                  border: .all(
-                                    color: AppColors.primaryColor,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 60.r,
-                                  backgroundColor: Colors.grey.shade100,
-                                  backgroundImage: _pickedAvatarFile != null
-                                      ? FileImage(_pickedAvatarFile!)
-                                      : null,
-                                  child: _pickedAvatarFile == null
-                                      ? Icon(
-                                          CupertinoIcons.person,
-                                          size: 70.sp,
-                                          color: Colors.grey.shade400,
-                                        )
-                                      : null,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: _pickAvatar,
-                                child: CircleAvatar(
-                                  radius: 18.r,
-                                  backgroundColor: AppColors.primaryColor,
-                                  child: SvgPicture.asset(
-                                    _pickedAvatarFile == null
-                                        ? "assets/svgs/camera.svg"
-                                        : "assets/svgs/pen_edit.svg",
-                                    colorFilter: .mode(Colors.white, .srcIn),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        //
-                        verticalSpace(25),
-                        //
-                        TextFormField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: "Full Name",
-                            prefixIcon: Icon(Icons.person_outline),
-                          ),
-                          validator: (val) {
-                            final v = val?.trim() ?? "";
-                            if (v.isEmpty) return "Please enter your name";
-                            if (v.length < 2) {
-                              return "Name must be at least 2 characters.";
-                            }
-
-                            if (RegExp(r'[0-9]').hasMatch(v)) {
-                              return "Name cannot contain numbers.";
-                            }
-
-                            if (!RegExp(
-                              r'^[a-zA-Z\u0600-\u06FF\s]+$',
-                            ).hasMatch(v)) {
-                              return "Name can only contain letters.";
-                            }
-                            return null;
-                          },
-                        ),
-                        //
-                        verticalSpace(15),
-                        //
-                        AutocompleteTextField(
-                          controller: _jobCategoryController,
-                          labelText: "Job Category (e.g. Graphic Design)",
-                          prefixIcon: Icons.category_outlined,
-                          suggestions: JobSuggestions.categories,
-                          validator: (val) => val!.isEmpty ? "Required" : null,
-                        ),
-                        //
-                        verticalSpace(15),
-                        //
-                        AutocompleteTextField(
-                          controller: _jobTitleController,
-                          labelText: "Job Title (e.g. Flutter Developer)",
-                          prefixIcon: Icons.work_outline,
-                          suggestions: JobSuggestions.titles,
-                          validator: (val) => val!.isEmpty ? "Required" : null,
-                        ),
-                      ],
+                    title: StepTitle(title: "Basic Information"),
+                    content: StepOneContent(
+                      backgroundImage: _pickedAvatarFile != null
+                          ? FileImage(_pickedAvatarFile!)
+                          : null,
+                      pickedAvatarFile: _pickedAvatarFile,
+                      onTapPickAvatar: _pickAvatar,
+                      nameController: _nameController,
+                      jobCategoryController: _jobCategoryController,
+                      jobTitleController: _jobTitleController,
                     ),
                   ),
+                  //
                   // Step Two
                   Step(
                     state: _currentStep > 1 ? .complete : .indexed,
                     isActive: _currentStep >= 1,
-                    title: Text(
-                      "Experience & Work Type",
-                      style: TextStyle(fontSize: 16.sp, fontWeight: .bold),
+                    title: StepTitle(title: "Experience & Work Type"),
+                    content: StepTwoContent(
+                      onChangedLevel: (newValue) =>
+                          setState(() => _selectedLevel = newValue),
+                      onChangedTypeOfWork: (newValue) =>
+                          setState(() => _selectedWorkType = newValue),
                     ),
-                    content: Column(
-                      children: [
-                        //
-                        verticalSpace(10),
-                        //
-                        DropdownButtonFormField<String>(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.primaryColor,
-                          ),
-                          dropdownColor: Colors.white,
-                          borderRadius: .circular(12.r),
-                          decoration: InputDecoration(
-                            labelText: "Level",
-                            prefixIcon: Icon(
-                              Icons.leaderboard_outlined,
-                              color: Colors.grey.shade600,
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey.shade50,
-                            contentPadding: .symmetric(
-                              horizontal: 16.w,
-                              vertical: 14.h,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: .circular(12.r),
-                              borderSide: BorderSide(
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: .circular(12.r),
-                              borderSide: BorderSide(
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: .circular(12.r),
-                              borderSide: BorderSide(
-                                color: AppColors.primaryColor,
-                                width: 1.5,
-                              ),
-                            ),
-                          ),
-                          items: ["Junior", "Mid-Level", "Senior", "Lead"].map((
-                            String value,
-                          ) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) =>
-                              setState(() => _selectedLevel = newValue),
-                        ),
-                        //
-                        verticalSpace(15),
-                        //
-                        DropdownButtonFormField<String>(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.primaryColor,
-                          ),
-                          dropdownColor: Colors.white,
-                          borderRadius: .circular(12.r),
-                          decoration: InputDecoration(
-                            labelText: "Type of Work",
-                            prefixIcon: Icon(
-                              Icons.business_center_outlined,
-                              color: Colors.grey.shade600,
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey.shade50,
-                            contentPadding: .symmetric(
-                              horizontal: 16.w,
-                              vertical: 14.h,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: .circular(12.r),
-                              borderSide: BorderSide(
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: .circular(12.r),
-                              borderSide: BorderSide(
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: .circular(12.r),
-                              borderSide: BorderSide(
-                                color: AppColors.primaryColor,
-                                width: 1.5,
-                              ),
-                            ),
-                          ),
-                          items: ["Remote", "On-site", "Hybrid"].map((
-                            String value,
-                          ) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) =>
-                              setState(() => _selectedWorkType = newValue),
-                        ),
-                        //
-                      ],
-                    ),
+                    //
                   ),
+                  //
                   // Step Three
                   Step(
                     isActive: _currentStep >= 2,
-                    title: Text(
-                      "Links & Resume",
-                      style: TextStyle(fontSize: 16.sp, fontWeight: .bold),
-                    ),
-                    content: Column(
-                      children: [
-                        //
-                        verticalSpace(10),
-                        //
-                        IntlPhoneField(
-                          cursorColor: AppColors.primaryColor,
-                          controller: _whatsappController,
-                          initialCountryCode: "EG",
-                          invalidNumberMessage:
-                              "Invalid number for the selected country",
-                          // ===================================
-                          pickerDialogStyle: PickerDialogStyle(
-                            backgroundColor: Colors.white,
-                          ),
-                          // ===================================
-                          decoration: InputDecoration(
-                            labelText: "WhatsApp Number",
-                            counterText: "",
-                            border: OutlineInputBorder(
-                              borderRadius: .circular(12.r),
-                            ),
-                          ),
-                          onChanged: (phone) {
-                            setState(() {
-                              _completeWhatsappNumber = phone.completeNumber;
-                              _isPhoneValid =
-                                  phone.number.length >=
-                                      _selectedCountry.minLength &&
-                                  phone.number.length <=
-                                      _selectedCountry.maxLength;
-                            });
-                          },
-                          onCountryChanged: (country) {
-                            setState(() {
-                              _selectedCountry = country;
-                              if (_whatsappController.text.isNotEmpty) {
-                                _isPhoneValid =
-                                    _whatsappController.text.length >=
-                                        _selectedCountry.minLength &&
-                                    _whatsappController.text.length <=
-                                        _selectedCountry.maxLength;
-                              }
-                            });
-                          },
-                        ),
-                        if (_isPhoneValid &&
-                            _whatsappController.text.isNotEmpty)
-                          Padding(
-                            padding: EdgeInsets.only(top: 8.h),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                  size: 16.sp,
-                                ),
-                                SizedBox(width: 5.w),
-                                Text(
-                                  "Valid phone number format",
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 12.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        //
-                        verticalSpace(15),
-                        //
-                        TextFormField(
-                          controller: _linkedinController,
-                          decoration: const InputDecoration(
-                            labelText: "LinkedIn URL (Optional)",
-                            hintText: "https://linkedin.com/in/username",
-                            prefixIcon: Icon(Icons.link),
-                          ),
-                          validator: _validateLinkedinUrl,
-                        ),
-                        //
-                        verticalSpace(15),
-                        //
-                        TextFormField(
-                          controller: _githubController,
-                          decoration: const InputDecoration(
-                            labelText: "GitHub URL (Optional)",
-                            hintText: "https://github.com/username",
-                            prefixIcon: Icon(Icons.code),
-                          ),
-                          validator: _validateGithubUrl,
-                        ),
-                        //
-                        verticalSpace(15),
-                        //
-                        TextFormField(
-                          controller: _behanceController,
-                          decoration: const InputDecoration(
-                            labelText: "Behance URL (Optional)",
-                            hintText: "https://behance.net/username",
-                            prefixIcon: Icon(Icons.palette_outlined),
-                          ),
-                          validator: _validateBehanceUrl,
-                        ),
-                        //
-                        verticalSpace(20),
-                        //
-                        GestureDetector(
-                          onTap: () async {
-                            FilePickerResult? result = await FilePicker.platform
-                                .pickFiles(
-                                  type: .custom,
-                                  allowedExtensions: ["pdf"],
-                                );
+                    title: StepTitle(title: "Links & Resume"),
+                    content: StepThreeContent(
+                      whatsappController: _whatsappController,
+                      linkedinController: _linkedinController,
+                      githubController: _githubController,
+                      behanceController: _behanceController,
+                      cvFile: _cvFile,
+                      cvFileName: _cvFileName,
+                      isPhoneValid: _isPhoneValid,
+                      onChangedPhone: (phone) {
+                        setState(() {
+                          _completeWhatsappNumber = phone.completeNumber;
+                          _isPhoneValid =
+                              phone.number.length >=
+                                  _selectedCountry.minLength &&
+                              phone.number.length <= _selectedCountry.maxLength;
+                        });
+                      },
+                      onChangedCountry: (country) {
+                        setState(() {
+                          _selectedCountry = country;
+                          if (_whatsappController.text.isNotEmpty) {
+                            _isPhoneValid =
+                                _whatsappController.text.length >=
+                                    _selectedCountry.minLength &&
+                                _whatsappController.text.length <=
+                                    _selectedCountry.maxLength;
+                          }
+                        });
+                      },
+                      linkedinValidator: _validateLinkedinUrl,
+                      githubValidator: _validateGithubUrl,
+                      behanceValidator: _validateBehanceUrl,
+                      onTapCV: () async {
+                        FilePickerResult? result = await FilePicker.platform
+                            .pickFiles(
+                              type: .custom,
+                              allowedExtensions: ["pdf"],
+                            );
 
-                            if (result != null &&
-                                result.files.single.path != null) {
-                              setState(() {
-                                _cvFile = File(result.files.single.path!);
-                                _cvFileName = result.files.single.name;
-                              });
-                            }
-                          },
-                          child: Container(
-                            width: .infinity,
-                            padding: .symmetric(vertical: 15.h),
-                            decoration: BoxDecoration(
-                              border: .all(
-                                color: _cvFile == null
-                                    ? Colors.grey.shade400
-                                    : AppColors.primaryColor,
-                                style: .solid,
-                              ),
-                              borderRadius: .circular(8.r),
-                              color: Colors.grey.shade50,
-                            ),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.upload_file,
-                                  color: AppColors.primaryColor,
-                                  size: 30.sp,
-                                ),
-                                verticalSpace(8),
-                                Text(
-                                  _cvFileName == null
-                                      ? "Upload CV (PDF) *"
-                                      : "CV Uploaded: $_cvFileName",
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    color: Colors.black87,
-                                    fontWeight: _cvFileName != null
-                                        ? .bold
-                                        : .normal,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                        if (result != null &&
+                            result.files.single.path != null) {
+                          setState(() {
+                            _cvFile = File(result.files.single.path!);
+                            _cvFileName = result.files.single.name;
+                          });
+                        }
+                      },
                     ),
                   ),
+                  //
                   // Step Four
                   Step(
                     isActive: _currentStep >= 3,
-                    title: Text(
-                      "Location",
-                      style: TextStyle(fontSize: 16.sp, fontWeight: .bold),
+                    title: StepTitle(title: "Location"),
+                    content: StepFourContent(
+                      locationName: _locationName,
+                      isLoadingLocation: _isLoadingLocation,
+                      mapController: _mapController,
+                      latitude: _latitude,
+                      longitude: _longitude,
+                      onTap: _openLocationPicker,
                     ),
-                    content: Column(
-                      children: [
-                        //
-                        verticalSpace(10),
-                        //
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: AppColors.primaryColor,
-                              size: 24.sp,
-                            ),
-                            //
-                            horizontalSpace(8),
-                            // Location Name
-                            Expanded(
-                              child: Text(
-                                _locationName,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: .w600,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                            //
-                            if (_isLoadingLocation)
-                              CupertinoActivityIndicator(
-                                color: AppColors.primaryColor,
-                              ),
-                          ],
-                        ),
-                        //
-                        verticalSpace(15),
-                        //
-                        // Tappable Map Preview
-                        GestureDetector(
-                          onTap: _openLocationPicker,
-                          child: Container(
-                            height: 250.h,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: Colors.grey.shade300),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  // Map Preview (non-interactive)
-                                  AbsorbPointer(
-                                    child: FlutterMap(
-                                      mapController: _mapController,
-                                      options: MapOptions(
-                                        initialCenter: LatLng(
-                                          _latitude,
-                                          _longitude,
-                                        ),
-                                        initialZoom: 14.0,
-                                      ),
-                                      children: [
-                                        TileLayer(
-                                          urlTemplate:
-                                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                          userAgentPackageName:
-                                              'com.example.joby',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  //
-                                  Icon(
-                                    Icons.location_pin,
-                                    color: Colors.red,
-                                    size: 40.sp,
-                                  ),
-                                  // "Tap to change" overlay
-                                  Positioned(
-                                    bottom: 10.h,
-                                    right: 10.w,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12.w,
-                                        vertical: 6.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primaryColor,
-                                        borderRadius: BorderRadius.circular(
-                                          20.r,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.15,
-                                            ),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.edit_location_alt,
-                                            color: Colors.white,
-                                            size: 16.sp,
-                                          ),
-                                          SizedBox(width: 4.w),
-                                          Text(
-                                            "Change",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        //
-                      ],
-                    ),
+                    //
                   ),
                   //
                 ],
@@ -1013,4 +542,4 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 }
- // 872
+ // 1016
