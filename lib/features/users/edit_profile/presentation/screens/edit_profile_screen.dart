@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/helpers/extensions.dart';
@@ -13,10 +11,14 @@ import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_cubit.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_state.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/build_text_field.dart';
+import 'package:joby/features/users/edit_profile/presentation/widgets/custom_avatar_widget.dart';
+import 'package:joby/features/users/edit_profile/presentation/widgets/custom_edit_profile_bold_text.dart';
+import 'package:joby/features/users/edit_profile/presentation/widgets/custom_save_button.dart';
+import 'package:joby/features/users/edit_profile/presentation/widgets/cv_upload_widget.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/drop_down_widget.dart';
+import 'package:joby/features/users/edit_profile/presentation/widgets/intl_phone_widget.dart';
+import 'package:joby/features/users/edit_profile/presentation/widgets/show_valid_message.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
-import 'package:intl_phone_field/country_picker_dialog.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserInfoModel? currentUserInfo;
@@ -360,58 +362,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   crossAxisAlignment: .start,
                   children: [
                     // Avatar
-                    Center(
-                      child: Stack(
-                        alignment: .bottomRight,
-                        children: [
-                          // Image - shows picked file, or network avatar, or fallback icon
-                          CircleAvatar(
-                            radius: 50.r,
-                            backgroundColor: Colors.grey.shade100,
-                            backgroundImage: _buildAvatarImage(),
-                            child: _shouldShowAvatarPlaceholder()
-                                ? Icon(
-                                    Ionicons.person,
-                                    size: 50.sp,
-                                    color: Colors.grey.shade400,
-                                  )
-                                : null,
-                          ),
-                          //
-                          // Camera Icon - opens gallery
-                          GestureDetector(
-                            onTap: isLoading ? null : () => cubit.pickAvatar(),
-                            child: Container(
-                              padding: .all(8.r),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor,
-                                shape: .circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                              ),
-                              child: SvgPicture.asset(
-                                _shouldShowAvatarPlaceholder()
-                                    ? "assets/svgs/camera.svg"
-                                    : "assets/svgs/pen_edit.svg",
-                                colorFilter: .mode(Colors.white, .srcIn),
-                                height: 18.h,
-                              ),
-                            ),
-                          ),
-                          //
-                        ],
-                      ),
+                    CustomAvatarWidget(
+                      backgroundImage: _buildAvatarImage(),
+
+                      onTap: isLoading ? null : () => cubit.pickAvatar(),
+                      icon: _shouldShowAvatarPlaceholder()
+                          ? "assets/svgs/camera.svg"
+                          : "assets/svgs/pen_edit.svg",
+                      child: _shouldShowAvatarPlaceholder()
+                          ? Icon(
+                              Ionicons.person,
+                              size: 50.sp,
+                              color: Colors.grey.shade400,
+                            )
+                          : null,
                     ),
                     //
                     verticalSpace(40),
                     //
                     //  Personal Info Section
-                    Text(
-                      "Personal Info",
-                      style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
-                    ),
+                    CustomEditProfileBoldText(text: "Personal Info"),
                     //
                     verticalSpace(20),
                     //
@@ -495,54 +465,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     verticalSpace(30),
                     //
                     //  Social Links Section
-                    Text(
-                      "Social Links",
-                      style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
-                    ),
+                    CustomEditProfileBoldText(text: "Social Links"),
                     //
                     verticalSpace(20),
                     //
-                    IntlPhoneField(
-                      cursorColor: AppColors.primaryColor,
+                    IntlPhoneWidget(
                       initialValue: _initialWhatsapp.isNotEmpty
                           ? _initialWhatsapp
                           : null,
                       initialCountryCode: _initialWhatsapp.isEmpty
                           ? "EG"
                           : null,
-                      invalidNumberMessage:
-                          "Invalid number for the selected country",
-                      pickerDialogStyle: PickerDialogStyle(
-                        backgroundColor: Colors.white,
-                      ),
-
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: .circular(12.r),
-                          borderSide: BorderSide(
-                            color: _isPhoneValid
-                                ? AppColors.primaryColor
-                                : Colors.red.shade400,
-                            width: 2,
-                          ),
-                        ),
-                        labelText: "WhatsApp Number",
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 14.sp,
-                          fontWeight: .w600,
-                        ),
-                        counterText: "",
-                        border: OutlineInputBorder(
-                          borderRadius: .circular(12.r),
-                          borderSide: BorderSide(
-                            color: _isPhoneValid
-                                ? Colors.grey.shade300
-                                : Colors.red.shade400,
-                          ),
-                        ),
-                      ),
-                      onChanged: (phone) {
+                      isPhoneValid: _isPhoneValid,
+                      onChangedPhone: (phone) {
                         setState(() {
                           _isPhoneEmpty = phone.number.isEmpty;
                           _completeWhatsappNumber = phone.completeNumber;
@@ -569,37 +504,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           }
                         });
                       },
-                      onCountryChanged: (country) {
+                      onChangedCountry: (country) {
                         setState(() {
                           _selectedCountry = country;
                         });
                       },
                     ),
+                    //
                     // Show validation message if phone is invalid and not empty
                     if (_isPhoneValid && !_isPhoneEmpty)
                       // Show valid message
-                      Padding(
-                        padding: .only(top: 8.h),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              color: Colors.green,
-                              size: 16.sp,
-                            ),
-                            //
-                            horizontalSpace(5),
-                            //
-                            Text(
-                              "Valid phone number format",
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 12.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      ShowValidMessage(),
                     //
                     verticalSpace(15),
                     //
@@ -634,86 +549,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     verticalSpace(30),
                     //
                     //  CV Section
-                    Text(
-                      "CV",
-                      style: TextStyle(fontSize: 18.sp, fontWeight: .bold),
-                    ),
+                    CustomEditProfileBoldText(text: "CV"),
                     //
                     verticalSpace(15),
                     //
                     // CV Upload
-                    GestureDetector(
+                    CvUploadWidget(
                       onTap: isLoading ? null : () => cubit.pickCv(),
-                      child: Container(
-                        width: .infinity,
-                        padding: .symmetric(
-                          vertical: _pickedCvName != null ? 15.h : 20.h,
-                          horizontal: 15.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor.withValues(alpha: 0.05),
-                          border: .all(
-                            color: AppColors.primaryColor.withValues(
-                              alpha: 0.3,
-                            ),
-                            width: 1.5,
-                          ),
-                          borderRadius: .circular(16.r),
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              _pickedCvName != null
-                                  ? Ionicons.document_text
-                                  : Ionicons.cloud_upload_outline,
-                              color: AppColors.primaryColor,
-                              size: 35.sp,
-                            ),
-                            verticalSpace(10),
-                            Text(
-                              _pickedCvName ?? "Upload New CV (PDF)",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: AppColors.primaryColor,
-                                fontWeight: .w600,
-                              ),
-                              textAlign: .center,
-                              maxLines: 1,
-                              overflow: .ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
+                      pickedCvName: _pickedCvName,
                     ),
                     //
                     verticalSpace(50),
                     //
                     //  Save Button
-                    SizedBox(
-                      width: .infinity,
-                      height: 55.h,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: .circular(16.r),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: isLoading ? null : _triggerSave,
-                        child: isLoading
-                            ? const CupertinoActivityIndicator(
-                                color: Colors.white,
-                              )
-                            : Text(
-                                "Save Changes",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                  fontWeight: .bold,
-                                ),
-                              ),
-                      ),
+                    CustomSaveButton(
+                      onPressed: isLoading ? null : _triggerSave,
+                      isLoading: isLoading,
                     ),
                     //
                     verticalSpace(30),
