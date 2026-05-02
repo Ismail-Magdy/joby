@@ -392,7 +392,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               ),
                               child: SvgPicture.asset(
-                                "assets/svgs/camera.svg",
+                                _shouldShowAvatarPlaceholder()
+                                    ? "assets/svgs/camera.svg"
+                                    : "assets/svgs/pen_edit.svg",
                                 colorFilter: .mode(Colors.white, .srcIn),
                                 height: 18.h,
                               ),

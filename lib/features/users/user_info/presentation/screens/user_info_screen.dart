@@ -145,7 +145,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   ///
   bool get _canSubmit {
     if (_currentStep != 2 && _currentStep != 3) return true;
-    return _cvFile != null && _whatsappController.text.isNotEmpty && _isPhoneValid;
+    return _cvFile != null &&
+        _whatsappController.text.isNotEmpty &&
+        _isPhoneValid;
   }
 
   /// URL validators for social links
@@ -512,7 +514,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   radius: 18.r,
                                   backgroundColor: AppColors.primaryColor,
                                   child: SvgPicture.asset(
-                                    "assets/svgs/camera.svg",
+                                    _pickedAvatarFile == null
+                                        ? "assets/svgs/camera.svg"
+                                        : "assets/svgs/pen_edit.svg",
                                     colorFilter: .mode(Colors.white, .srcIn),
                                   ),
                                 ),
@@ -707,7 +711,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           cursorColor: AppColors.primaryColor,
                           controller: _whatsappController,
                           initialCountryCode: "EG",
-                          invalidNumberMessage: "Invalid number for the selected country",
+                          invalidNumberMessage:
+                              "Invalid number for the selected country",
                           // ===================================
                           pickerDialogStyle: PickerDialogStyle(
                             backgroundColor: Colors.white,
@@ -723,30 +728,44 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           onChanged: (phone) {
                             setState(() {
                               _completeWhatsappNumber = phone.completeNumber;
-                              _isPhoneValid = phone.number.length >= _selectedCountry.minLength &&
-                                  phone.number.length <= _selectedCountry.maxLength;
+                              _isPhoneValid =
+                                  phone.number.length >=
+                                      _selectedCountry.minLength &&
+                                  phone.number.length <=
+                                      _selectedCountry.maxLength;
                             });
                           },
                           onCountryChanged: (country) {
                             setState(() {
                               _selectedCountry = country;
                               if (_whatsappController.text.isNotEmpty) {
-                                _isPhoneValid = _whatsappController.text.length >= _selectedCountry.minLength &&
-                                    _whatsappController.text.length <= _selectedCountry.maxLength;
+                                _isPhoneValid =
+                                    _whatsappController.text.length >=
+                                        _selectedCountry.minLength &&
+                                    _whatsappController.text.length <=
+                                        _selectedCountry.maxLength;
                               }
                             });
                           },
                         ),
-                        if (_isPhoneValid && _whatsappController.text.isNotEmpty)
+                        if (_isPhoneValid &&
+                            _whatsappController.text.isNotEmpty)
                           Padding(
                             padding: EdgeInsets.only(top: 8.h),
                             child: Row(
                               children: [
-                                Icon(Icons.check_circle, color: Colors.green, size: 16.sp),
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 16.sp,
+                                ),
                                 SizedBox(width: 5.w),
                                 Text(
                                   "Valid phone number format",
-                                  style: TextStyle(color: Colors.green, fontSize: 12.sp),
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 12.sp,
+                                  ),
                                 ),
                               ],
                             ),
