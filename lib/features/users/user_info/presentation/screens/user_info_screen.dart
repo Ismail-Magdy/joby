@@ -4,10 +4,12 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:image_picker/image_picker.dart";
+import "package:image_cropper/image_cropper.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
+import "package:joby/core/widgets/snack_bar_text.dart";
 import "package:joby/features/users/user_info/presentation/components/step_four_content.dart";
 import "package:joby/features/users/user_info/presentation/components/step_one_content.dart";
 import "package:joby/features/users/user_info/presentation/components/step_three_content.dart";
@@ -196,9 +198,25 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     final XFile? image = await picker.pickImage(source: .gallery);
 
     if (image != null) {
-      setState(() {
-        _pickedAvatarFile = File(image.path);
-      });
+      final CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: "Crop Image",
+            toolbarColor: AppColors.primaryColor,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(title: "Crop Image"),
+        ],
+      );
+
+      if (croppedFile != null) {
+        setState(() {
+          _pickedAvatarFile = File(croppedFile.path);
+        });
+      }
     }
   }
 
@@ -271,12 +289,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             // Success
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Center(
-                  child: Text(
-                    "Profile saved successfully",
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                ),
+                content: SnackBarText(title: "Profile saved successfully"),
                 backgroundColor: Colors.green,
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.all(20.r),
@@ -296,9 +309,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             // Error
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Center(
-                  child: Text(state.message, style: TextStyle(fontSize: 14.sp)),
-                ),
+                content: SnackBarText(title: state.message),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.all(20.r),
@@ -334,11 +345,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       //
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Center(
-                            child: Text(
-                              "Please upload your profile picture",
-                              style: TextStyle(fontSize: 14.sp),
-                            ),
+                          content: SnackBarText(
+                            title: "Please upload your profile picture",
                           ),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
@@ -358,11 +366,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       //
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Center(
-                            child: Text(
-                              "Please select your Level and Type of Work",
-                              style: TextStyle(fontSize: 14.sp),
-                            ),
+                          content: SnackBarText(
+                            title: "Please select your Level and Type of Work",
                           ),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
@@ -381,11 +386,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       //
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Center(
-                            child: Text(
-                              "Please fill WhatsApp and upload CV",
-                              style: TextStyle(fontSize: 14.sp),
-                            ),
+                          content: SnackBarText(
+                            title: "Please fill WhatsApp and upload CV",
                           ),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
@@ -530,7 +532,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       longitude: _longitude,
                       onTap: _openLocationPicker,
                     ),
-                    //
                   ),
                   //
                 ],
@@ -542,4 +543,3 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 }
- // 1016

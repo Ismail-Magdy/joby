@@ -5,6 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/repos/edit_profile_repo.dart';
 import 'edit_profile_state.dart';
+import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import '../../../../core/themes/app_colors.dart';
 import '../../../../core/errors/error_handler.dart';
 
 class EditProfileCubit extends Cubit<EditProfileState> {
@@ -21,11 +24,27 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   Future<void> pickAvatar() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: .gallery);
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
-        _pickedAvatarFile = File(image.path);
-        emit(EditProfileAvatarPicked(file: _pickedAvatarFile!));
+        final CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: image.path,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: AppColors.primaryColor,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.square,
+              lockAspectRatio: false,
+            ),
+            IOSUiSettings(title: 'Crop Image'),
+          ],
+        );
+
+        if (croppedFile != null) {
+          _pickedAvatarFile = File(croppedFile.path);
+          emit(EditProfileAvatarPicked(file: _pickedAvatarFile!));
+        }
       }
     } catch (error) {
       emit(EditProfileError(ErrorHandler.handleError(error)));
