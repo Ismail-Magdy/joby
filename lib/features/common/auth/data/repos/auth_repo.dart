@@ -6,14 +6,15 @@ abstract class AuthRepo {
   Future<Either<String, UserModel>> signUpWithEmail(
     AuthCredentials credentials,
   );
-  //
+
   Future<Either<String, UserModel>> signInWithEmail(
     AuthCredentials credentials,
   );
-  //
-  Future<Either<String, UserModel>> signInWithGoogle();
-  //
+
+  Future<Either<String, UserModel>> signInWithGoogleQuick();
+  Future<Either<String, UserModel>> signInWithGoogleChooseAccount();
+
   Future<void> signOut();
-  //
+
   Future<String> getUserRole();
 }

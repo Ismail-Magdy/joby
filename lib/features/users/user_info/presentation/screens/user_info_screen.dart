@@ -338,7 +338,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 type: .vertical,
                 physics: const BouncingScrollPhysics(),
                 currentStep: _currentStep,
-                onStepTapped: null, // Disable tapping on step numbers
+                onStepTapped: null,
                 onStepContinue: () {
                   final isLastStep = _currentStep == 3;
 
