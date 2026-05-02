@@ -384,8 +384,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     setState(() => _currentStep += 1);
                   } else if (_currentStep == 2) {
                     // Check step 2 valid before proceeding
-                    if (_cvFile == null || _whatsappController.text.isEmpty) {
-                      //
+                    if (_cvFile == null && _whatsappController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: SnackBarText(
@@ -399,7 +398,49 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           ),
                         ),
                       );
-                      //
+                      return;
+                    } else if (_whatsappController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: SnackBarText(
+                            title: "Please enter your WhatsApp number",
+                          ),
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                          margin: .all(20.r),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: .circular(10.r),
+                          ),
+                        ),
+                      );
+                      return;
+                    } else if (!_isPhoneValid) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: SnackBarText(
+                            title: "Please enter a valid WhatsApp number",
+                          ),
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(20.r),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                        ),
+                      );
+                      return;
+                    } else if (_cvFile == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: SnackBarText(title: "Please upload your CV"),
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(20.r),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                        ),
+                      );
                       return;
                     }
                     //
