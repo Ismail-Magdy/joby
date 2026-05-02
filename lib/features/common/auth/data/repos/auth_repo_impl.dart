@@ -34,6 +34,10 @@ class AuthRepoImpl implements AuthRepo {
       );
 
       if (response.user != null) {
+        if (response.user!.identities != null &&
+            response.user!.identities!.isEmpty) {
+          return const Left("An account with this email already exists");
+        }
         return Right(UserModel.fromSupabase(response.user!));
       } else {
         return const Left("Sign up failed. Please try again");
