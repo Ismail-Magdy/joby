@@ -202,6 +202,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         sourcePath: image.path,
         uiSettings: [
           AndroidUiSettings(
+            activeControlsWidgetColor: AppColors.primaryColor,
+            hideBottomControls: false,
             toolbarTitle: "Crop Image",
             toolbarColor: AppColors.primaryColor,
             toolbarWidgetColor: Colors.white,

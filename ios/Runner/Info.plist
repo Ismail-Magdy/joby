@@ -84,7 +84,24 @@
           </dict>
         </array>
         
+        <!-- Image Picker and Cropper Permissions -->
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>This app needs access to your photo library to allow you to upload and crop your profile avatar.</string>
+        <key>NSCameraUsageDescription</key>
+        <string>This app requires access to your camera to let you take photos for your profile avatar.</string>
+        
+        <!-- Location Permissions -->
         <key>NSLocationWhenInUseUsageDescription</key>
-        <string>We need your location to pin it on the map.</string>
+        <string>This app requires access to your location to detect and display your area accurately on the map.</string>
+        <key>NSLocationAlwaysUsageDescription</key>
+        <string>This app requires location access to maintain your location services.</string>
+
+        <!-- URL Launcher Queries -->
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>whatsapp</string>
+            <string>https</string>
+            <string>http</string>
+        </array>
     </dict>
 </plist>
