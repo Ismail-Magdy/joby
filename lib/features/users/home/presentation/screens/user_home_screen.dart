@@ -25,6 +25,7 @@ import '../widgets/profile_header_delegate.dart';
 import '../../../../../core/errors/error_handler.dart';
 import "package:joby/features/users/user_info/presentation/screens/location_picker_screen.dart";
 import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -74,9 +75,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               backgroundColor: Colors.red,
               behavior: SnackBarBehavior.floating,
               margin: EdgeInsets.all(20.r),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
             ),
           );
         } else {
@@ -323,6 +322,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   SliverPersistentHeader(
                     pinned: true,
                     delegate: ProfileHeaderDelegate(
+                      userId:
+                          Supabase.instance.client.auth.currentUser?.id ?? "",
                       avatarUrl: user.avatarUrl,
                       title: "My Profile",
                       name: user.name,
