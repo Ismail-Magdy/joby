@@ -53,9 +53,3 @@ void main() async {
 
   runApp(JobyApp(appRouter: AppRouter(), initialRoute: initialRoute));
 }
-
-// ismailmagdy021@gmail.com
-// ismailmagdy861@gmail.com
-// ismailmagdy070@gmail.com
-// Google
-// ismailmagdy960@gmail.com
