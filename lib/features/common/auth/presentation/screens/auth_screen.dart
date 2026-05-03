@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:joby/core/helpers/app_regex.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/helpers/spacing.dart";
+import "package:joby/core/widgets/snack_bar_text.dart";
 import "package:joby/features/common/auth/presentation/widgets/custom_google_button.dart";
 import "package:joby/features/common/auth/presentation/widgets/forgot_password_widget.dart";
 import "package:joby/features/common/auth/presentation/widgets/show_success_dialog.dart";
@@ -129,15 +130,7 @@ class _AuthScreenState extends State<AuthScreen> {
               //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Center(
-                    child: Text(
-                      "Welcome ${state.user.name}",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontFamily: "BrunoAceSC",
-                      ),
-                    ),
-                  ),
+                  content: SnackBarText(title: "Welcome ${state.user.name}"),
                   backgroundColor: Colors.green,
                   behavior: .floating,
                   margin: .all(20.r),
@@ -197,18 +190,11 @@ class _AuthScreenState extends State<AuthScreen> {
               //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Center(
-                    child: Text(
-                      state.message,
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
-                  ),
+                  content: SnackBarText(title: state.message),
                   backgroundColor: Colors.red,
                   behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
               //

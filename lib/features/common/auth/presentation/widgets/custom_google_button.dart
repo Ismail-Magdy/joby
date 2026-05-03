@@ -23,11 +23,7 @@ class CustomGoogleButton extends StatelessWidget {
           side: BorderSide(color: Colors.grey.shade300, width: 1),
           shape: RoundedRectangleBorder(borderRadius: .circular(14.r)),
         ),
-        icon: const FaIcon(
-          FontAwesomeIcons.google,
-          color: Colors.black,
-          size: 20,
-        ),
+        icon: FaIcon(FontAwesomeIcons.google, color: Colors.black, size: 20.sp),
         label: Text(
           text,
           style: TextStyle(
