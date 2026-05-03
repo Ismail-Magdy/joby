@@ -27,6 +27,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'location_picker_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
@@ -64,11 +65,41 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   String _locationName = "Detecting location...";
   final MapController _mapController = MapController();
   bool _isLoadingLocation = true;
+  String? _networkAvatarUrl;
 
   @override
   void initState() {
     super.initState();
     _determinePosition();
+    _fetchUserMetadata();
+  }
+
+  void _fetchUserMetadata() {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      final metadata = user.userMetadata;
+      if (metadata != null) {
+        if (metadata['full_name'] != null &&
+            metadata['full_name'].toString().isNotEmpty) {
+          _nameController.text = metadata['full_name'];
+        } else if (metadata['name'] != null &&
+            metadata['name'].toString().isNotEmpty) {
+          _nameController.text = metadata['name'];
+        }
+
+        if (metadata['avatar_url'] != null &&
+            metadata['avatar_url'].toString().isNotEmpty) {
+          setState(() {
+            _networkAvatarUrl = metadata['avatar_url'];
+          });
+        } else if (metadata['picture'] != null &&
+            metadata['picture'].toString().isNotEmpty) {
+          setState(() {
+            _networkAvatarUrl = metadata['picture'];
+          });
+        }
+      }
+    }
   }
 
   /// Determine Position
@@ -264,7 +295,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         github: githubText.isEmpty ? null : githubText,
         behance: behanceText.isEmpty ? null : behanceText,
         cvUrl: null,
-        avatarUrl: null,
+        avatarUrl: _networkAvatarUrl,
         locationName: _locationName,
         latitude: _latitude,
         longitude: _longitude,
@@ -294,10 +325,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 content: SnackBarText(title: "Profile saved successfully"),
                 backgroundColor: Colors.green,
                 behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.all(20.r),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
+                margin: .all(20.r),
+                shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
               ),
             );
             //
@@ -314,10 +343,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 content: SnackBarText(title: state.message),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.all(20.r),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
+                margin: .all(20.r),
+                shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
               ),
             );
             //
@@ -354,7 +381,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           behavior: SnackBarBehavior.floating,
                           margin: .all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
+                            borderRadius: .circular(10.r),
                           ),
                         ),
                       );
@@ -373,9 +400,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           ),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(20.r),
+                          margin: .all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
+                            borderRadius: .circular(10.r),
                           ),
                         ),
                       );
@@ -392,9 +419,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           ),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(20.r),
+                          margin: .all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
+                            borderRadius: .circular(10.r),
                           ),
                         ),
                       );
@@ -422,9 +449,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           ),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(20.r),
+                          margin: .all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
+                            borderRadius: .circular(10.r),
                           ),
                         ),
                       );
@@ -435,9 +462,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           content: SnackBarText(title: "Please upload your CV"),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(20.r),
+                          margin: .all(20.r),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
+                            borderRadius: .circular(10.r),
                           ),
                         ),
                       );
@@ -486,7 +513,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     content: StepOneContent(
                       backgroundImage: _pickedAvatarFile != null
                           ? FileImage(_pickedAvatarFile!)
-                          : null,
+                          : (_networkAvatarUrl != null
+                                    ? NetworkImage(_networkAvatarUrl!)
+                                    : null)
+                                as ImageProvider<Object>?,
                       pickedAvatarFile: _pickedAvatarFile,
                       onTapPickAvatar: _pickAvatar,
                       nameController: _nameController,

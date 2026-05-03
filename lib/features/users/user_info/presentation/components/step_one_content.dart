@@ -43,7 +43,7 @@ class StepOneContent extends StatelessWidget {
                   radius: 60.r,
                   backgroundColor: Colors.grey.shade100,
                   backgroundImage: backgroundImage,
-                  child: pickedAvatarFile == null
+                  child: backgroundImage == null
                       ? Icon(
                           CupertinoIcons.person,
                           size: 70.sp,
@@ -58,7 +58,7 @@ class StepOneContent extends StatelessWidget {
                   radius: 18.r,
                   backgroundColor: AppColors.primaryColor,
                   child: SvgPicture.asset(
-                    pickedAvatarFile == null
+                    backgroundImage == null
                         ? "assets/svgs/camera.svg"
                         : "assets/svgs/pen_edit.svg",
                     colorFilter: .mode(Colors.white, .srcIn),
