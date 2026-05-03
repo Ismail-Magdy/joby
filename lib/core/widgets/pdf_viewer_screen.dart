@@ -21,7 +21,7 @@ class PdfViewerScreen extends StatelessWidget {
       backgroundColor: Colors.grey.shade100,
       appBar: CustomAppBar(text: title),
       body:
-          PDF(
+          const PDF(
             enableSwipe: true,
             swipeHorizontal: false,
             autoSpacing: false,
@@ -35,11 +35,12 @@ class PdfViewerScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.error_outline, color: Colors.red, size: 50.sp),
                   verticalSpace(10),
-                  SizedBox(height: 10.h),
-                  Text(
-                    "Failed to load document\n$error",
-                    textAlign: .center,
-                    style: const TextStyle(color: Colors.red),
+                  Center(
+                    child: Text(
+                      "Failed to load document\n$error",
+                      textAlign: .center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
                 ],
               ),

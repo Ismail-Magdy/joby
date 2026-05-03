@@ -35,9 +35,7 @@ class ShimmerBox extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         shape: shape,
-        borderRadius: shape == .rectangle
-            ? BorderRadius.circular(borderRadius.r)
-            : null,
+        borderRadius: shape == .rectangle ? .circular(borderRadius.r) : null,
       ),
     );
   }

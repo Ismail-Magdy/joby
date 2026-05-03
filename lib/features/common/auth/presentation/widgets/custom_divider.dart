@@ -10,7 +10,7 @@ class CustomDivider extends StatelessWidget {
       children: [
         Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          padding: .symmetric(horizontal: 10.w),
           child: Text(
             "Or continue with",
             style: TextStyle(color: Colors.grey.shade500, fontSize: 13.sp),

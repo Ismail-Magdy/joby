@@ -24,7 +24,7 @@ class OfflineModeWidget extends StatelessWidget {
                 SvgPicture.asset(
                   "assets/svgs/offline.svg",
                   height: 55.h,
-                  colorFilter: .mode(AppColors.primaryColor, .srcIn),
+                  colorFilter: const .mode(AppColors.primaryColor, .srcIn),
                 ),
                 //
                 verticalSpace(180),
