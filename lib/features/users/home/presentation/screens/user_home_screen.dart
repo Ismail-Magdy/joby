@@ -1,4 +1,3 @@
-import "package:dio/dio.dart";
 import "package:flutter/material.dart";
 import "package:joby/features/users/home/presentation/widgets/custom_info_row.dart";
 import "package:joby/features/users/home/presentation/widgets/cv_section.dart";
@@ -14,18 +13,16 @@ import "package:joby/features/users/home/presentation/widgets/total_points_conta
 import "package:joby/features/users/points/manager/points_cubit.dart";
 import "package:joby/features/users/points/manager/points_state.dart";
 import "package:joby/features/users/points/presentation/widgets/points_celebration_dialog.dart";
-import "package:open_filex/open_filex.dart";
-import "package:path_provider/path_provider.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "../../manager/user_home_cubit.dart";
 import "../../manager/user_home_state.dart";
 import '../widgets/profile_header_delegate.dart';
-import '../../../../../core/errors/error_handler.dart';
 import "package:joby/features/users/user_info/presentation/screens/location_picker_screen.dart";
 import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
+import "package:joby/core/widgets/pdf_viewer_screen.dart";
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -35,7 +32,6 @@ class UserHomeScreen extends StatefulWidget {
 }
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
-  bool _isDownloadingCv = false;
   bool _isAvatarLoading = false;
   String? _loadedAvatarUrl;
 
@@ -151,57 +147,26 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   ///
-  Future<void> _downloadAndOpenCV(String urlString) async {
-    setState(() {
-      _isDownloadingCv = true;
-    });
+  void _openCV(String urlString) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            PdfViewerScreen(pdfUrl: urlString, title: "My Resume"),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
 
-    try {
-      final tempDir = await getTemporaryDirectory();
-      final savePath =
-          "${tempDir.path}/Joby_Resume_${DateTime.now().millisecondsSinceEpoch}.pdf";
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
 
-      final dio = Dio();
-      await dio.download(urlString, savePath);
-
-      final result = await OpenFilex.open(savePath);
-
-      if (result.type != .done) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Center(
-                child: const Text("No app found to open PDF files"),
-              ),
-              backgroundColor: Colors.orange,
-              margin: EdgeInsets.all(20.r),
-              shape: RoundedRectangleBorder(
-                borderRadius: .all(.circular(10.r)),
-              ),
-            ),
-          );
-        }
-      }
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Center(child: Text(ErrorHandler.handleError(error))),
-            backgroundColor: Colors.red,
-            margin: EdgeInsets.all(20.r),
-            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isDownloadingCv = false;
-        });
-      }
-    }
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
   }
 
   //
@@ -436,11 +401,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                 //
                                 if (user.cvUrl != null)
                                   //
-                                  CvSection(
-                                    onTap: _isDownloadingCv
-                                        ? null
-                                        : () => _downloadAndOpenCV(user.cvUrl!),
-                                  ),
+                                  CvSection(onTap: () => _openCV(user.cvUrl!)),
                                 //
                               ],
                             ),
