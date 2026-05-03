@@ -5,8 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:joby/features/users/home/presentation/widgets/full_screen_avatar_dialog.dart';
 
 class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final String userId;
   final String? avatarUrl;
   final String title;
   final String name;
@@ -15,6 +17,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final VoidCallback onEditTap;
 
   ProfileHeaderDelegate({
+    required this.userId,
     required this.avatarUrl,
     required this.title,
     required this.name,
@@ -203,32 +206,40 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
           Positioned(
             left: avatarCX - avatarRadius,
             top: avatarCY - avatarRadius,
-            child: Container(
-              padding: .all(2.r),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: .circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+            child: GestureDetector(
+              onTap: () {
+                showFullScreenAvatarDialog(context, avatarUrl, userId);
+              },
+              child: Hero(
+                tag: "profile_avatar",
+                child: Container(
+                  padding: .all(2.r),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: .circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.12),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: CircleAvatar(
-                radius: avatarRadius,
-                backgroundColor: Colors.grey.shade100,
-                backgroundImage: avatarUrl != null
-                    ? NetworkImage(avatarUrl!)
-                    : null,
-                child: avatarUrl == null
-                    ? Icon(
-                        Ionicons.person,
-                        size: avatarRadius * 0.7,
-                        color: Colors.grey.shade400,
-                      )
-                    : null,
+                  child: CircleAvatar(
+                    radius: avatarRadius,
+                    backgroundColor: Colors.grey.shade100,
+                    backgroundImage: avatarUrl != null
+                        ? NetworkImage(avatarUrl!)
+                        : null,
+                    child: avatarUrl == null
+                        ? Icon(
+                            Ionicons.person,
+                            size: avatarRadius * 0.7,
+                            color: Colors.grey.shade400,
+                          )
+                        : null,
+                  ),
+                ),
               ),
             ),
           ),

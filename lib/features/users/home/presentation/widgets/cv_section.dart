@@ -59,9 +59,9 @@ class CvSection extends StatelessWidget {
               ),
             ),
             SvgPicture.asset(
-              "assets/svgs/eye.svg",
+              "assets/svgs/show_cv.svg",
               colorFilter: .mode(AppColors.primaryColor, .srcIn),
-              height: 22.h,
+              height: 20.h,
             ),
           ],
         ),
