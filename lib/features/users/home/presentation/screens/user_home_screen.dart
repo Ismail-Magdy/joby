@@ -291,7 +291,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           Supabase.instance.client.auth.currentUser?.id ?? "",
                       avatarUrl: user.avatarUrl,
                       title: "My Profile",
-                      name: user.name,
+                      name: user.displayShortName,
                       jobTitle: user.jobTitle,
                       onManagerTap: () =>
                           context.pushNamed(Routes.companyViewScreen),
@@ -317,7 +317,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           verticalSpace(70),
                           // Name
                           Text(
-                            user.name,
+                            user.displayShortName,
                             style: TextStyle(
                               fontSize: 22.sp,
                               fontWeight: .bold,

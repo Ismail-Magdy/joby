@@ -35,6 +35,12 @@ class UserInfoModel {
     required this.longitude,
   });
 
+  String get displayShortName {
+    if (name.trim().isEmpty) return "";
+    final parts = name.trim().split(" ");
+    return parts.take(2).join(" ");
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "name": name,
