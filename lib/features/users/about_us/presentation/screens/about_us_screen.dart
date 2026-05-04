@@ -7,7 +7,7 @@ import 'package:joby/features/users/about_us/presentation/widgets/card_widget.da
 import 'package:joby/features/users/about_us/presentation/widgets/custom_social_button.dart';
 import 'package:joby/features/users/about_us/presentation/widgets/custom_tech_row.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../widgets/custom_header.dart';
+import '../widgets/about_header_delegate.dart';
 import '../widgets/footer_section.dart';
 
 class AboutUsScreen extends StatelessWidget {
@@ -24,35 +24,18 @@ class AboutUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // App Bar
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          "About Us",
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 20.sp,
-            fontWeight: .bold,
-            fontFamily: "BrunoAceSC",
-          ),
-        ),
-      ),
       //
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Gradient Header
-            CustomHeader(),
-            //  Content Cards
-            Padding(
-              padding: .symmetric(horizontal: 20.w),
+      body: CustomScrollView(
+        slivers: [
+          // Collapsing Animated Header
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: AboutHeaderDelegate(version: "v 1.0.0"),
+          ),
+          // Content Cards
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(
                 children: [
                   //
@@ -115,7 +98,7 @@ class AboutUsScreen extends StatelessWidget {
                               verticalSpace(3),
                               //
                               Text(
-                                "Flutter Developer & Software Engineer",
+                                "Software Engineer & Flutter Developer",
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   color: Colors.grey.shade600,
@@ -170,21 +153,21 @@ class AboutUsScreen extends StatelessWidget {
                           icon: Ionicons.phone_portrait_outline,
                           name: "Flutter",
                           description:
-                              "Cross-platform mobile framework by Google",
+                              "Cross platform mobile framework by Google",
                         ),
                         //
                         CustomTechRow(
                           icon: Ionicons.server_outline,
                           name: "Supabase",
                           description:
-                              "Open-source backend & PostgreSQL database",
+                              "Open source backend & PostgreSQL database",
                         ),
                         //
                         CustomTechRow(
-                          icon: Ionicons.sparkles_outline,
-                          name: "Google Gemini AI",
-                          description: "AI-powered career coaching assistant",
-                          isLast: true,
+                          icon: Ionicons.logo_github,
+                          name: "GitHub",
+                          description:
+                              "Version control and code hosting platform",
                         ),
                         //
                       ],
@@ -248,9 +231,9 @@ class AboutUsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            //
-          ],
-        ),
+          ),
+          //
+        ],
       ),
     );
   }
