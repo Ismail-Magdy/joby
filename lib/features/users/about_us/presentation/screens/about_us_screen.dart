@@ -180,27 +180,72 @@ class AboutUsScreen extends StatelessWidget {
                   CardWidget(
                     icon: Ionicons.share_social_outline,
                     title: "Connect With Us",
-                    child: Row(
-                      mainAxisAlignment: .spaceEvenly,
+                    child: Wrap(
+                      alignment: .center,
+                      spacing: 20.w,
+                      runSpacing: 20.h,
                       children: [
-                        //
+                        // Facebook
                         CustomSocialButton(
-                          icon: Ionicons.logo_github,
-                          label: "GitHub",
-                          color: const Color(0xFF333333),
-                          onTap: () =>
-                              _launchUrl("https://github.com/Ismail-Magdy"),
+                          icon: Ionicons.logo_facebook,
+                          label: "Facebook",
+                          color: const Color(0xFF1877F2),
+                          onTap: () => _launchUrl(
+                            "https://www.facebook.com/share/1B4LsLAAdq/",
+                          ),
                         ),
-                        //
+                        // Instagram
+                        CustomSocialButton(
+                          icon: Ionicons.logo_instagram,
+                          label: "Instagram",
+                          color: const Color(0xFFE4405F),
+                          onTap: () => _launchUrl(
+                            "https://www.instagram.com/joby_app_?igsh=ZndvdHM4eTFzbXo1",
+                          ),
+                        ),
+                        // LinkedIn
                         CustomSocialButton(
                           icon: Ionicons.logo_linkedin,
                           label: "LinkedIn",
                           color: const Color(0xFF0077B5),
                           onTap: () => _launchUrl(
-                            "https://linkedin.com/in/ismailmagdy021",
+                            "https://www.linkedin.com/company/joby-application/",
                           ),
                         ),
-                        //
+                        // TikTok
+                        CustomSocialButton(
+                          icon: Ionicons.logo_tiktok,
+                          label: "TikTok",
+                          color: Colors.black,
+                          onTap: () => _launchUrl(
+                            "https://www.tiktok.com/@joby922?_r=1&_t=ZS-964FnlNpv1u",
+                          ),
+                        ),
+                        // WhatsApp
+                        CustomSocialButton(
+                          icon: Ionicons.logo_whatsapp,
+                          label: "WhatsApp",
+                          color: Colors.green,
+                          onTap: () =>
+                              _launchUrl("https://wa.me/+201507090603"),
+                        ),
+                        // Telegram
+                        CustomSocialButton(
+                          icon: Icons.telegram,
+                          label: "Telegram",
+                          color: const Color(0xFF0088cc),
+                          onTap: () =>
+                              _launchUrl("https://t.me/+Ly0NuI9eqhgxNTg0"),
+                        ),
+                        // Site
+                        CustomSocialButton(
+                          icon: Ionicons.globe_outline,
+                          label: "Website",
+                          color: AppColors.primaryColor,
+                          onTap: () =>
+                              _launchUrl("https://joby-site.vercel.app/"),
+                        ),
+                        // Email
                         CustomSocialButton(
                           icon: Ionicons.mail_outline,
                           label: "Email",
@@ -208,16 +253,6 @@ class AboutUsScreen extends StatelessWidget {
                           onTap: () =>
                               _launchUrl("mailto:ismailmagdy920@gmail.com"),
                         ),
-                        //
-                        //
-                        CustomSocialButton(
-                          icon: Ionicons.logo_whatsapp,
-                          label: "WhatsApp",
-                          color: Colors.green,
-                          onTap: () =>
-                              _launchUrl("https://wa.me/+201206607906"),
-                        ),
-                        //
                       ],
                     ),
                   ),
