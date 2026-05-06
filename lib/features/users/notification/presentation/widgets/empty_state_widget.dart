@@ -10,7 +10,7 @@ class EmptyStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         children: [
           Icon(
             CupertinoIcons.bell_slash,
@@ -19,17 +19,17 @@ class EmptyStateWidget extends StatelessWidget {
           ),
           verticalSpace(20),
           Text(
-            "No new notifications yet!",
+            "No new notifications yet",
             style: TextStyle(
               fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
+              fontWeight: .w600,
               color: Colors.grey.shade700,
             ),
           ),
           verticalSpace(10),
           Text(
             "We'll notify you when something\nimportant happens.",
-            textAlign: TextAlign.center,
+            textAlign: .center,
             style: TextStyle(
               fontSize: 14.sp,
               color: Colors.grey.shade500,

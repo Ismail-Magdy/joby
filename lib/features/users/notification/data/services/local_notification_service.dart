@@ -9,10 +9,10 @@ class LocalNotificationService {
 
   Future<void> init() async {
     tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
+    tz.setLocalLocation(tz.getLocation("Africa/Cairo"));
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings("@mipmap/ic_launcher");
 
     const DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings();
@@ -25,7 +25,7 @@ class LocalNotificationService {
 
     await flutterLocalNotificationsPlugin.initialize(
       onDidReceiveNotificationResponse: (details) {
-        // Handle notification tap هنا تقدر تعمل navigation مثلاً
+        // Handle notification tap navigation
       },
       settings: initializationSettings,
     );
@@ -67,22 +67,22 @@ class LocalNotificationService {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id: 1,
-      title: 'We miss you today!',
-      body: 'Come in now and collect your 10 points before they\'re gone.',
+      title: "We miss you today",
+      body: "Come in now and collect your 10 points before they\"re gone",
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
-          'daily_check_in_channel',
-          'Daily Check-in',
-          channelDescription: 'Reminders for daily check-in points',
-          importance: Importance.max,
-          priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          "daily_check_in_channel",
+          "Daily Check-in",
+          channelDescription: "Reminders for daily check-in points",
+          importance: .max,
+          priority: .high,
+          icon: "@mipmap/ic_launcher",
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
+      androidScheduleMode: .exactAllowWhileIdle,
+      matchDateTimeComponents: .time,
     );
   }
 
@@ -104,23 +104,23 @@ class LocalNotificationService {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id: 2,
-      title: 'Great news!',
+      title: "Great news",
       body:
-          'Did any company see your CV today? Check out who viewed your profile!',
+          "Did any company see your CV today? Check out who viewed your profile",
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
-          'profile_views_channel',
-          'Profile Views',
-          channelDescription: 'Reminders to check profile views',
-          importance: Importance.max,
-          priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          "profile_views_channel",
+          "Profile Views",
+          channelDescription: "Reminders to check profile views",
+          importance: .max,
+          priority: .high,
+          icon: "@mipmap/ic_launcher",
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
+      androidScheduleMode: .exactAllowWhileIdle,
+      matchDateTimeComponents: .time,
     );
   }
 

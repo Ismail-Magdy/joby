@@ -11,6 +11,8 @@ import 'package:joby/features/company/home/company_home_screen.dart';
 import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
 import 'package:joby/features/users/feed_back/presentation/screens/advice_screen.dart';
 import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
+import 'package:joby/features/users/notification/manager/notification_cubit.dart';
+import 'package:joby/features/users/notification/presentation/screens/notifications_screen.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import '../../features/users/feed_back/manager/advice_cubit.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
@@ -117,6 +119,16 @@ class AppRouter {
       /// Points Screen
       case Routes.pointsScreen:
         return MaterialPageRoute(builder: (_) => const PointsScreen());
+
+      /// Notifications Screen
+      case Routes.notificationsScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                getIt<NotificationCubit>()..fetchNotifications(),
+            child: const NotificationsScreen(),
+          ),
+        );
 
       //// Company Part
 

@@ -25,22 +25,22 @@ class NotificationTile extends StatelessWidget {
 
   IconData _getIconData() {
     switch (notification.type) {
-      case NotificationType.points:
+      case .points:
         return Ionicons.gift_outline;
-      case NotificationType.profileView:
+      case .profileView:
         return Ionicons.eye_outline;
-      case NotificationType.other:
+      case .other:
         return Ionicons.notifications_outline;
     }
   }
 
   Color _getIconColor() {
     switch (notification.type) {
-      case NotificationType.points:
+      case .points:
         return Colors.orange;
-      case NotificationType.profileView:
+      case .profileView:
         return AppColors.primaryColor;
-      case NotificationType.other:
+      case .other:
         return Colors.blueGrey;
     }
   }
@@ -52,15 +52,15 @@ class NotificationTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16.r),
+      borderRadius: .circular(16.r),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        padding: EdgeInsets.all(16.r),
+        margin: .symmetric(horizontal: 16.w, vertical: 8.h),
+        padding: .all(16.r),
         decoration: BoxDecoration(
           color: isUnread
               ? AppColors.primaryColor.withValues(alpha: 0.05)
               : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: .circular(16.r),
           border: Border.all(
             color: isUnread
                 ? AppColors.primaryColor.withValues(alpha: 0.2)
@@ -76,14 +76,14 @@ class NotificationTile extends StatelessWidget {
           ],
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             // Icon Background
             Container(
-              padding: EdgeInsets.all(12.r),
+              padding: .all(12.r),
               decoration: BoxDecoration(
                 color: iconColor.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
+                shape: .circle,
               ),
               child: Icon(_getIconData(), color: iconColor, size: 24.sp),
             ),
@@ -91,23 +91,21 @@ class NotificationTile extends StatelessWidget {
             // Content
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: .spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
                           notification.title,
                           style: TextStyle(
                             fontSize: 16.sp,
-                            fontWeight: isUnread
-                                ? FontWeight.bold
-                                : FontWeight.w600,
+                            fontWeight: isUnread ? .bold : .w600,
                             color: Colors.black87,
                           ),
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                         ),
                       ),
                       horizontalSpace(8),
@@ -135,7 +133,7 @@ class NotificationTile extends StatelessWidget {
             if (isUnread) ...[
               horizontalSpace(12),
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   verticalSpace(8),
                   Container(
@@ -143,7 +141,7 @@ class NotificationTile extends StatelessWidget {
                     height: 10.r,
                     decoration: BoxDecoration(
                       color: AppColors.primaryColor,
-                      shape: BoxShape.circle,
+                      shape: .circle,
                     ),
                   ),
                 ],
