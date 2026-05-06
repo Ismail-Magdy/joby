@@ -1,0 +1,157 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/core/themes/app_colors.dart';
+import '../../data/models/notification_model.dart';
+
+class NotificationTile extends StatelessWidget {
+  final NotificationModel notification;
+  final VoidCallback onTap;
+
+  const NotificationTile({
+    super.key,
+    required this.notification,
+    required this.onTap,
+  });
+
+  String _formatTimeAgo(DateTime timestamp) {
+    final diff = DateTime.now().difference(timestamp);
+    if (diff.inDays > 0) return '${diff.inDays}d ago';
+    if (diff.inHours > 0) return '${diff.inHours}h ago';
+    if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
+    return 'Just now';
+  }
+
+  IconData _getIconData() {
+    switch (notification.type) {
+      case NotificationType.points:
+        return Ionicons.gift_outline;
+      case NotificationType.profileView:
+        return Ionicons.eye_outline;
+      case NotificationType.other:
+        return Ionicons.notifications_outline;
+    }
+  }
+
+  Color _getIconColor() {
+    switch (notification.type) {
+      case NotificationType.points:
+        return Colors.orange;
+      case NotificationType.profileView:
+        return AppColors.primaryColor;
+      case NotificationType.other:
+        return Colors.blueGrey;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isUnread = !notification.isRead;
+    final iconColor = _getIconColor();
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        padding: EdgeInsets.all(16.r),
+        decoration: BoxDecoration(
+          color: isUnread
+              ? AppColors.primaryColor.withValues(alpha: 0.05)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isUnread
+                ? AppColors.primaryColor.withValues(alpha: 0.2)
+                : Colors.grey.shade200,
+          ),
+          boxShadow: [
+            if (isUnread)
+              BoxShadow(
+                color: AppColors.primaryColor.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Icon Background
+            Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(_getIconData(), color: iconColor, size: 24.sp),
+            ),
+            horizontalSpace(16),
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          notification.title,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: isUnread
+                                ? FontWeight.bold
+                                : FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      horizontalSpace(8),
+                      Text(
+                        _formatTimeAgo(notification.timestamp),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  verticalSpace(6),
+                  Text(
+                    notification.subtitle,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isUnread) ...[
+              horizontalSpace(12),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  verticalSpace(8),
+                  Container(
+                    width: 10.r,
+                    height: 10.r,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}

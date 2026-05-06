@@ -6,6 +6,7 @@ import "package:joby/core/helpers/constants.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/routes/app_router.dart";
 import "package:joby/core/routes/routes.dart";
+import "package:joby/features/users/notification/data/services/local_notification_service.dart";
 import "package:joby/joby_app.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations([.portraitUp]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Load Environment Variables
   await dotenv.load(fileName: ".env");
@@ -26,6 +27,13 @@ void main() async {
 
   // Initialize GetIt service locator
   await initGetIt();
+
+  // Initialize Local Notifications
+  final notificationService = getIt<LocalNotificationService>();
+  await notificationService.init();
+  await notificationService.requestPermissions();
+  await notificationService.scheduleDailyCheckInReminder();
+  await notificationService.scheduleProfileViewsReminder();
 
   // Determine initial route from session state
   String initialRoute = Routes.onBoardingScreen;
