@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/extensions.dart";
@@ -13,28 +14,18 @@ class UserSettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       //
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: SizedBox.shrink(),
-        leadingWidth: 0,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        title: Text(
-          "Settings",
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: .bold,
-            fontSize: 20.sp,
-            fontFamily: "BrunoAceSC",
-          ),
-        ),
-        centerTitle: true,
-      ),
+      appBar: CustomAppBarWithNoLeading(text: "Settings"),
       //
       body: Padding(
         padding: .symmetric(horizontal: 20.w, vertical: 20.h),
         child: Column(
           children: [
+            //
+            CustomSettingsItem(
+              icon: "assets/svgs/notification.svg",
+              label: "Notifications",
+              onTap: () => context.pushNamed(Routes.notificationsScreen),
+            ),
             //
             CustomSettingsItem(
               icon: "assets/svgs/about-us.svg",
