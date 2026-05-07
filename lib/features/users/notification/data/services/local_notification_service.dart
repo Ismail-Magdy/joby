@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as timezone;
+import 'package:timezone/timezone.dart' as timezone;
 
 class LocalNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation("Africa/Cairo"));
+    timezone.initializeTimeZones();
+    timezone.setLocalLocation(timezone.getLocation("Africa/Cairo"));
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings("@mipmap/ic_launcher");
@@ -50,10 +50,10 @@ class LocalNotificationService {
   }
 
   Future<void> scheduleDailyCheckInReminder() async {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    final timezone.TZDateTime now = timezone.TZDateTime.now(timezone.local);
 
-    tz.TZDateTime scheduledDate = tz.TZDateTime(
-      tz.local,
+    timezone.TZDateTime scheduledDate = timezone.TZDateTime(
+      timezone.local,
       now.year,
       now.month,
       now.day,
@@ -87,10 +87,10 @@ class LocalNotificationService {
   }
 
   Future<void> scheduleProfileViewsReminder() async {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    final timezone.TZDateTime now = timezone.TZDateTime.now(timezone.local);
 
-    tz.TZDateTime scheduledDate = tz.TZDateTime(
-      tz.local,
+    timezone.TZDateTime scheduledDate = timezone.TZDateTime(
+      timezone.local,
       now.year,
       now.month,
       now.day,

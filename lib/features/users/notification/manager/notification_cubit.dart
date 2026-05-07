@@ -55,8 +55,8 @@ class NotificationCubit extends Cubit<NotificationState> {
       } else {
         emit(NotificationLoaded(List.from(_notifications)));
       }
-    } catch (e) {
-      emit(NotificationError('Failed to load notifications'));
+    } catch (error) {
+      emit(NotificationError("Failed to load notifications"));
     }
   }
 

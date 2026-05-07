@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/extensions.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key, required this.text});
+  const CustomAppBar({super.key, required this.text, this.actions});
   final String text;
+  final List<Widget>? actions;
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -29,6 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
+      actions: actions,
     );
   }
 }

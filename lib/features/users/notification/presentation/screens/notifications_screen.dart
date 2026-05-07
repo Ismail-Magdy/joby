@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:joby/core/widgets/custom_app_bar.dart';
+import 'package:joby/core/widgets/error_screen.dart';
 import '../../manager/notification_cubit.dart';
 import '../../manager/notification_state.dart';
 import '../widgets/empty_state_widget.dart';
@@ -15,22 +16,10 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          "Notifications",
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 20.sp,
-            fontWeight: .bold,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
-          onPressed: () => context.pop(),
-        ),
+      backgroundColor: Colors.white,
+      // App Bar
+      appBar: CustomAppBar(
+        text: "Notifications",
         actions: [
           BlocBuilder<NotificationCubit, NotificationState>(
             builder: (context, state) {
@@ -45,7 +34,7 @@ class NotificationsScreen extends StatelessWidget {
                       "Mark all as read",
                       style: TextStyle(
                         color: AppColors.primaryColor,
-                        fontSize: 14.sp,
+                        fontSize: 10.sp,
                         fontWeight: .w600,
                       ),
                     ),
@@ -57,23 +46,25 @@ class NotificationsScreen extends StatelessWidget {
           ),
         ],
       ),
+      //
       body: BlocBuilder<NotificationCubit, NotificationState>(
         builder: (context, state) {
+          // Loading State
           if (state is NotificationLoading) {
             return const Center(child: CupertinoActivityIndicator());
+            // Error State
           } else if (state is NotificationError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: TextStyle(color: Colors.red, fontSize: 16.sp),
-              ),
-            );
-          } else if (state is NotificationEmpty) {
+            return ErrorScreen(errorText: state.message);
+          }
+          // Empty State
+          else if (state is NotificationEmpty) {
             return const EmptyStateWidget();
-          } else if (state is NotificationLoaded) {
+          }
+          // Loaded State
+          else if (state is NotificationLoaded) {
             final notifications = state.notifications;
             return ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 12.h),
+              padding: .symmetric(vertical: 12.h),
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 return TweenAnimationBuilder<double>(
@@ -89,7 +80,7 @@ class NotificationsScreen extends StatelessWidget {
                   child: NotificationTile(
                     notification: notifications[index],
                     onTap: () {
-                      // Handle tap, e.g. navigate to profile or points screen
+                      // Handle tap navigate to profile or points screen
                     },
                   ),
                 );

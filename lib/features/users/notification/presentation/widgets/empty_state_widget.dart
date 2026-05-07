@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/core/themes/app_colors.dart';
 
 class EmptyStateWidget extends StatelessWidget {
   const EmptyStateWidget({super.key});
@@ -12,12 +13,15 @@ class EmptyStateWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: .center,
         children: [
+          //
           Icon(
             CupertinoIcons.bell_slash,
-            size: 80.sp,
-            color: Colors.grey.shade400,
+            size: 90.sp,
+            color: AppColors.primaryColor,
           ),
+          //
           verticalSpace(20),
+          //
           Text(
             "No new notifications yet",
             style: TextStyle(
@@ -26,7 +30,9 @@ class EmptyStateWidget extends StatelessWidget {
               color: Colors.grey.shade700,
             ),
           ),
+          //
           verticalSpace(10),
+          //
           Text(
             "We'll notify you when something\nimportant happens.",
             textAlign: .center,
@@ -36,6 +42,7 @@ class EmptyStateWidget extends StatelessWidget {
               height: 1.5,
             ),
           ),
+          //
         ],
       ),
     );
