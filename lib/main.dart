@@ -43,7 +43,15 @@ void main() async {
     final userType = await SharedPrefHelper.getString(AppConstants.userTypeKey);
 
     if (userType == "company") {
-      initialRoute = Routes.companyHomeScreen;
+      final isCompanyInfoCompleted = await SharedPrefHelper.getBool(
+        AppConstants.isCompanyInfoCompletedKey,
+      );
+
+      if (isCompanyInfoCompleted == true) {
+        initialRoute = Routes.companyHomeScreen;
+      } else {
+        initialRoute = Routes.companyInfoScreen;
+      }
     } else {
       final isInfoCompleted = await SharedPrefHelper.getBool(
         AppConstants.isUserInfoCompletedKey,

@@ -149,6 +149,14 @@ class AuthRepoImpl implements AuthRepo {
 
       if (seekerData != null) return "seeker";
 
+      final managerData = await supabaseClient
+          .from("managers_data")
+          .select("id")
+          .eq("id", userId)
+          .maybeSingle();
+
+      if (managerData != null) return "company";
+
       return "none";
     } catch (error) {
       return "none";
