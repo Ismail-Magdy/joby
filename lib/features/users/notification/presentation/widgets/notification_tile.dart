@@ -17,10 +17,10 @@ class NotificationTile extends StatelessWidget {
 
   String _formatTimeAgo(DateTime timestamp) {
     final diff = DateTime.now().difference(timestamp);
-    if (diff.inDays > 0) return '${diff.inDays}d ago';
-    if (diff.inHours > 0) return '${diff.inHours}h ago';
-    if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
-    return 'Just now';
+    if (diff.inDays > 0) return "${diff.inDays}d ago";
+    if (diff.inHours > 0) return "${diff.inHours}h ago";
+    if (diff.inMinutes > 0) return "${diff.inMinutes}m ago";
+    return "Just now";
   }
 
   IconData _getIconData() {
@@ -37,11 +37,11 @@ class NotificationTile extends StatelessWidget {
   Color _getIconColor() {
     switch (notification.type) {
       case .points:
-        return Colors.orange;
+        return AppColors.primaryColor;
       case .profileView:
         return AppColors.primaryColor;
       case .other:
-        return Colors.blueGrey;
+        return AppColors.primaryColor;
     }
   }
 
@@ -50,9 +50,8 @@ class NotificationTile extends StatelessWidget {
     final bool isUnread = !notification.isRead;
     final iconColor = _getIconColor();
 
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: .circular(16.r),
       child: Container(
         margin: .symmetric(horizontal: 16.w, vertical: 8.h),
         padding: .all(16.r),
@@ -61,7 +60,7 @@ class NotificationTile extends StatelessWidget {
               ? AppColors.primaryColor.withValues(alpha: 0.05)
               : Colors.white,
           borderRadius: .circular(16.r),
-          border: Border.all(
+          border: .all(
             color: isUnread
                 ? AppColors.primaryColor.withValues(alpha: 0.2)
                 : Colors.grey.shade200,
@@ -70,7 +69,7 @@ class NotificationTile extends StatelessWidget {
             if (isUnread)
               BoxShadow(
                 color: AppColors.primaryColor.withValues(alpha: 0.05),
-                blurRadius: 10,
+                blurRadius: 10.r,
                 offset: const Offset(0, 4),
               ),
           ],
@@ -82,11 +81,12 @@ class NotificationTile extends StatelessWidget {
             Container(
               padding: .all(12.r),
               decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.1),
+                color: iconColor.withValues(alpha: 0.05),
                 shape: .circle,
               ),
-              child: Icon(_getIconData(), color: iconColor, size: 24.sp),
+              child: Icon(_getIconData(), color: iconColor, size: 22.sp),
             ),
+            //
             horizontalSpace(16),
             // Content
             Expanded(
@@ -96,6 +96,7 @@ class NotificationTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: .spaceBetween,
                     children: [
+                      // Title
                       Expanded(
                         child: Text(
                           notification.title,
@@ -108,34 +109,44 @@ class NotificationTile extends StatelessWidget {
                           overflow: .ellipsis,
                         ),
                       ),
+                      //
                       horizontalSpace(8),
+                      // Timestamp
                       Text(
                         _formatTimeAgo(notification.timestamp),
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 10.sp,
                           color: Colors.grey.shade500,
                         ),
                       ),
+                      //
                     ],
                   ),
+                  //
                   verticalSpace(6),
+                  // Subtitle
                   Text(
                     notification.subtitle,
                     style: TextStyle(
-                      fontSize: 14.sp,
-                      color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                      fontSize: 12.sp,
+                      color: isUnread ? Colors.black87 : Colors.grey.shade500,
                       height: 1.4,
                     ),
                   ),
+                  //
                 ],
               ),
             ),
             if (isUnread) ...[
+              //
               horizontalSpace(12),
+              // Unread Indicator
               Column(
                 mainAxisAlignment: .center,
                 children: [
+                  //
                   verticalSpace(8),
+                  //
                   Container(
                     width: 10.r,
                     height: 10.r,
@@ -144,8 +155,10 @@ class NotificationTile extends StatelessWidget {
                       shape: .circle,
                     ),
                   ),
+                  //
                 ],
               ),
+              //
             ],
           ],
         ),
