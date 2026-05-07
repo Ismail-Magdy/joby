@@ -140,26 +140,26 @@ class _AuthScreenState extends State<AuthScreen> {
               //
               if (state.hasProfile) {
                 if (state.userType == "company") {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
+                  context.pushNamedAndRemoveUntil(
                     Routes.companyHomeScreen,
-                    (route) => false,
+                    predicate: (Route<dynamic> route) => false,
                   );
                 } else {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
+                  context.pushNamedAndRemoveUntil(
                     Routes.userRootScreen,
-                    (route) => false,
+                    predicate: (Route<dynamic> route) => false,
                   );
                 }
               } else {
                 if (state.userType == "company") {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.companyHomeScreen,
-                    (route) => false,
+                  context.pushNamedAndRemoveUntil(
+                    Routes.companyInfoScreen,
+                    predicate: (Route<dynamic> route) => false,
                   );
                 } else {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
+                  context.pushNamedAndRemoveUntil(
                     Routes.userInfoScreen,
-                    (route) => false,
+                    predicate: (Route<dynamic> route) => false,
                   );
                 }
               }

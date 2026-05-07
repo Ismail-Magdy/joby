@@ -22,6 +22,9 @@ import '../../features/users/user_info/manager/user_info_cubit.dart';
 import '../../features/users/points/data/repos/points_repo.dart';
 import '../../features/users/points/data/repos/points_repo_impl.dart';
 import '../../features/users/points/manager/points_cubit.dart';
+import '../../features/company/company_info/data/repos/company_info_repo.dart';
+import '../../features/company/company_info/data/repos/company_info_repo_impl.dart';
+import '../../features/company/company_info/manager/company_info_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -97,4 +100,17 @@ Future<void> initGetIt() async {
     () => LocalNotificationService(),
   );
   getIt.registerFactory<NotificationCubit>(() => NotificationCubit());
+
+  /// Company Part
+
+  /// Company Info Feature
+  getIt.registerLazySingleton<CompanyInfoRepo>(
+    () => CompanyInfoRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+  );
+  getIt.registerFactory<CompanyInfoCubit>(
+    () => CompanyInfoCubit(
+      companyInfoRepo: getIt<CompanyInfoRepo>(),
+      supabaseClient: getIt<SupabaseClient>(),
+    ),
+  );
 }
