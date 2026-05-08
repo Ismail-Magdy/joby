@@ -48,7 +48,7 @@ void main() async {
       );
 
       if (isCompanyInfoCompleted == true) {
-        initialRoute = Routes.companyHomeScreen;
+        initialRoute = Routes.companyRootScreen;
       } else {
         initialRoute = Routes.companyInfoScreen;
       }
