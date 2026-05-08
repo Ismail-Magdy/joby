@@ -13,7 +13,6 @@ import 'package:joby/core/widgets/snack_bar_text.dart';
 import 'package:joby/features/company/company_info/manager/company_info_cubit.dart';
 import 'package:joby/features/company/company_info/manager/company_info_state.dart';
 import 'package:joby/features/company/company_info/presentation/widgets/custom_setup_company_button.dart';
-import '../../../../../core/helpers/extensions.dart';
 
 class CompanyInfoScreen extends StatefulWidget {
   const CompanyInfoScreen({super.key});
@@ -51,7 +50,10 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
           child: BlocConsumer<CompanyInfoCubit, CompanyInfoState>(
             listener: (context, state) {
               if (state is CompanyInfoSuccess) {
-                context.pushReplacementNamed(Routes.companyHomeScreen);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.companyHomeScreen,
+                  (route) => false,
+                );
               } else if (state is CompanyInfoError) {
                 // Show error message in a SnackBar
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -101,6 +103,7 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
                           height: 1.5,
                         ),
                       ),
+                      //
                       verticalSpace(40),
                       // Profile Picture Section
                       GestureDetector(
@@ -175,7 +178,7 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
                                 "Complete Setup",
                                 style: TextStyle(
                                   fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                   color: Colors.white,
                                 ),
                               ),
@@ -194,7 +197,7 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
 
   Widget _buildProfileImage(CompanyInfoCubit cubit) {
     if (cubit.profileImage != null) {
-      return Image.file(cubit.profileImage!, fit: BoxFit.cover);
+      return Image.file(cubit.profileImage!, fit: .cover);
     } else if (cubit.prefilledAvatarUrl != null) {
       return CachedNetworkImage(
         imageUrl: cubit.prefilledAvatarUrl!,
