@@ -141,7 +141,7 @@ class _AuthScreenState extends State<AuthScreen> {
               if (state.hasProfile) {
                 if (state.userType == "company") {
                   context.pushNamedAndRemoveUntil(
-                    Routes.companyHomeScreen,
+                    Routes.companyRootScreen,
                     predicate: (Route<dynamic> route) => false,
                   );
                 } else {

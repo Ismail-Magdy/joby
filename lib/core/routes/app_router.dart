@@ -9,7 +9,8 @@ import 'package:joby/features/common/auth/presentation/screens/auth_screen.dart'
 import 'package:joby/features/common/auth/manager/auth_cubit.dart';
 import 'package:joby/features/company/company_info/manager/company_info_cubit.dart';
 import 'package:joby/features/company/company_info/presentation/screens/company_info_screen.dart';
-import 'package:joby/features/company/home/company_home_screen.dart';
+import 'package:joby/features/company/home/presentation/screens/company_home_screen.dart';
+import 'package:joby/features/company/root/screens/company_root_screen.dart';
 import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
 import 'package:joby/features/users/feed_back/presentation/screens/advice_screen.dart';
 import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
@@ -148,6 +149,13 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) =>
               const ExitConfirmationWrapper(child: CompanyHomeScreen()),
+        );
+
+      /// Company Root Screen
+      case Routes.companyRootScreen:
+        return MaterialPageRoute(
+          builder: (_) =>
+              const ExitConfirmationWrapper(child: CompanyRootScreen()),
         );
 
       /// Default Case

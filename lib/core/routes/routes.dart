@@ -17,4 +17,5 @@ class Routes {
   /// Company
   static const String companyInfoScreen = "/companyInfoScreen";
   static const String companyHomeScreen = "/companyHomeScreen";
+  static const String companyRootScreen = "/companyRootScreen";
 }
