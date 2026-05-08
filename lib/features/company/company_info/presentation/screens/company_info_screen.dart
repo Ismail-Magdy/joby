@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/routes/routes.dart';
 import 'package:joby/core/themes/app_colors.dart';
@@ -50,9 +51,9 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
           child: BlocConsumer<CompanyInfoCubit, CompanyInfoState>(
             listener: (context, state) {
               if (state is CompanyInfoSuccess) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.companyHomeScreen,
-                  (route) => false,
+                context.pushNamedAndRemoveUntil(
+                  Routes.companyRootScreen,
+                  predicate: (Route<dynamic> route) => false,
                 );
               } else if (state is CompanyInfoError) {
                 // Show error message in a SnackBar

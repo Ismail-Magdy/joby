@@ -151,8 +151,8 @@ class AuthRepoImpl implements AuthRepo {
 
       final managerData = await supabaseClient
           .from("managers_data")
-          .select("id")
-          .eq("id", userId)
+          .select("manager_id")
+          .eq("manager_id", userId)
           .maybeSingle();
 
       if (managerData != null) return "company";
