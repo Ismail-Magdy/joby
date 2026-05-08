@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../../core/errors/error_handler.dart';
 import 'company_info_repo.dart';
 
 class CompanyInfoRepoImpl implements CompanyInfoRepo {
@@ -37,23 +36,19 @@ class CompanyInfoRepoImpl implements CompanyInfoRepo {
         avatarUrl = null;
       }
 
-      // Update name in profiles table
-      await supabaseClient.from('profiles').update({
-        'name': name,
-      }).eq('id', user.id);
-
-      // Upsert avatar_url in managers_data table
-      await supabaseClient.from('managers_data').upsert({
-        'id': user.id,
-        'avatar_url': avatarUrl,
-      });
+      // Use RPC to atomically upsert profiles + managers_data (bypasses RLS)
+      await supabaseClient.rpc(
+        'create_company_profile',
+        params: {
+          'p_name': name,
+          'p_email': user.email ?? '',
+          'p_avatar_url': avatarUrl,
+        },
+      );
 
       return const Right(null);
     } catch (e) {
-      if (e is PostgrestException) {
-        return Left("Database Error: ${e.message}");
-      }
-      return Left(ErrorHandler.handleError(e));
+      return Left("Error [${e.runtimeType}]: $e");
     }
   }
 }
