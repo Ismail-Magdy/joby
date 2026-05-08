@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:joby/features/users/notification/data/services/local_notification_service.dart';
 import 'package:joby/features/users/notification/manager/notification_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,6 +26,8 @@ import '../../features/users/points/manager/points_cubit.dart';
 import '../../features/company/company_info/data/repos/company_info_repo.dart';
 import '../../features/company/company_info/data/repos/company_info_repo_impl.dart';
 import '../../features/company/company_info/manager/company_info_cubit.dart';
+import '../../features/company/home/data/repos/company_home_repo_impl.dart';
+import '../../features/company/home/manager/company_home_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -112,5 +115,13 @@ Future<void> initGetIt() async {
       companyInfoRepo: getIt<CompanyInfoRepo>(),
       supabaseClient: getIt<SupabaseClient>(),
     ),
+  );
+
+  /// Company Home Feature
+  getIt.registerLazySingleton<CompanyHomeRepo>(
+    () => CompanyHomeRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+  );
+  getIt.registerFactory<CompanyHomeCubit>(
+    () => CompanyHomeCubit(repo: getIt<CompanyHomeRepo>()),
   );
 }

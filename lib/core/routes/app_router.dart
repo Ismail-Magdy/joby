@@ -9,6 +9,7 @@ import 'package:joby/features/common/auth/presentation/screens/auth_screen.dart'
 import 'package:joby/features/common/auth/manager/auth_cubit.dart';
 import 'package:joby/features/company/company_info/manager/company_info_cubit.dart';
 import 'package:joby/features/company/company_info/presentation/screens/company_info_screen.dart';
+import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:joby/features/company/home/presentation/screens/company_home_screen.dart';
 import 'package:joby/features/company/root/screens/company_root_screen.dart';
 import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
@@ -151,11 +152,18 @@ class AppRouter {
               const ExitConfirmationWrapper(child: CompanyHomeScreen()),
         );
 
-      /// Company Root Screen
       case Routes.companyRootScreen:
         return MaterialPageRoute(
-          builder: (_) =>
-              const ExitConfirmationWrapper(child: CompanyRootScreen()),
+          builder: (_) => ExitConfirmationWrapper(
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<CompanyHomeCubit>(
+                  create: (context) => getIt<CompanyHomeCubit>(),
+                ),
+              ],
+              child: const CompanyRootScreen(),
+            ),
+          ),
         );
 
       /// Default Case
