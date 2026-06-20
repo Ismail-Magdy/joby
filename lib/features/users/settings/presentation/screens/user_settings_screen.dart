@@ -22,12 +22,6 @@ class UserSettingsScreen extends StatelessWidget {
           children: [
             //
             CustomSettingsItem(
-              icon: "assets/svgs/notification.svg",
-              label: "Notifications",
-              onTap: () => context.pushNamed(Routes.notificationsScreen),
-            ),
-            //
-            CustomSettingsItem(
               icon: "assets/svgs/about-us.svg",
               label: "About Us",
               onTap: () => context.pushNamed(Routes.aboutUsScreen),
