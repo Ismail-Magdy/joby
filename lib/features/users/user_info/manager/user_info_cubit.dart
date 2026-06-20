@@ -1,5 +1,7 @@
 import "dart:io";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:joby/core/helpers/constants.dart";
+import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "../data/models/user_info_model.dart";
 import "../data/repos/user_info_repo.dart";
 import "user_info_state.dart";
@@ -24,7 +26,13 @@ class UserInfoCubit extends Cubit<UserInfoState> {
 
     result.fold(
       (errorMessage) => emit(UserInfoError(errorMessage)),
-      (_) => emit(UserInfoSuccess()),
+      (_) async {
+        await SharedPrefHelper.setData(
+          AppConstants.isUserInfoCompletedKey,
+          true,
+        );
+        emit(UserInfoSuccess());
+      },
     );
   }
 }

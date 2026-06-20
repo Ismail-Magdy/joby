@@ -43,9 +43,28 @@ void main() async {
     final userType = await SharedPrefHelper.getString(AppConstants.userTypeKey);
 
     if (userType == "company") {
-      final isCompanyInfoCompleted = await SharedPrefHelper.getBool(
-        AppConstants.isCompanyInfoCompletedKey,
-      );
+      bool isCompanyInfoCompleted = false;
+      try {
+        final managerData = await Supabase.instance.client
+            .from("managers_data")
+            .select("manager_id")
+            .eq("manager_id", session.user.id)
+            .maybeSingle();
+
+        if (managerData != null) {
+          isCompanyInfoCompleted = true;
+          // Sync shared preferences just in case
+          await SharedPrefHelper.setData(
+            AppConstants.isCompanyInfoCompletedKey,
+            true,
+          );
+        }
+      } catch (_) {
+        // Fallback to shared preferences if network error
+        isCompanyInfoCompleted = await SharedPrefHelper.getBool(
+          AppConstants.isCompanyInfoCompletedKey,
+        );
+      }
 
       if (isCompanyInfoCompleted == true) {
         initialRoute = Routes.companyRootScreen;
@@ -53,9 +72,28 @@ void main() async {
         initialRoute = Routes.companyInfoScreen;
       }
     } else {
-      final isInfoCompleted = await SharedPrefHelper.getBool(
-        AppConstants.isUserInfoCompletedKey,
-      );
+      bool isInfoCompleted = false;
+      try {
+        final userData = await Supabase.instance.client
+            .from("users")
+            .select("id, name")
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+        if (userData != null && userData["name"] != null) {
+          isInfoCompleted = true;
+          // Sync shared preferences
+          await SharedPrefHelper.setData(
+            AppConstants.isUserInfoCompletedKey,
+            true,
+          );
+        }
+      } catch (_) {
+        // Fallback to shared preferences if network error
+        isInfoCompleted = await SharedPrefHelper.getBool(
+          AppConstants.isUserInfoCompletedKey,
+        );
+      }
 
       if (isInfoCompleted == true) {
         initialRoute = Routes.userRootScreen;

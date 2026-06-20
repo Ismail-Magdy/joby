@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
 import '../../manager/company_home_state.dart';
-import '../widgets/company_home_app_bar.dart';
 import '../widgets/search_filter_bar.dart';
 import '../widgets/seeker_card.dart';
 
@@ -25,52 +26,60 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      appBar: const CompanyHomeAppBar(),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
+        children: [
+          // Fixed Header
+          SizedBox(
+            height: 150.h,
+            child: Stack(
+              clipBehavior: .none,
               children: [
-                SizedBox(height: 20.h),
-                const SearchFilterBar(),
-                SizedBox(height: 24.h),
-
-                SizedBox(height: 24.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Text(
-                    "Top Talents",
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                // AppBar
+                Container(
+                  height: 125.h,
+                  width: .infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: .only(
+                      bottomLeft: .circular(20.r),
+                      bottomRight: .circular(20.r),
+                    ),
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      "assets/svgs/joby_logo.svg",
+                      height: 60.h,
+                      colorFilter: const .mode(Colors.white, .srcIn),
                     ),
                   ),
                 ),
-                SizedBox(height: 16.h),
+                // Search Filter Bar
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: const SearchFilterBar(),
+                ),
               ],
             ),
           ),
-          BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
-            builder: (context, state) {
-              if (state is CompanyHomeLoading) {
-                return const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              } else if (state is CompanyHomeError) {
-                return SliverFillRemaining(
-                  child: Center(
+          //
+          //
+          Expanded(
+            child: BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
+              builder: (context, state) {
+                if (state is CompanyHomeLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is CompanyHomeError) {
+                  return Center(
                     child: Text(
                       state.message,
                       style: const TextStyle(color: Colors.red),
                     ),
-                  ),
-                );
-              } else if (state is CompanyHomeLoaded) {
-                if (state.seekers.isEmpty) {
-                  return SliverFillRemaining(
-                    child: Center(
+                  );
+                } else if (state is CompanyHomeLoaded) {
+                  if (state.seekers.isEmpty) {
+                    return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -89,26 +98,31 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
                           ),
                         ],
                       ),
-                    ),
-                  );
-                }
+                    );
+                  }
 
-                return SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
+                  // الـ ListView العادية عشان تسكرول لوحدها
+                  return ListView.builder(
+                    padding: EdgeInsets.only(
+                      top: 24.h, // مسافة بين السيرش وأول كارت
+                      left: 24.w,
+                      right: 24.w,
+                      bottom: 24.h,
+                    ),
+                    itemCount: state.seekers.length,
+                    itemBuilder: (context, index) {
                       final seeker = state.seekers[index];
                       final isSaved = state.savedSeekerIds.contains(
                         seeker.name,
                       );
                       return SeekerCard(seeker: seeker, isSaved: isSaved);
-                    }, childCount: state.seekers.length),
-                  ),
-                );
-              }
+                    },
+                  );
+                }
 
-              return const SliverFillRemaining(child: SizedBox.shrink());
-            },
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ],
       ),
