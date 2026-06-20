@@ -1,7 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:joby/features/users/notification/data/services/local_notification_service.dart';
-import 'package:joby/features/users/notification/manager/notification_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:joby/features/common/on_boarding/manager/on_boarding_cubit.dart';
@@ -102,7 +101,6 @@ Future<void> initGetIt() async {
   getIt.registerLazySingleton<LocalNotificationService>(
     () => LocalNotificationService(),
   );
-  getIt.registerFactory<NotificationCubit>(() => NotificationCubit());
 
   /// Company Part
 
