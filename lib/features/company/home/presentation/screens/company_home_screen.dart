@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import '../../../../users/user_info/data/models/user_info_model.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
 import '../../manager/company_home_state.dart';
@@ -69,7 +71,34 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
             child: BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
               builder: (context, state) {
                 if (state is CompanyHomeLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  final dummySeeker = UserInfoModel(
+                    name: 'Skeleton Name Loading',
+                    jobCategory: 'Programming',
+                    jobTitle: 'Software Engineer',
+                    level: 'Senior',
+                    typeOfWork: 'Full-time',
+                    whatsapp: '123456789',
+                    locationName: 'Cairo, Egypt',
+                    latitude: 0,
+                    longitude: 0,
+                    totalPoints: 100,
+                  );
+
+                  return Skeletonizer(
+                    enabled: true,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(
+                        top: 24.h,
+                        left: 24.w,
+                        right: 24.w,
+                        bottom: 24.h,
+                      ),
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return SeekerCard(seeker: dummySeeker, isSaved: false);
+                      },
+                    ),
+                  );
                 } else if (state is CompanyHomeError) {
                   return Center(
                     child: Text(
