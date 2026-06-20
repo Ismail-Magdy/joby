@@ -48,7 +48,8 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
       // Gamification Logic: Order by total_points DESC
       final response = await query.order('total_points', ascending: false);
 
-      final seekersList = (response as List)
+      final dataList = List<Map<String, dynamic>>.from(response as List);
+      final seekersList = dataList
           .map((json) => UserInfoModel.fromJson(json))
           .toList();
 
