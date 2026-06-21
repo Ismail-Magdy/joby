@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:joby/core/helpers/spacing.dart';
+import 'package:like_button/like_button.dart';
 import '../../../../users/user_info/data/models/user_info_model.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
@@ -33,75 +36,94 @@ class SeekerCard extends StatelessWidget {
         crossAxisAlignment: .start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               // Avatar
               Container(
                 width: 60.w,
                 height: 60.w,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
+                  shape: .circle,
+                  border: .all(
                     color: AppColors.primaryColor.withValues(alpha: 0.1),
                     width: 2,
                   ),
                 ),
                 child: ClipOval(
-                  child: seeker.avatarUrl != null && seeker.avatarUrl!.isNotEmpty
+                  child:
+                      seeker.avatarUrl != null && seeker.avatarUrl!.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: seeker.avatarUrl!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => const Center(
-                            child: CupertinoActivityIndicator(),
-                          ),
+                          fit: .cover,
+                          placeholder: (context, url) =>
+                              const Center(child: CupertinoActivityIndicator()),
                           errorWidget: (context, url, error) => Image.asset(
                             "assets/icons/play-store-icon-launcher.png",
-                            fit: BoxFit.cover,
+                            fit: .cover,
                           ),
                         )
                       : Image.asset(
                           "assets/icons/play-store-icon-launcher.png",
-                          fit: BoxFit.cover,
+                          fit: .cover,
                         ),
                 ),
               ),
               //
-              SizedBox(width: 12.w),
+              horizontalSpace(12.w),
               //
-              // Name, Title, Location
               Expanded(
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
+                    // Name
                     Text(
-                      seeker.name,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      seeker.name
+                          .trim()
+                          .split(RegExp(r"\s+"))
+                          .take(2)
+                          .map((word) {
+                            if (word.isEmpty) return "";
+                            return "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
+                          })
+                          .join(" "),
+                      style: TextStyle(fontSize: 16.sp, fontWeight: .bold),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
-                    SizedBox(height: 4.h),
+                    //
+                    verticalSpace(4.h),
+                    // Job Title
                     Text(
-                      seeker.jobTitle,
+                      seeker.jobTitle
+                          .trim()
+                          .split(RegExp(r"\s+"))
+                          .map((word) {
+                            if (word.isEmpty) return '';
+                            return "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
+                          })
+                          .join(" "),
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: .w500,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
-                    SizedBox(height: 4.h),
+                    //
+                    verticalSpace(4.h),
+                    //
                     Row(
                       children: [
+                        // Location Icon
                         Icon(
                           Icons.location_on,
                           color: Colors.grey.shade500,
                           size: 14.sp,
                         ),
-                        SizedBox(width: 4.w),
+                        //
+                        horizontalSpace(4.w),
+                        //
                         Expanded(
                           child: Text(
                             seeker.locationName,
@@ -110,103 +132,103 @@ class SeekerCard extends StatelessWidget {
                               color: Colors.grey.shade600,
                             ),
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                           ),
                         ),
+                        //
                       ],
                     ),
+                    //
                   ],
                 ),
               ),
-              // Bookmark Icon
+              //
+              // Save Icon
               GestureDetector(
                 onTap: () {
-                  context.read<CompanyHomeCubit>().toggleBookmark(
-                    seeker.name,
-                  ); // Using name as temp ID
+                  context.read<CompanyHomeCubit>().toggleBookmark(seeker.name);
                 },
-                child: Icon(
-                  isSaved ? Icons.bookmark : Icons.bookmark_border,
-                  color: isSaved
-                      ? AppColors.primaryColor
-                      : Colors.grey.shade400,
-                  size: 26.sp,
+                child: LikeButton(
+                  size: 23.sp,
+                  isLiked: isSaved,
+                  onTap: (bool isCurrentlySaved) async {
+                    context.read<CompanyHomeCubit>().toggleBookmark(
+                      seeker.name,
+                    );
+                    return !isCurrentlySaved;
+                  },
+                  likeBuilder: (bool isLiked) {
+                    return SvgPicture.asset(
+                      isLiked
+                          ? "assets/svgs/fill_saved.svg"
+                          : "assets/svgs/saved.svg",
+                      colorFilter: ColorFilter.mode(
+                        isLiked ? AppColors.primaryColor : Colors.grey.shade400,
+                        .srcIn,
+                      ),
+                      height: 23.sp,
+                    );
+                  },
+                  circleColor: CircleColor(
+                    start: AppColors.primaryColor.withValues(alpha: 0.5),
+                    end: AppColors.primaryColor,
+                  ),
+                  bubblesColor: BubblesColor(
+                    dotPrimaryColor: AppColors.primaryColor,
+                    dotSecondaryColor: Colors.blueAccent,
+                  ),
+                  animationDuration: const Duration(milliseconds: 600),
                 ),
               ),
+              //
             ],
           ),
-          SizedBox(height: 16.h),
+          //
+          verticalSpace(16.h),
           // Chips
-          Row(
+          Wrap(
+            spacing: 10.w,
+            runSpacing: 10.h,
             children: [
               _buildChip(
                 seeker.level,
                 Colors.blue.shade50,
-                Colors.blue.shade700,
+                AppColors.primaryColor.withValues(alpha: 0.7),
               ),
-              SizedBox(width: 8.w),
               _buildChip(
                 seeker.typeOfWork,
-                Colors.purple.shade50,
-                Colors.purple.shade700,
+                Colors.blue.shade50,
+                AppColors.primaryColor.withValues(alpha: 0.7),
               ),
-              SizedBox(width: 8.w),
               _buildChip(
                 seeker.jobCategory,
-                Colors.orange.shade50,
-                Colors.orange.shade800,
+                Colors.blue.shade50,
+                AppColors.primaryColor.withValues(alpha: 0.7),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
-          // Gamification Badge
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: Colors.amber.shade50,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: Colors.amber.shade200),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.star_rounded,
-                  color: Colors.amber.shade600,
-                  size: 20.sp,
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  "${seeker.totalPoints} Points",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber.shade800,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          //
         ],
       ),
     );
   }
 
+  ///
   Widget _buildChip(String label, Color bgColor, Color textColor) {
     if (label.isEmpty) return const SizedBox.shrink();
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
+      padding: .symmetric(horizontal: 10.w, vertical: 6.h),
+      decoration: BoxDecoration(color: bgColor, borderRadius: .circular(8.r)),
       child: Text(
-        label,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
-        ),
+        label
+            .trim()
+            .split(RegExp(r"\s+"))
+            .map((word) {
+              if (word.isEmpty) return "";
+              return "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
+            })
+            .join(" "),
+        style: TextStyle(color: textColor, fontSize: 12.sp, fontWeight: .w600),
       ),
     );
   }
