@@ -62,6 +62,7 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
                   right: 0,
                   child: const SearchFilterBar(),
                 ),
+                //
               ],
             ),
           ),
