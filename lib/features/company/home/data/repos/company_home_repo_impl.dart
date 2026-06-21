@@ -20,10 +20,9 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
     try {
       var query = supabaseClient.from('users').select();
 
-      // Apply Search Filter (checking name or job_title)
       if (searchQuery != null && searchQuery.isNotEmpty) {
         query = query.or(
-          'name.ilike.%$searchQuery%,job_title.ilike.%$searchQuery%',
+          'name.ilike.%$searchQuery%,job_title.ilike.%$searchQuery%,job_category.ilike.%$searchQuery%',
         );
       }
 
