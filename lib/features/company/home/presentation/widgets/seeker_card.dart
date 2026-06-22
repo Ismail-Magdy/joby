@@ -13,8 +13,14 @@ import '../../manager/company_home_cubit.dart';
 class SeekerCard extends StatelessWidget {
   final UserInfoModel seeker;
   final bool isSaved;
+  final Future<bool> Function(bool isSaved)? onBookmarkTapOverride;
 
-  const SeekerCard({super.key, required this.seeker, required this.isSaved});
+  const SeekerCard({
+    super.key,
+    required this.seeker,
+    required this.isSaved,
+    this.onBookmarkTapOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -144,43 +150,39 @@ class SeekerCard extends StatelessWidget {
               ),
               //
               // Save Icon
-              GestureDetector(
-                onTap: () {
+              LikeButton(
+                size: 23.sp,
+                isLiked: isSaved,
+                onTap: (bool isCurrentlySaved) async {
+                  if (onBookmarkTapOverride != null) {
+                    return onBookmarkTapOverride!(isCurrentlySaved);
+                  }
                   context.read<CompanyHomeCubit>().toggleBookmark(
                     seeker.id.toString(),
                   );
+                  return !isCurrentlySaved;
                 },
-                child: LikeButton(
-                  size: 23.sp,
-                  isLiked: isSaved,
-                  onTap: (bool isCurrentlySaved) async {
-                    context.read<CompanyHomeCubit>().toggleBookmark(
-                      seeker.id.toString(),
-                    );
-                    return !isCurrentlySaved;
-                  },
-                  likeBuilder: (bool isLiked) {
-                    return SvgPicture.asset(
-                      isLiked
-                          ? "assets/svgs/fill_saved.svg"
-                          : "assets/svgs/saved.svg",
-                      colorFilter: ColorFilter.mode(
-                        isLiked ? AppColors.primaryColor : Colors.grey.shade400,
-                        .srcIn,
-                      ),
-                      height: 23.sp,
-                    );
-                  },
-                  circleColor: CircleColor(
-                    start: AppColors.primaryColor.withValues(alpha: 0.5),
-                    end: AppColors.primaryColor,
-                  ),
-                  bubblesColor: BubblesColor(
-                    dotPrimaryColor: AppColors.primaryColor,
-                    dotSecondaryColor: Colors.blueAccent,
-                  ),
-                  animationDuration: const Duration(milliseconds: 600),
+                likeBuilder: (bool isLiked) {
+                  return SvgPicture.asset(
+                    isLiked
+                        ? "assets/svgs/fill_saved.svg"
+                        : "assets/svgs/saved.svg",
+                    colorFilter: ColorFilter.mode(
+                      isLiked ? AppColors.primaryColor : Colors.grey.shade400,
+                      BlendMode.srcIn,
+                    ),
+                    height: 23.sp,
+                  );
+                },
+                circleColor: CircleColor(
+                  start: AppColors.primaryColor.withValues(alpha: 0.5),
+                  end: AppColors.primaryColor,
                 ),
+                bubblesColor: BubblesColor(
+                  dotPrimaryColor: AppColors.primaryColor,
+                  dotSecondaryColor: Colors.blueAccent,
+                ),
+                animationDuration: const Duration(milliseconds: 600),
               ),
               //
             ],
