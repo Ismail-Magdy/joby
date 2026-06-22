@@ -146,14 +146,16 @@ class SeekerCard extends StatelessWidget {
               // Save Icon
               GestureDetector(
                 onTap: () {
-                  context.read<CompanyHomeCubit>().toggleBookmark(seeker.name);
+                  context.read<CompanyHomeCubit>().toggleBookmark(
+                    seeker.id.toString(),
+                  );
                 },
                 child: LikeButton(
                   size: 23.sp,
                   isLiked: isSaved,
                   onTap: (bool isCurrentlySaved) async {
                     context.read<CompanyHomeCubit>().toggleBookmark(
-                      seeker.name,
+                      seeker.id.toString(),
                     );
                     return !isCurrentlySaved;
                   },
