@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/core/widgets/error_screen.dart';
+import 'package:joby/features/company/home/presentation/widgets/seeker_card.dart';
+import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../users/user_info/data/models/user_info_model.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
 import '../../manager/company_home_state.dart';
 import '../widgets/search_filter_bar.dart';
-import '../widgets/seeker_card.dart';
 
 class CompanyHomeScreen extends StatefulWidget {
   const CompanyHomeScreen({super.key});
@@ -34,7 +37,7 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
           SizedBox(
             height: 150.h,
             child: Stack(
-              clipBehavior: .none,
+              clipBehavior: Clip.none,
               children: [
                 // AppBar
                 Container(
@@ -66,15 +69,16 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
               ],
             ),
           ),
-          //
-          //
+
           Expanded(
             child: BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
               builder: (context, state) {
-                if (state is CompanyHomeLoading) {
+                if (state is CompanyHomeLoading ||
+                    state is CompanyHomeInitial) {
                   final dummySeeker = UserInfoModel(
-                    name: 'Skeleton Name Loading',
-                    jobCategory: 'Programming',
+                    id: '1',
+                    name: "Skeleton Name Loading",
+                    jobCategory: "Programming",
                     jobTitle: 'Software Engineer',
                     level: 'Senior',
                     typeOfWork: 'Full-time',
@@ -84,11 +88,11 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
                     longitude: 0,
                     totalPoints: 100,
                   );
-
+                  //
                   return Skeletonizer(
                     enabled: true,
                     child: ListView.builder(
-                      padding: EdgeInsets.only(
+                      padding: .only(
                         top: 24.h,
                         left: 24.w,
                         right: 24.w,
@@ -100,41 +104,51 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
                       },
                     ),
                   );
+                  // Error State
                 } else if (state is CompanyHomeError) {
-                  return Center(
-                    child: Text(
-                      state.message,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
+                  return ErrorScreen(errorText: state.message);
+                  // Succsess State
                 } else if (state is CompanyHomeLoaded) {
                   if (state.seekers.isEmpty) {
                     return Center(
+                      //
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: .center,
                         children: [
-                          Icon(
-                            Icons.search_off,
-                            size: 64.sp,
-                            color: Colors.grey.shade400,
+                          //
+                          ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              AppColors.primaryColor,
+                              .srcIn,
+                            ),
+                            child: Lottie.asset(
+                              alignment: .center,
+                              "assets/lotties/no_data.json",
+                              width: 200.w,
+                              height: 200.h,
+                              fit: .cover,
+                              repeat: true,
+                            ),
                           ),
-                          SizedBox(height: 16.h),
+                          //
+                          verticalSpace(5),
+                          //
                           Text(
-                            "No talents found matching your criteria.",
+                            "No Talents Found Matching Your Criteria",
                             style: TextStyle(
                               fontSize: 16.sp,
                               color: Colors.grey.shade600,
                             ),
                           ),
+                          //
                         ],
                       ),
                     );
                   }
 
-                  // الـ ListView العادية عشان تسكرول لوحدها
                   return ListView.builder(
-                    padding: EdgeInsets.only(
-                      top: 24.h, // مسافة بين السيرش وأول كارت
+                    padding: .only(
+                      top: 24.h,
                       left: 24.w,
                       right: 24.w,
                       bottom: 24.h,
@@ -142,10 +156,12 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
                     itemCount: state.seekers.length,
                     itemBuilder: (context, index) {
                       final seeker = state.seekers[index];
-                      final isSaved = state.savedSeekerIds.contains(
-                        seeker.name,
+                      final isSaved = state.savedSeekerIds.contains(seeker.id);
+                      return SeekerCard(
+                        key: ValueKey(seeker.id),
+                        seeker: seeker,
+                        isSaved: isSaved,
                       );
-                      return SeekerCard(seeker: seeker, isSaved: isSaved);
                     },
                   );
                 }
