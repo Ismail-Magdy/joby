@@ -19,6 +19,9 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
     Set<String> currentSaved = {};
     if (state is CompanyHomeLoaded) {
       currentSaved = (state as CompanyHomeLoaded).savedSeekerIds;
+    } else {
+      final savedResult = await repo.getSavedSeekerIds();
+      savedResult.fold((error) => null, (saved) => currentSaved = saved);
     }
 
     emit(CompanyHomeLoading());
@@ -77,6 +80,7 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
       }
 
       emit(currentState.copyWith(savedSeekerIds: newSaved));
+      repo.saveSeekerIds(newSaved);
     }
   }
 }

@@ -1,13 +1,18 @@
 import 'package:dartz/dartz.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../users/user_info/data/models/user_info_model.dart';
 import '../../../../../core/errors/error_handler.dart';
 
 class CompanyHomeRepoImpl implements CompanyHomeRepo {
   final SupabaseClient supabaseClient;
+  final SharedPreferences sharedPreferences;
 
-  CompanyHomeRepoImpl({required this.supabaseClient});
+  CompanyHomeRepoImpl({
+    required this.supabaseClient,
+    required this.sharedPreferences,
+  });
 
   @override
   Future<Either<String, List<UserInfoModel>>> getSeekers({
@@ -53,6 +58,34 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
           .toList();
 
       return Right(seekersList);
+    } catch (e) {
+      return Left(ErrorHandler.handleError(e));
+    }
+  }
+
+  @override
+  Future<Either<String, Set<String>>> getSavedSeekerIds() async {
+    try {
+      final List<String>? savedList = sharedPreferences.getStringList(
+        'saved_seeker_ids',
+      );
+      if (savedList != null) {
+        return Right(savedList.toSet());
+      }
+      return const Right({});
+    } catch (e) {
+      return Left(ErrorHandler.handleError(e));
+    }
+  }
+
+  @override
+  Future<Either<String, void>> saveSeekerIds(Set<String> savedIds) async {
+    try {
+      await sharedPreferences.setStringList(
+        'saved_seeker_ids',
+        savedIds.toList(),
+      );
+      return const Right(null);
     } catch (e) {
       return Left(ErrorHandler.handleError(e));
     }
