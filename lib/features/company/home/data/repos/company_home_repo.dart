@@ -9,4 +9,7 @@ abstract class CompanyHomeRepo {
     String? locationName,
     String? level,
   });
+
+  Future<Either<String, Set<String>>> getSavedSeekerIds();
+  Future<Either<String, void>> saveSeekerIds(Set<String> savedIds);
 }

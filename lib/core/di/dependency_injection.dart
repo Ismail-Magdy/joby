@@ -117,7 +117,10 @@ Future<void> initGetIt() async {
 
   /// Company Home Feature
   getIt.registerLazySingleton<CompanyHomeRepo>(
-    () => CompanyHomeRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+    () => CompanyHomeRepoImpl(
+      supabaseClient: getIt<SupabaseClient>(),
+      sharedPreferences: getIt<SharedPreferences>(),
+    ),
   );
   getIt.registerFactory<CompanyHomeCubit>(
     () => CompanyHomeCubit(repo: getIt<CompanyHomeRepo>()),
