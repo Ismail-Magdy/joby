@@ -50,7 +50,7 @@ class CustomSavedList extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
                 child: SeekerCard(
-                  key: ValueKey(seeker.name),
+                  key: ValueKey(seeker.id),
                   seeker: seeker,
                   isSaved: true,
                 ),

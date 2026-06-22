@@ -61,7 +61,7 @@ class SavedScreen extends StatelessWidget {
                 } else if (state is CompanyHomeLoaded) {
                   final savedSeekers = state.seekers
                       .where(
-                        (seeker) => state.savedSeekerIds.contains(seeker.name),
+                        (seeker) => state.savedSeekerIds.contains(seeker.id),
                       )
                       .toList();
 
