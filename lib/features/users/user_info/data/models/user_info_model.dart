@@ -1,4 +1,5 @@
 class UserInfoModel {
+  final String? id;
   final String name;
   final String jobCategory;
   final String jobTitle;
@@ -17,6 +18,7 @@ class UserInfoModel {
   final double longitude;
 
   UserInfoModel({
+    this.id,
     required this.name,
     required this.jobCategory,
     required this.jobTitle,
@@ -43,6 +45,7 @@ class UserInfoModel {
 
   Map<String, dynamic> toMap() {
     return {
+      if (id != null) "user_id": id,
       "name": name,
       "job_category": jobCategory,
       "job_title": jobTitle,
@@ -64,6 +67,7 @@ class UserInfoModel {
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
     return UserInfoModel(
+      id: json["user_id"]?.toString() ?? json["id"]?.toString(),
       name: json["name"] ?? "",
       jobCategory: json["job_category"] ?? "",
       jobTitle: json["job_title"] ?? "",
