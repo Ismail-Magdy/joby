@@ -13,8 +13,8 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String title;
   final String name;
   final String jobTitle;
-  final VoidCallback onManagerTap;
-  final VoidCallback onEditTap;
+  final VoidCallback? onManagerTap;
+  final VoidCallback? onEditTap;
 
   ProfileHeaderDelegate({
     required this.userId,
@@ -22,8 +22,8 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.title,
     required this.name,
     required this.jobTitle,
-    required this.onManagerTap,
-    required this.onEditTap,
+    this.onManagerTap,
+    this.onEditTap,
   });
 
   @override
@@ -171,7 +171,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
 
           // Manager icon - Fades out
-          if (expandedOpacity > 0)
+          if (expandedOpacity > 0 && onManagerTap != null)
             Positioned(
               top: iconsExpandedTop,
               left: managerX,
@@ -181,7 +181,10 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
                   onTap: onManagerTap,
                   child: SvgPicture.asset(
                     "assets/svgs/manager.svg",
-                    colorFilter: const .mode(Colors.white, .srcIn),
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                     height: 22.h,
                   ),
                 ),
@@ -189,18 +192,19 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
 
           // Edit icon - Stays visible, moves
-          Positioned(
-            top: editY,
-            left: editX,
-            child: GestureDetector(
-              onTap: onEditTap,
-              child: SvgPicture.asset(
-                "assets/svgs/pen.svg",
-                colorFilter: const .mode(Colors.white, .srcIn),
-                height: 22.h,
+          if (onEditTap != null)
+            Positioned(
+              top: editY,
+              left: editX,
+              child: GestureDetector(
+                onTap: onEditTap,
+                child: SvgPicture.asset(
+                  "assets/svgs/pen.svg",
+                  colorFilter: const .mode(Colors.white, .srcIn),
+                  height: 22.h,
+                ),
               ),
             ),
-          ),
 
           // Avatar - Moves and scales
           Positioned(
