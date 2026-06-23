@@ -1,10 +1,13 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/features/company/home/presentation/widgets/seeker_preview_overlay.dart';
 import 'package:like_button/like_button.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../../../../users/user_info/data/models/user_info_model.dart';
@@ -30,6 +33,7 @@ class SeekerCard extends StatefulWidget {
 
 class _SeekerCardState extends State<SeekerCard> {
   late AudioPlayer audioPlayer;
+  OverlayEntry? _previewOverlay;
 
   @override
   void initState() {
@@ -39,9 +43,34 @@ class _SeekerCardState extends State<SeekerCard> {
 
   @override
   void dispose() {
+    _removePreview();
     audioPlayer.dispose();
     super.dispose();
   }
+
+  // Preview Overlay
+
+  void _showPreview() {
+    if (_previewOverlay != null) return;
+
+    HapticFeedback.mediumImpact();
+
+    _previewOverlay = OverlayEntry(
+      builder: (context) => SeekerPreviewOverlay(
+        seeker: widget.seeker,
+        onDismiss: _removePreview,
+      ),
+    );
+
+    Overlay.of(context).insert(_previewOverlay!);
+  }
+
+  void _removePreview() {
+    _previewOverlay?.remove();
+    _previewOverlay = null;
+  }
+
+  // Build
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +86,9 @@ class _SeekerCardState extends State<SeekerCard> {
           ),
         );
       },
+      onLongPressStart: (_) => _showPreview(),
+      onLongPressEnd: (_) => _removePreview(),
+      onLongPressCancel: () => _removePreview(),
       child: Container(
         margin: .only(bottom: 16.h),
         padding: .all(16.w),
@@ -80,10 +112,10 @@ class _SeekerCardState extends State<SeekerCard> {
                 // Avatar
                 Container(
                   width: 60.w,
-                  height: 60.w,
+                  height: 60.h,
                   decoration: BoxDecoration(
                     shape: .circle,
-                    border: .all(
+                    border: Border.all(
                       color: AppColors.primaryColor.withValues(alpha: 0.1),
                       width: 2,
                     ),
@@ -206,7 +238,7 @@ class _SeekerCardState extends State<SeekerCard> {
                       isLiked
                           ? "assets/svgs/fill_saved.svg"
                           : "assets/svgs/saved.svg",
-                      colorFilter: ColorFilter.mode(
+                      colorFilter: .mode(
                         isLiked ? AppColors.primaryColor : Colors.grey.shade400,
                         .srcIn,
                       ),
@@ -261,8 +293,11 @@ class _SeekerCardState extends State<SeekerCard> {
   Widget _buildChip(String label, Color bgColor, Color textColor) {
     if (label.isEmpty) return const SizedBox.shrink();
     return Container(
-      padding: .symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(color: bgColor, borderRadius: .circular(8.r)),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
       child: Text(
         label
             .trim()
@@ -272,8 +307,14 @@ class _SeekerCardState extends State<SeekerCard> {
               return "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
             })
             .join(" "),
-        style: TextStyle(color: textColor, fontSize: 12.sp, fontWeight: .w600),
+        style: TextStyle(
+          color: textColor,
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
 }
+
+// 614
