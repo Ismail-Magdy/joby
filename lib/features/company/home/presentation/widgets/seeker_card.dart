@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:like_button/like_button.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../../../users/user_info/data/models/user_info_model.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
 
-class SeekerCard extends StatelessWidget {
+class SeekerCard extends StatefulWidget {
   final UserInfoModel seeker;
   final bool isSaved;
   final Future<bool> Function(bool isSaved)? onBookmarkTapOverride;
@@ -23,7 +25,30 @@ class SeekerCard extends StatelessWidget {
   });
 
   @override
+  State<SeekerCard> createState() => _SeekerCardState();
+}
+
+class _SeekerCardState extends State<SeekerCard> {
+  late AudioPlayer audioPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    audioPlayer = AudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final seeker = widget.seeker;
+    final isSaved = widget.isSaved;
+    final onBookmarkTapOverride = widget.onBookmarkTapOverride;
+
     return Container(
       margin: .only(bottom: 16.h),
       padding: .all(16.w),
@@ -155,8 +180,13 @@ class SeekerCard extends StatelessWidget {
                 isLiked: isSaved,
                 onTap: (bool isCurrentlySaved) async {
                   if (onBookmarkTapOverride != null) {
-                    return onBookmarkTapOverride!(isCurrentlySaved);
+                    return onBookmarkTapOverride(isCurrentlySaved);
                   }
+
+                  if (!isCurrentlySaved) {
+                    audioPlayer.play(AssetSource("sounds/save.mp3"));
+                  }
+
                   context.read<CompanyHomeCubit>().toggleBookmark(
                     seeker.id.toString(),
                   );
@@ -169,7 +199,7 @@ class SeekerCard extends StatelessWidget {
                         : "assets/svgs/saved.svg",
                     colorFilter: ColorFilter.mode(
                       isLiked ? AppColors.primaryColor : Colors.grey.shade400,
-                      BlendMode.srcIn,
+                      .srcIn,
                     ),
                     height: 23.sp,
                   );

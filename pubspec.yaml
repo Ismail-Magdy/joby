@@ -32,6 +32,11 @@ dependencies:
   geocoding: ^3.0.0
   image_cropper: ^12.2.1
   share_plus: ^10.0.0
+  timezone: ^0.11.0
+  flutter_local_notifications: ^21.0.0
+  like_button: ^2.1.0
+  thanos_snap_effect: ^0.0.9
+  audioplayers: ^6.7.1
 
   # ==========================================
   # State Management
@@ -75,10 +80,6 @@ dependencies:
   # ====================================
   flutter_secure_storage: ^9.0.0
   flutter_dotenv: ^6.0.1
-  timezone: ^0.11.0
-  flutter_local_notifications: ^21.0.0
-  like_button: ^2.1.0
-  thanos_snap_effect: ^0.0.9
 
 dev_dependencies:
   flutter_test:
@@ -120,6 +121,7 @@ flutter:
     - assets/svgs/
     - assets/icons/
     - assets/lotties/
+    - assets/sounds/
 
   # ==========================================
   # Shaders (thanos_snap_effect)
