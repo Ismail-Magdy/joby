@@ -6,6 +6,7 @@ import 'package:joby/features/company/home/presentation/widgets/seeker_card.dart
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:thanos_snap_effect/thanos_snap_effect.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class CustomSavedList extends StatelessWidget {
   const CustomSavedList({
@@ -77,11 +78,13 @@ class _AnimatableSavedCard extends StatefulWidget {
 class _AnimatableSavedCardState extends State<_AnimatableSavedCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _snapController;
+  late final AudioPlayer audioPlayer;
   bool _isSnapping = false;
 
   @override
   void initState() {
     super.initState();
+    audioPlayer = AudioPlayer();
     _snapController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
@@ -90,6 +93,7 @@ class _AnimatableSavedCardState extends State<_AnimatableSavedCard>
 
   @override
   void dispose() {
+    audioPlayer.dispose();
     _snapController.dispose();
     super.dispose();
   }
@@ -105,6 +109,9 @@ class _AnimatableSavedCardState extends State<_AnimatableSavedCard>
           if (_isSnapping) return isCurrentlySaved;
 
           setState(() => _isSnapping = true);
+
+          // Play the delete sound
+          audioPlayer.play(AssetSource("sounds/delete.mp3"));
 
           // Start the snap disintegration animation
           _snapController.forward();
