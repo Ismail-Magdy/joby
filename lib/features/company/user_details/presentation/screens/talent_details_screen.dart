@@ -36,16 +36,18 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
         }
       }
       url = Uri.parse("https://wa.me/$cleanedPhone");
-    } else {
+    }
+    //
+    else {
       String finalUrl = urlString.trim();
       if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
         finalUrl = "https://$finalUrl";
       }
       url = Uri.parse(finalUrl);
     }
-
+    //
     try {
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!await launchUrl(url, mode: .externalApplication)) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -73,6 +75,7 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
         );
       }
     }
+    //
   }
 
   /// Open CV
@@ -98,6 +101,18 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
     );
   }
 
+  ///
+  String _toTitleCase(String text) {
+    if (text.isEmpty) return text;
+    return text
+        .split(" ")
+        .map((word) {
+          if (word.isEmpty) return word;
+          return word[0].toUpperCase() + word.substring(1).toLowerCase();
+        })
+        .join(" ");
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = widget.seeker;
@@ -114,23 +129,23 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
               userId: user.id?.toString() ?? "",
               avatarUrl: user.avatarUrl,
               title: "Talent Profile",
-              name: user.displayShortName,
-              jobTitle: user.jobTitle,
+              name: _toTitleCase(user.displayShortName),
+              jobTitle: _toTitleCase(user.jobTitle),
             ),
           ),
           //
           SliverPadding(
             // Bottom Space
-            padding: .only(bottom: 50.h),
+            padding: EdgeInsets.only(bottom: 50.h),
             //
             sliver: SliverToBoxAdapter(
               child: Column(
                 children: [
                   //
-                  verticalSpace(30),
+                  verticalSpace(60),
                   // Name
                   Text(
-                    user.displayShortName,
+                    _toTitleCase(user.displayShortName),
                     style: TextStyle(
                       fontSize: 22.sp,
                       fontWeight: .bold,
@@ -141,7 +156,7 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
                   verticalSpace(5),
                   // Job Title
                   Text(
-                    user.jobTitle,
+                    _toTitleCase(user.jobTitle),
                     style: TextStyle(
                       fontSize: 15.sp,
                       color: Colors.grey.shade600,
@@ -159,9 +174,9 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
                     scrollDirection: .horizontal,
                     physics: const BouncingScrollPhysics(),
                     child: CustomInfoRow(
-                      levelText: user.level,
-                      jobCategoryText: user.jobCategory,
-                      typeOfWorkText: user.typeOfWork,
+                      levelText: _toTitleCase(user.level),
+                      jobCategoryText: _toTitleCase(user.jobCategory),
+                      typeOfWorkText: _toTitleCase(user.typeOfWork),
                     ),
                   ),
                   //
