@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../core/helpers/spacing.dart';
-import '../../../../../core/themes/app_colors.dart';
+import '../../../../core/helpers/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
 
 class CardWidget extends StatelessWidget {
   const CardWidget({
@@ -17,7 +17,7 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: .infinity,
       padding: .all(20.r),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -36,6 +36,7 @@ class CardWidget extends StatelessWidget {
         children: [
           Row(
             children: [
+              //
               Container(
                 padding: .all(8.r),
                 decoration: BoxDecoration(
@@ -44,7 +45,9 @@ class CardWidget extends StatelessWidget {
                 ),
                 child: Icon(icon, color: AppColors.primaryColor, size: 20.sp),
               ),
+              //
               horizontalSpace(12),
+              //
               Text(
                 title,
                 style: TextStyle(
@@ -53,10 +56,14 @@ class CardWidget extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
+              //
             ],
           ),
+          //
           verticalSpace(16),
+          //
           child,
+          //
         ],
       ),
     );

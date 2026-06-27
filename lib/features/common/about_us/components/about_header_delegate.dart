@@ -30,33 +30,35 @@ class AboutHeaderDelegate extends SliverPersistentHeaderDelegate {
     final double statusBarH = MediaQuery.of(context).padding.top;
     final double screenW = MediaQuery.of(context).size.width;
 
-    // --- Opacities ---
+    // Opacities
     final double textOpacity = max(0.0, 1.0 - t * 2.0); // Fades out early
 
-    // --- Back Button Position ---
-    final double backButtonX = 10.w;
+    // Back Button Position
+    final double backButtonX = 20.w;
     final double backExpandedY = statusBarH + 10.h;
     final double backCollapsedY =
         statusBarH + (minExtent - statusBarH) / 2 - 24.h;
     final double backY = backExpandedY + (backCollapsedY - backExpandedY) * t;
 
-    // --- Logo Size and Position ---
+    // Logo Size and Position
     final double logoExpandedH = 58.h;
     final double logoCollapsedH = 34.h;
     final double logoH = logoExpandedH + (logoCollapsedH - logoExpandedH) * t;
 
-    final double logoExpandedY = statusBarH + 50.h;
+    //
+    final double logoExpandedY = statusBarH + 25.h;
     final double logoCollapsedY =
         statusBarH + (minExtent - statusBarH) / 2 - logoCollapsedH / 2;
     final double logoY = logoExpandedY + (logoCollapsedY - logoExpandedY) * t;
 
-    // --- Text Position ---
+    // Text Position
     final double textY = logoExpandedY + logoExpandedH + 10.h;
 
-    // --- Version Position ---
+    // Version Position
     final double versionW = 80.w; // Approximate width
     final double versionExpandedX = screenW / 2 - versionW / 2;
-    final double versionExpandedY = textY + 40.h;
+    //
+    final double versionExpandedY = textY + 30.h;
 
     final double versionCollapsedX = screenW - versionW - 20.w;
     final double versionCollapsedY =
@@ -68,8 +70,7 @@ class AboutHeaderDelegate extends SliverPersistentHeaderDelegate {
         versionExpandedY + (versionCollapsedY - versionExpandedY) * t;
 
     // Background Gradient and BorderRadius
-    final double borderRadius =
-        35.r * (1 - t * 0.5); // Slightly reduces radius when collapsed
+    final double borderRadius = 35.r * (1 - t * 0.5);
 
     return Container(
       decoration: BoxDecoration(
@@ -85,18 +86,18 @@ class AboutHeaderDelegate extends SliverPersistentHeaderDelegate {
           Positioned(
             left: backButtonX,
             top: backY,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-              onPressed: () => context.pop(),
+            child: GestureDetector(
+              onTap: () => context.pop(),
+              child: const Icon(Icons.arrow_back_ios, color: Colors.white),
             ),
           ),
           // Logo
           Positioned(
             left: 0,
-            right: 0, // Centered horizontally always
+            right: 0,
             top: logoY,
             child: Align(
-              alignment: .center,
+              alignment: Alignment.center,
               child: SvgPicture.asset(
                 "assets/svgs/joby_logo.svg",
                 height: logoH,
@@ -104,8 +105,10 @@ class AboutHeaderDelegate extends SliverPersistentHeaderDelegate {
               ),
             ),
           ),
-          // Subtext (Fades out)
+          //
+          // Subtext
           if (textOpacity > 0)
+            //
             Positioned(
               left: 0,
               right: 0,
@@ -124,6 +127,7 @@ class AboutHeaderDelegate extends SliverPersistentHeaderDelegate {
                 ),
               ),
             ),
+          //
           // Version Badge
           Positioned(
             left: versionX,
@@ -140,10 +144,12 @@ class AboutHeaderDelegate extends SliverPersistentHeaderDelegate {
                   color: Colors.white,
                   fontSize: 12.sp,
                   fontWeight: .w600,
+                  fontFamily: "BrunoAceSC",
                 ),
               ),
             ),
           ),
+          //
         ],
       ),
     );

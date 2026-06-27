@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../core/helpers/spacing.dart';
+import '../../../../core/helpers/spacing.dart';
 
 class CustomTechRow extends StatelessWidget {
   const CustomTechRow({
@@ -22,6 +22,7 @@ class CustomTechRow extends StatelessWidget {
       padding: .only(bottom: isLast ? 0 : 14.h),
       child: Row(
         children: [
+          //
           Container(
             padding: .all(8.r),
             decoration: BoxDecoration(
@@ -31,11 +32,14 @@ class CustomTechRow extends StatelessWidget {
             ),
             child: Icon(icon, size: 18.sp, color: Colors.grey.shade600),
           ),
+          //
           horizontalSpace(12),
+          //
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
               children: [
+                //
                 Text(
                   name,
                   style: TextStyle(
@@ -44,6 +48,7 @@ class CustomTechRow extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
+                //
                 Text(
                   description,
                   style: TextStyle(
@@ -51,9 +56,11 @@ class CustomTechRow extends StatelessWidget {
                     color: Colors.grey.shade500,
                   ),
                 ),
+                //
               ],
             ),
           ),
+          //
         ],
       ),
     );

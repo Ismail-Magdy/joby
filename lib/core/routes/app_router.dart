@@ -13,7 +13,7 @@ import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:joby/features/company/home/presentation/screens/company_home_screen.dart';
 import 'package:joby/features/company/profile_company/screens/company_profile_screen.dart';
 import 'package:joby/features/company/root/screens/company_root_screen.dart';
-import 'package:joby/features/common/about_us/presentation/screens/about_us_screen.dart';
+import 'package:joby/features/common/about_us/screens/about_us_screen.dart';
 import 'package:joby/features/common/feed_back/presentation/screens/advice_screen.dart';
 import 'package:joby/features/users/home/presentation/screens/company_view_screen.dart';
 import 'package:joby/features/users/profile_users/screens/users_profile_screen.dart.dart';
