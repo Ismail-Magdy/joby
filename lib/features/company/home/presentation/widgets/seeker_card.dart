@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,8 +47,7 @@ class _SeekerCardState extends State<SeekerCard> {
     super.dispose();
   }
 
-  // Preview Overlay
-
+  /// Preview Overlay
   void _showPreview() {
     if (_previewOverlay != null) return;
 
@@ -70,8 +68,7 @@ class _SeekerCardState extends State<SeekerCard> {
     _previewOverlay = null;
   }
 
-  // Build
-
+  /// Build
   @override
   Widget build(BuildContext context) {
     final seeker = widget.seeker;

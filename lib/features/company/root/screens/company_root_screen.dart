@@ -4,7 +4,7 @@ import "package:flutter_svg/svg.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/features/company/home/presentation/screens/company_home_screen.dart";
-import "package:joby/features/company/profile/presentation/screens/company_profile_screen.dart";
+import "package:joby/features/company/profile_company/screens/company_profile_screen.dart";
 import "package:joby/features/company/saved/presentation/screens/saved_screen.dart";
 
 class CompanyRootScreen extends StatefulWidget {
@@ -49,8 +49,8 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
               //
               _navItem(
                 index: 2,
-                icon: "assets/svgs/profile.svg",
-                title: "Profile",
+                icon: "assets/svgs/settings.svg",
+                title: "Settings",
               ),
               //
             ],

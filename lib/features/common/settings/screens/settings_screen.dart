@@ -1,13 +1,14 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "../widgets/custom_settings_item.dart";
 
-class UserSettingsScreen extends StatelessWidget {
-  const UserSettingsScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +101,8 @@ class UserSettingsScreen extends StatelessWidget {
                 );
 
                 if (confirmLogout == true && context.mounted) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.clear();
                   await Supabase.instance.client.auth.signOut();
                   if (!context.mounted) return;
                   context.pushNamedAndRemoveUntil(
