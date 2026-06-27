@@ -106,7 +106,7 @@ class SettingsScreen extends StatelessWidget {
                   await Supabase.instance.client.auth.signOut();
                   if (!context.mounted) return;
                   context.pushNamedAndRemoveUntil(
-                    Routes.authScreen,
+                    Routes.onBoardingScreen,
                     predicate: (route) => false,
                   );
                 }

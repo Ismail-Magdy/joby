@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:joby/core/widgets/home_shimmer_loading.dart";
 import "package:joby/features/users/home/presentation/widgets/custom_info_row.dart";
 import "package:joby/features/users/home/presentation/widgets/cv_section.dart";
 import "package:joby/features/users/home/presentation/widgets/location_map_section.dart";
@@ -7,7 +8,6 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/widgets/error_screen.dart";
-import "package:joby/core/widgets/home_shimmer_loading.dart";
 import "package:joby/features/users/home/presentation/widgets/social_media_row.dart";
 import "package:joby/features/users/home/presentation/widgets/total_points_container.dart";
 import "package:joby/features/users/points/manager/points_cubit.dart";

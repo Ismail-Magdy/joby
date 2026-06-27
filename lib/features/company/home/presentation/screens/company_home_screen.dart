@@ -76,14 +76,14 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
                 if (state is CompanyHomeLoading ||
                     state is CompanyHomeInitial) {
                   final dummySeeker = UserInfoModel(
-                    id: '1',
+                    id: "1",
                     name: "Skeleton Name Loading",
                     jobCategory: "Programming",
-                    jobTitle: 'Software Engineer',
-                    level: 'Senior',
-                    typeOfWork: 'Full-time',
-                    whatsapp: '123456789',
-                    locationName: 'Cairo, Egypt',
+                    jobTitle: "Software Engineer",
+                    level: "Senior",
+                    typeOfWork: "Full-time",
+                    whatsapp: "123456789",
+                    locationName: "Cairo, Egypt",
                     latitude: 0,
                     longitude: 0,
                     totalPoints: 100,
