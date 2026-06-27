@@ -3,21 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:joby/core/widgets/custom_app_bar.dart';
+import 'package:joby/core/widgets/snack_bar_text.dart';
 import 'package:joby/features/common/feed_back/manager/advice_cubit.dart';
 import 'package:joby/features/common/feed_back/manager/advice_state.dart';
-import 'package:joby/features/common/feed_back/presentation/widgets/advice_footer.dart';
+import 'package:joby/features/common/feed_back/presentation/widgets/feed_back_footer.dart';
 import 'package:joby/features/common/feed_back/presentation/widgets/custom_head_section.dart';
 import 'package:joby/features/common/feed_back/presentation/widgets/custom_send_button.dart';
 import 'package:joby/features/common/feed_back/presentation/widgets/success_state_widget.dart';
 
-class AdviceScreen extends StatefulWidget {
-  const AdviceScreen({super.key});
+class FeedBackScreen extends StatefulWidget {
+  const FeedBackScreen({super.key});
 
   @override
-  State<AdviceScreen> createState() => _AdviceScreenState();
+  State<FeedBackScreen> createState() => _FeedBackScreenState();
 }
 
-class _AdviceScreenState extends State<AdviceScreen> {
+class _FeedBackScreenState extends State<FeedBackScreen> {
   final TextEditingController _messageController = TextEditingController();
   static const int _maxChars = 500;
 
@@ -57,25 +59,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       // App Bar
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          "Share Feedback",
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 20.sp,
-            fontWeight: .bold,
-            fontFamily: "BrunoAceSC",
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(text: "Feedback"),
       //
       body: BlocConsumer<AdviceCubit, AdviceState>(
         //
@@ -83,17 +67,17 @@ class _AdviceScreenState extends State<AdviceScreen> {
           if (state is AdviceSent) {
             _messageController.clear();
           } else if (state is AdviceError) {
+            //
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Center(
-                  child: Text(state.message, style: TextStyle(fontSize: 13.sp)),
-                ),
+                content: SnackBarText(title: state.message),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.all(20.r),
+                margin: .all(20.r),
                 shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
               ),
             );
+            //
           }
         },
         //
@@ -135,7 +119,8 @@ class _AdviceScreenState extends State<AdviceScreen> {
                     valueListenable: _messageController,
                     builder: (context, value, _) {
                       final charCount = value.text.length;
-                      final isNearLimit = charCount > _maxChars * 0.85;
+                      final isLimit = charCount >= _maxChars;
+                      final isNearLimit = charCount >= _maxChars * 0.85;
                       return Column(
                         crossAxisAlignment: .end,
                         children: [
@@ -158,26 +143,26 @@ class _AdviceScreenState extends State<AdviceScreen> {
                                   "you'd like us to improve...",
                               hintStyle: TextStyle(
                                 color: Colors.grey.shade400,
-                                fontSize: 14.sp,
+                                fontSize: 13.sp,
                                 height: 1.5,
                               ),
                               filled: true,
                               fillColor: Colors.grey.shade50,
-                              contentPadding: EdgeInsets.all(16.r),
+                              contentPadding: .all(16.r),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.r),
+                                borderRadius: .circular(16.r),
                                 borderSide: BorderSide(
                                   color: Colors.grey.shade200,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.r),
+                                borderRadius: .circular(16.r),
                                 borderSide: BorderSide(
                                   color: Colors.grey.shade200,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.r),
+                                borderRadius: .circular(16.r),
                                 borderSide: BorderSide(
                                   color: AppColors.primaryColor,
                                   width: 1.5,
@@ -185,17 +170,21 @@ class _AdviceScreenState extends State<AdviceScreen> {
                               ),
                             ),
                           ),
+                          //
                           verticalSpace(4),
                           //
                           Text(
                             "$charCount / $_maxChars",
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: isNearLimit
+                              color: isLimit
+                                  ? Colors.red
+                                  : isNearLimit
                                   ? Colors.orange
                                   : Colors.grey.shade400,
                             ),
                           ),
+                          //
                         ],
                       );
                     },
@@ -211,7 +200,7 @@ class _AdviceScreenState extends State<AdviceScreen> {
                   //
                   verticalSpace(16),
                   //
-                  AdviceFooter(),
+                  FeedBackFooter(),
                   //
                 ],
                 //

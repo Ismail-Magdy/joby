@@ -3,7 +3,7 @@ import "package:supabase_flutter/supabase_flutter.dart";
 import "advice_repo.dart";
 import "../../../../../core/errors/error_handler.dart";
 
-class AdviceRepoImpl implements AdviceRepo {
+class AdviceRepoImpl implements FeedBackRepo {
   final SupabaseClient supabaseClient;
 
   AdviceRepoImpl({required this.supabaseClient});
