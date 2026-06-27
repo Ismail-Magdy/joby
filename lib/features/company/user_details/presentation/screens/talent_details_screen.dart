@@ -10,6 +10,9 @@ import "package:joby/features/users/home/presentation/widgets/location_map_secti
 import "package:joby/features/users/home/presentation/widgets/social_media_row.dart";
 import "package:joby/features/users/home/presentation/widgets/total_points_container.dart";
 import "package:joby/features/users/home/presentation/widgets/profile_header_delegate.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:joby/features/company/home/manager/company_home_cubit.dart";
+import "package:joby/features/company/home/manager/company_home_state.dart";
 
 class TalentDetailsScreen extends StatefulWidget {
   final UserInfoModel seeker;
@@ -131,6 +134,24 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
               title: "Talent Profile",
               name: _toTitleCase(user.displayShortName),
               jobTitle: _toTitleCase(user.jobTitle),
+              showBackButton: true,
+              trailingAction: BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
+                builder: (context, state) {
+                  bool isSaved = false;
+                  if (state is CompanyHomeLoaded) {
+                    isSaved = state.savedSeekerIds.contains(user.id.toString());
+                  }
+                  return IconButton(
+                    icon: Icon(
+                      isSaved ? Icons.bookmark : Icons.bookmark_border,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      context.read<CompanyHomeCubit>().toggleBookmark(user.id.toString());
+                    },
+                  );
+                },
+              ),
             ),
           ),
           //

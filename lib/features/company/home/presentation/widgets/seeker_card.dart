@@ -77,9 +77,13 @@ class _SeekerCardState extends State<SeekerCard> {
 
     return GestureDetector(
       onTap: () {
+        final cubit = context.read<CompanyHomeCubit>();
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => TalentDetailsScreen(seeker: seeker),
+            builder: (_) => BlocProvider.value(
+              value: cubit,
+              child: TalentDetailsScreen(seeker: seeker),
+            ),
           ),
         );
       },

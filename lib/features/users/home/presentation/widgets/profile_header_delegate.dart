@@ -15,6 +15,8 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String jobTitle;
   final VoidCallback? onManagerTap;
   final VoidCallback? onEditTap;
+  final bool showBackButton;
+  final Widget? trailingAction;
 
   ProfileHeaderDelegate({
     required this.userId,
@@ -24,6 +26,8 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.jobTitle,
     this.onManagerTap,
     this.onEditTap,
+    this.showBackButton = false,
+    this.trailingAction,
   });
 
   @override
@@ -51,6 +55,7 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     final double currentHeight = max(maxExtent - shrinkOffset, minExtent);
 
     // --- Opacities ---
+    final double fadeOpacity = (1.0 - (shrinkOffset / (maxExtent - minExtent))).clamp(0.0, 1.0);
     final double expandedOpacity = max(0.0, 1.0 - t * 2.0); // Fades out early
     final double collapsedOpacity = max(0.0, (t - 0.5) * 2.0); // Fades in late
 
@@ -120,6 +125,39 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
               ),
             ),
           ),
+
+          // Back button and Trailing action
+          if (showBackButton || trailingAction != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                bottom: false,
+                child: IgnorePointer(
+                  ignoring: fadeOpacity <= 0.0,
+                  child: Opacity(
+                    opacity: fadeOpacity,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (showBackButton)
+                            IconButton(
+                              icon: const Icon(Icons.arrow_back, color: Colors.white),
+                              onPressed: () => Navigator.pop(context),
+                            )
+                          else
+                            const SizedBox.shrink(),
+                          if (trailingAction != null) trailingAction!,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
           // Title "My Profile" - Fades out
           if (expandedOpacity > 0)
