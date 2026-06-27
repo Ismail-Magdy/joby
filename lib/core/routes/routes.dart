@@ -3,7 +3,7 @@ class Routes {
   static const String onBoardingScreen = "/onBoardingScreen";
   static const String authScreen = "/authScreen";
   static const String aboutUsScreen = "/aboutUsScreen";
-  static const String adviceScreen = "/adviceScreen";
+  static const String feedBackScreen = "/feedBackScreen";
 
   /// User
   static const String userInfoScreen = "/userInfoScreen";

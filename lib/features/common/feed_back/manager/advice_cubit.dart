@@ -3,9 +3,9 @@ import "../data/repos/advice_repo.dart";
 import "advice_state.dart";
 
 class AdviceCubit extends Cubit<AdviceState> {
-  final AdviceRepo _adviceRepo;
+  final FeedBackRepo _adviceRepo;
 
-  AdviceCubit({required AdviceRepo adviceRepo})
+  AdviceCubit({required FeedBackRepo adviceRepo})
     : _adviceRepo = adviceRepo,
       super(AdviceInitial());
 

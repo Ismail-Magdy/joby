@@ -79,11 +79,11 @@ Future<void> initGetIt() async {
   );
 
   /// Advice (Feedback) Feature
-  getIt.registerLazySingleton<AdviceRepo>(
+  getIt.registerLazySingleton<FeedBackRepo>(
     () => AdviceRepoImpl(supabaseClient: getIt<SupabaseClient>()),
   );
   getIt.registerFactory<AdviceCubit>(
-    () => AdviceCubit(adviceRepo: getIt<AdviceRepo>()),
+    () => AdviceCubit(adviceRepo: getIt<FeedBackRepo>()),
   );
 
   /// Points Feature

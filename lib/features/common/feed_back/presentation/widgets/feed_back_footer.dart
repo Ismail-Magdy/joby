@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AdviceFooter extends StatelessWidget {
-  const AdviceFooter({super.key});
+class FeedBackFooter extends StatelessWidget {
+  const FeedBackFooter({super.key});
 
   @override
   Widget build(BuildContext context) {
