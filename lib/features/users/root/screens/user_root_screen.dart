@@ -3,10 +3,10 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
 import "package:joby/features/users/points/presentation/screens/points_screen.dart";
+import "package:joby/features/users/profile_users/screens/users_profile_screen.dart.dart";
 import "package:joby/features/users/profile_views/presentation/screens/profile_views_screen.dart";
 import "../../../../core/helpers/spacing.dart";
 import "../../../../core/themes/app_colors.dart";
-import "../../settings/presentation/screens/user_settings_screen.dart";
 
 class UserRootScreen extends StatefulWidget {
   const UserRootScreen({super.key});
@@ -28,7 +28,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
           const UserHomeScreen(),
           const PointsScreen(),
           const ProfileViewsScreen(),
-          const UserSettingsScreen(),
+          const UsersProfileScreen(),
         ],
       ),
       //

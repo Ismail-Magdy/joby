@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_colors.dart';
 
 class CustomSettingsItem extends StatelessWidget {
   const CustomSettingsItem({
@@ -27,6 +27,7 @@ class CustomSettingsItem extends StatelessWidget {
         border: .all(color: Colors.grey.shade200),
       ),
       child: ListTile(
+        //
         leading: SvgPicture.asset(
           icon,
           colorFilter: .mode(
@@ -35,6 +36,7 @@ class CustomSettingsItem extends StatelessWidget {
           ),
           height: 24.h,
         ),
+        //
         title: Text(
           label,
           style: TextStyle(
@@ -44,12 +46,15 @@ class CustomSettingsItem extends StatelessWidget {
             fontWeight: isLogout ?? false ? .bold : .normal,
           ),
         ),
+        //
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16.sp,
           color: Colors.grey,
         ),
+        //
         onTap: onTap,
+        //
       ),
     );
   }

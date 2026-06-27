@@ -11,12 +11,14 @@ import 'package:joby/features/company/company_info/manager/company_info_cubit.da
 import 'package:joby/features/company/company_info/presentation/screens/company_info_screen.dart';
 import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:joby/features/company/home/presentation/screens/company_home_screen.dart';
+import 'package:joby/features/company/profile_company/screens/company_profile_screen.dart';
 import 'package:joby/features/company/root/screens/company_root_screen.dart';
-import 'package:joby/features/users/about_us/presentation/screens/about_us_screen.dart';
-import 'package:joby/features/users/feed_back/presentation/screens/advice_screen.dart';
-import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
+import 'package:joby/features/common/about_us/presentation/screens/about_us_screen.dart';
+import 'package:joby/features/common/feed_back/presentation/screens/advice_screen.dart';
+import 'package:joby/features/users/home/presentation/screens/company_view_screen.dart';
+import 'package:joby/features/users/profile_users/screens/users_profile_screen.dart.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
-import '../../features/users/feed_back/manager/advice_cubit.dart';
+import '../../features/common/feed_back/manager/advice_cubit.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/edit_profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/users/home/manager/user_home_cubit.dart';
@@ -105,9 +107,9 @@ class AppRouter {
       case Routes.aboutUsScreen:
         return MaterialPageRoute(builder: (_) => const AboutUsScreen());
 
-      /// Company View Screen
-      case Routes.companyViewScreen:
-        return MaterialPageRoute(builder: (_) => const CompanyViewScreen());
+      /// Users Profile Screen
+      case Routes.usersProfileScreen:
+        return MaterialPageRoute(builder: (_) => const UsersProfileScreen());
 
       /// Advice / Feedback Screen
       case Routes.adviceScreen:
@@ -140,6 +142,7 @@ class AppRouter {
               const ExitConfirmationWrapper(child: CompanyHomeScreen()),
         );
 
+      /// Company Root Screen
       case Routes.companyRootScreen:
         return MaterialPageRoute(
           builder: (_) => ExitConfirmationWrapper(
@@ -153,6 +156,14 @@ class AppRouter {
             ),
           ),
         );
+
+      /// Company Profile Screen
+      case Routes.companyProfileScreen:
+        return MaterialPageRoute(builder: (_) => const CompanyProfileScreen());
+
+      /// Company Vieew Screen
+      case Routes.companyViewScreen:
+        return MaterialPageRoute(builder: (_) => const CompanyViewScreen());
 
       /// Default Case
       default:
