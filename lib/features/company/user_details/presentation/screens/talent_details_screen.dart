@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:flutter_svg/svg.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/widgets/pdf_viewer_screen.dart";
@@ -24,6 +25,7 @@ class TalentDetailsScreen extends StatefulWidget {
 }
 
 class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
+  ///
   Future<void> _launchUrl(String urlString, {bool isPhone = false}) async {
     Uri url;
 
@@ -141,14 +143,20 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
                   if (state is CompanyHomeLoaded) {
                     isSaved = state.savedSeekerIds.contains(user.id.toString());
                   }
-                  return IconButton(
-                    icon: Icon(
-                      isSaved ? Icons.bookmark : Icons.bookmark_border,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      context.read<CompanyHomeCubit>().toggleBookmark(user.id.toString());
+                  return GestureDetector(
+                    behavior: .opaque,
+                    onTap: () {
+                      context.read<CompanyHomeCubit>().toggleBookmark(
+                        user.id.toString(),
+                      );
                     },
+                    child: SvgPicture.asset(
+                      isSaved
+                          ? "assets/svgs/fill_saved.svg"
+                          : "assets/svgs/saved.svg",
+                      colorFilter: .mode(Colors.white, .srcIn),
+                      height: 24.h,
+                    ),
                   );
                 },
               ),

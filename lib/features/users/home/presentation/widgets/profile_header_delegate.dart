@@ -126,39 +126,6 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
 
-          // Back button and Trailing action
-          if (showBackButton || trailingAction != null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: SafeArea(
-                bottom: false,
-                child: IgnorePointer(
-                  ignoring: fadeOpacity <= 0.0,
-                  child: Opacity(
-                    opacity: fadeOpacity,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (showBackButton)
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back, color: Colors.white),
-                              onPressed: () => Navigator.pop(context),
-                            )
-                          else
-                            const SizedBox.shrink(),
-                          if (trailingAction != null) trailingAction!,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
           // Title "My Profile" - Fades out
           if (expandedOpacity > 0)
             Positioned(
@@ -285,6 +252,44 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
               ),
             ),
           ),
+
+          // Back button and Trailing action — LAST so it's on top for taps
+          if (showBackButton || trailingAction != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                bottom: false,
+                child: IgnorePointer(
+                  ignoring: fadeOpacity <= 0.0,
+                  child: Opacity(
+                    opacity: fadeOpacity,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (showBackButton)
+                            IconButton(
+                              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                              onPressed: () => Navigator.pop(context),
+                            )
+                          else
+                            const SizedBox.shrink(),
+                          if (trailingAction != null)
+                            SizedBox(
+                              width: 48.w,
+                              height: 48.h,
+                              child: Center(child: trailingAction!),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           //
         ],
       ),
