@@ -30,7 +30,7 @@ class CustomSavedList extends StatelessWidget {
                   borderRadius: .circular(20.r),
                 ),
                 child: Text(
-                  "${savedSeekers.length} Talent${savedSeekers.length != 1 ? 's' : ''} Saved",
+                  "${savedSeekers.length} Talent${savedSeekers.length != 1 ? "s" : ""} Saved",
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: .w600,

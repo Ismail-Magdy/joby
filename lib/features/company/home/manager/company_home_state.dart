@@ -8,7 +8,7 @@ class CompanyHomeLoading extends CompanyHomeState {}
 
 class CompanyHomeLoaded extends CompanyHomeState {
   final List<UserInfoModel> seekers;
-  final Set<String> savedSeekerIds; // For the local bookmark toggle state
+  final Set<String> savedSeekerIds;
 
   CompanyHomeLoaded({required this.seekers, this.savedSeekerIds = const {}});
 

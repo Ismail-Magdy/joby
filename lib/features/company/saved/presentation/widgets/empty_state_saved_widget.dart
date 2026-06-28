@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
-class EmptyStateWidget extends StatelessWidget {
-  const EmptyStateWidget({super.key});
+class EmptyStateSavedWidget extends StatelessWidget {
+  const EmptyStateSavedWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,7 @@ class EmptyStateWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: .center,
           children: [
+            //
             Container(
               width: 120.w,
               height: 120.w,
@@ -29,14 +31,19 @@ class EmptyStateWidget extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: Icon(
-                  Icons.bookmark_outline_rounded,
-                  size: 56.sp,
-                  color: AppColors.primaryColor.withValues(alpha: 0.55),
+                child: SvgPicture.asset(
+                  "assets/svgs/saved.svg",
+                  height: 56.h,
+                  colorFilter: .mode(
+                    AppColors.primaryColor.withValues(alpha: 0.55),
+                    .srcIn,
+                  ),
                 ),
               ),
             ),
+            //
             verticalSpace(28),
+            //
             Text(
               "No Saved Talents Yet",
               style: TextStyle(
@@ -46,8 +53,9 @@ class EmptyStateWidget extends StatelessWidget {
                 letterSpacing: 0.3,
               ),
             ),
-
+            //
             verticalSpace(32),
+            //
             Container(
               padding: .symmetric(horizontal: 16.w, vertical: 10.h),
               decoration: BoxDecoration(
@@ -60,12 +68,15 @@ class EmptyStateWidget extends StatelessWidget {
               child: Row(
                 mainAxisSize: .min,
                 children: [
+                  //
                   Icon(
                     Icons.touch_app_rounded,
                     size: 18.sp,
                     color: AppColors.primaryColor.withValues(alpha: 0.6),
                   ),
+                  //
                   horizontalSpace(8.w),
+                  //
                   Text(
                     "Tap the bookmark icon on any card",
                     style: TextStyle(
@@ -77,6 +88,7 @@ class EmptyStateWidget extends StatelessWidget {
                 ],
               ),
             ),
+            //
           ],
         ),
       ),

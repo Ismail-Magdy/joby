@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
 class SavedHeaderWidget extends StatelessWidget {
@@ -26,26 +24,15 @@ class SavedHeaderWidget extends StatelessWidget {
         ],
       ),
       child: Center(
-        child: Row(
-          mainAxisAlignment: .center,
-          children: [
-            SvgPicture.asset(
-              "assets/svgs/fill_saved.svg",
-              height: 22.h,
-              colorFilter: const .mode(Colors.white, .srcIn),
-            ),
-            horizontalSpace(10),
-            Text(
-              "Saved Talents",
-              style: TextStyle(
-                fontFamily: "BrunoAceSC",
-                fontSize: 20.sp,
-                color: Colors.white,
-                fontWeight: .bold,
-                letterSpacing: 0.5,
-              ),
-            ),
-          ],
+        child: Text(
+          "Saved Talents",
+          style: TextStyle(
+            fontFamily: "BrunoAceSC",
+            fontSize: 20.sp,
+            color: Colors.white,
+            fontWeight: .bold,
+            letterSpacing: 0.5,
+          ),
         ),
       ),
     );
