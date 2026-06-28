@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/widgets/error_screen.dart';
 import 'package:joby/features/company/saved/presentation/widgets/custom_saved_list.dart';
-import 'package:joby/features/company/saved/presentation/widgets/empty_state_widget.dart';
+import 'package:joby/features/company/saved/presentation/widgets/empty_state_saved_widget.dart';
 import 'package:joby/features/company/saved/presentation/widgets/saved_header_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:joby/features/company/home/manager/company_home_cubit.dart';
@@ -28,19 +28,20 @@ class SavedScreen extends StatelessWidget {
               builder: (context, state) {
                 if (state is CompanyHomeLoading ||
                     state is CompanyHomeInitial) {
+                  //
                   final dummySeeker = UserInfoModel(
-                    name: 'Skeleton Name Loading',
-                    jobCategory: 'Programming',
-                    jobTitle: 'Software Engineer',
-                    level: 'Senior',
-                    typeOfWork: 'Full-time',
-                    whatsapp: '123456789',
-                    locationName: 'Cairo, Egypt',
+                    name: "Skeleton Name Loading",
+                    jobCategory: "Programming",
+                    jobTitle: "Software Engineer",
+                    level: "Senior",
+                    typeOfWork: "Full-time",
+                    whatsapp: "123456789",
+                    locationName: "Cairo, Egypt",
                     latitude: 0,
                     longitude: 0,
                     totalPoints: 100,
                   );
-
+                  //
                   return Skeletonizer(
                     enabled: true,
                     child: ListView.builder(
@@ -56,6 +57,7 @@ class SavedScreen extends StatelessWidget {
                       },
                     ),
                   );
+                  //
                 } else if (state is CompanyHomeError) {
                   return ErrorScreen(errorText: state.message);
                 } else if (state is CompanyHomeLoaded) {
@@ -66,7 +68,7 @@ class SavedScreen extends StatelessWidget {
                       .toList();
 
                   if (savedSeekers.isEmpty) {
-                    return EmptyStateWidget();
+                    return EmptyStateSavedWidget();
                   }
 
                   return CustomSavedList(

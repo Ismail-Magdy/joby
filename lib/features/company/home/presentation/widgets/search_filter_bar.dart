@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
-import 'filter_bottom_sheet.dart';
+import '../components/filter_bottom_sheet.dart';
 
 class SearchFilterBar extends StatefulWidget {
   const SearchFilterBar({super.key});

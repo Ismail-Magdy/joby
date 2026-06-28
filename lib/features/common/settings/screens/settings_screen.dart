@@ -82,10 +82,7 @@ class SettingsScreen extends StatelessWidget {
                             borderRadius: .circular(12.r),
                           ),
                           elevation: 0,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20.w,
-                            vertical: 10.h,
-                          ),
+                          padding: .symmetric(horizontal: 20.w, vertical: 10.h),
                         ),
                         child: Text(
                           "Logout",
