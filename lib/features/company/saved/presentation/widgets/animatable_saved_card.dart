@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:joby/features/company/home/presentation/widgets/seeker_card.dart';
+import 'package:joby/features/company/home/presentation/components/seeker_card.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:thanos_snap_effect/thanos_snap_effect.dart';
