@@ -286,6 +286,7 @@ class _SeekerCardState extends State<SeekerCard> {
             //
           ],
         ),
+        //
       ),
     );
   }

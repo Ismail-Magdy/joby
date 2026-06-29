@@ -8,7 +8,7 @@ import 'package:joby/features/company/saved/presentation/widgets/saved_header_wi
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:joby/features/company/home/manager/company_home_state.dart';
-import 'package:joby/features/company/home/presentation/widgets/seeker_card.dart';
+import 'package:joby/features/company/home/presentation/components/seeker_card.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 
 class SavedScreen extends StatelessWidget {
