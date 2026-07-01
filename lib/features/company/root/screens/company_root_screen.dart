@@ -5,7 +5,7 @@ import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/features/company/home/presentation/screens/company_home_screen.dart";
 import "package:joby/features/company/profile_company/screens/company_profile_screen.dart";
-import "package:joby/features/company/saved/presentation/screens/saved_screen.dart";
+import "package:joby/features/company/saved/screens/saved_screen.dart";
 
 class CompanyRootScreen extends StatefulWidget {
   const CompanyRootScreen({super.key});
@@ -21,6 +21,7 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      //
       body: IndexedStack(
         index: currentIndex,
         children: [

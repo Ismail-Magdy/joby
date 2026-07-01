@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/themes/app_colors.dart';
-import 'package:joby/features/company/saved/presentation/widgets/animatable_saved_card.dart';
+import 'package:joby/features/company/saved/widgets/animatable_saved_card.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 
 class CustomSavedList extends StatelessWidget {
