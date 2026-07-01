@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +11,40 @@ import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class BottomSectionCompanyHome extends StatelessWidget {
+class BottomSectionCompanyHome extends StatefulWidget {
   const BottomSectionCompanyHome({super.key});
+
+  @override
+  State<BottomSectionCompanyHome> createState() =>
+      _BottomSectionCompanyHomeState();
+}
+
+class _BottomSectionCompanyHomeState extends State<BottomSectionCompanyHome> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  ///
+  void _onScroll() {
+    const threshold = 200.0;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    if (currentScroll >= maxScroll - threshold) {
+      context.read<CompanyHomeCubit>().fetchNextPage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +81,12 @@ class BottomSectionCompanyHome extends StatelessWidget {
                 },
               ),
             );
-            // Error State
+            //
           } else if (state is CompanyHomeError) {
             return ErrorScreen(errorText: state.message);
-            // Succsess State
           } else if (state is CompanyHomeLoaded) {
             if (state.seekers.isEmpty) {
               return Center(
-                //
                 child: Column(
                   mainAxisAlignment: .center,
                   children: [
@@ -84,10 +115,21 @@ class BottomSectionCompanyHome extends StatelessWidget {
               );
             }
 
+            final itemCount =
+                state.seekers.length + (state.isLoadingMore ? 1 : 0);
+
             return ListView.builder(
+              controller: _scrollController,
               padding: .only(top: 24.h, left: 24.w, right: 24.w, bottom: 24.h),
-              itemCount: state.seekers.length,
+              itemCount: itemCount,
               itemBuilder: (context, index) {
+                if (index >= state.seekers.length) {
+                  return Padding(
+                    padding: .symmetric(vertical: 16.h),
+                    child: const Center(child: CupertinoActivityIndicator()),
+                  );
+                }
+
                 final seeker = state.seekers[index];
                 final isSaved = state.savedSeekerIds.contains(seeker.id);
                 return SeekerCard(
@@ -103,6 +145,5 @@ class BottomSectionCompanyHome extends StatelessWidget {
         },
       ),
     );
-    //
   }
 }

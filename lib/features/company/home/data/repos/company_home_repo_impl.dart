@@ -9,6 +9,8 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
   final SupabaseClient supabaseClient;
   final SharedPreferences sharedPreferences;
 
+  static const int pageSize = 10;
+
   CompanyHomeRepoImpl({
     required this.supabaseClient,
     required this.sharedPreferences,
@@ -21,6 +23,7 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
     String? jobTitle,
     String? locationName,
     String? level,
+    required int page,
   }) async {
     try {
       var query = supabaseClient.from('users').select();
@@ -31,7 +34,6 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
         );
       }
 
-      // Apply Dropdown Filters
       if (jobCategory != null &&
           jobCategory.isNotEmpty &&
           jobCategory != 'All') {
@@ -49,8 +51,13 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
         query = query.eq('level', level);
       }
 
-      // Gamification Logic: Order by total_points DESC
-      final response = await query.order('total_points', ascending: false);
+      // Pagination range: page 0 => rows 0-9, page 1 => rows 10-19, ...
+      final from = page * pageSize;
+      final to = from + pageSize - 1;
+
+      final response = await query
+          .order('total_points', ascending: false)
+          .range(from, to);
 
       final dataList = List<Map<String, dynamic>>.from(response as List);
       final seekersList = dataList

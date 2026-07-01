@@ -12,10 +12,18 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
   String? currentLocationName;
   String? currentLevel;
 
+  // Pagination tracking
+  static const int _pageSize = 10;
+  int _currentPage = 0;
+  bool _isFetchingMore = false;
+
   CompanyHomeCubit({required this.repo}) : super(CompanyHomeInitial());
 
+  ///
   Future<void> fetchSeekers() async {
-    // Retain saved seekers if we are already in Loaded state
+    _currentPage = 0;
+    _isFetchingMore = false;
+
     Set<String> currentSaved = {};
     if (state is CompanyHomeLoaded) {
       currentSaved = (state as CompanyHomeLoaded).savedSeekerIds;
@@ -32,14 +40,59 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
       jobTitle: currentJobTitle,
       locationName: currentLocationName,
       level: currentLevel,
+      page: _currentPage,
     );
 
     result.fold(
       (error) => emit(CompanyHomeError(error)),
       (seekers) => emit(
-        CompanyHomeLoaded(seekers: seekers, savedSeekerIds: currentSaved),
+        CompanyHomeLoaded(
+          seekers: seekers,
+          savedSeekerIds: currentSaved,
+          hasReachedMax: seekers.length < _pageSize,
+        ),
       ),
     );
+  }
+
+  ///
+  Future<void> fetchNextPage() async {
+    if (state is! CompanyHomeLoaded) return;
+    final currentState = state as CompanyHomeLoaded;
+    if (currentState.hasReachedMax || _isFetchingMore) return;
+
+    _isFetchingMore = true;
+    emit(currentState.copyWith(isLoadingMore: true));
+
+    final nextPage = _currentPage + 1;
+
+    final result = await repo.getSeekers(
+      searchQuery: currentSearchQuery,
+      jobCategory: currentJobCategory,
+      jobTitle: currentJobTitle,
+      locationName: currentLocationName,
+      level: currentLevel,
+      page: nextPage,
+    );
+
+    result.fold(
+      (error) {
+        emit(currentState.copyWith(isLoadingMore: false));
+      },
+      (newSeekers) {
+        _currentPage = nextPage;
+        final updatedList = List.of(currentState.seekers)..addAll(newSeekers);
+        emit(
+          currentState.copyWith(
+            seekers: updatedList,
+            isLoadingMore: false,
+            hasReachedMax: newSeekers.length < _pageSize,
+          ),
+        );
+      },
+    );
+
+    _isFetchingMore = false;
   }
 
   void applyFilters({

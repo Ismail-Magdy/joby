@@ -8,6 +8,7 @@ abstract class CompanyHomeRepo {
     String? jobTitle,
     String? locationName,
     String? level,
+    required int page,
   });
 
   Future<Either<String, Set<String>>> getSavedSeekerIds();
