@@ -12,7 +12,7 @@ import 'package:audioplayers/audioplayers.dart';
 import '../../../../users/user_info/data/models/user_info_model.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
-import 'package:joby/features/company/user_details/presentation/screens/talent_details_screen.dart';
+import 'package:joby/features/company/user_details/screens/talent_details_screen.dart';
 
 class SeekerCard extends StatefulWidget {
   final UserInfoModel seeker;

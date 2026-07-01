@@ -165,7 +165,7 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
           //
           SliverPadding(
             // Bottom Space
-            padding: EdgeInsets.only(bottom: 50.h),
+            padding: .only(bottom: 50.h),
             //
             sliver: SliverToBoxAdapter(
               child: Column(
