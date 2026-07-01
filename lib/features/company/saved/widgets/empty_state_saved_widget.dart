@@ -85,6 +85,7 @@ class EmptyStateSavedWidget extends StatelessWidget {
                       fontWeight: .w500,
                     ),
                   ),
+                  //
                 ],
               ),
             ),

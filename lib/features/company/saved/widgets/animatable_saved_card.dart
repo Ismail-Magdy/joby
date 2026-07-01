@@ -71,6 +71,7 @@ class AnimatableSavedCardState extends State<AnimatableSavedCard>
 
                   // Actually remove from state & local storage
                   if (mounted) {
+                    // ignore: use_build_context_synchronously
                     context.read<CompanyHomeCubit>().toggleBookmark(
                       widget.seeker.id.toString(),
                     );

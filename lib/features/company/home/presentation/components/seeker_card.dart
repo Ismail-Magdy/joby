@@ -309,11 +309,7 @@ class _SeekerCardState extends State<SeekerCard> {
               return "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
             })
             .join(" "),
-        style: TextStyle(
-          color: textColor,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyle(color: textColor, fontSize: 12.sp, fontWeight: .w600),
       ),
     );
   }
