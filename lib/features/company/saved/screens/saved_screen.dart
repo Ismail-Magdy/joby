@@ -61,11 +61,39 @@ class SavedScreen extends StatelessWidget {
                 } else if (state is CompanyHomeError) {
                   return ErrorScreen(errorText: state.message);
                 } else if (state is CompanyHomeLoaded) {
-                  final savedSeekers = state.seekers
-                      .where(
-                        (seeker) => state.savedSeekerIds.contains(seeker.id),
-                      )
-                      .toList();
+                  final savedSeekers = state.savedSeekerProfiles;
+
+                  // Profiles not yet loaded — show skeleton
+                  // (fetchSavedSeekers is triggered by tab switch)
+                  if (savedSeekers == null) {
+                    final dummySeeker = UserInfoModel(
+                      name: "Skeleton Name Loading",
+                      jobCategory: "Programming",
+                      jobTitle: "Software Engineer",
+                      level: "Senior",
+                      typeOfWork: "Full-time",
+                      whatsapp: "123456789",
+                      locationName: "Cairo, Egypt",
+                      latitude: 0,
+                      longitude: 0,
+                      totalPoints: 100,
+                    );
+                    return Skeletonizer(
+                      enabled: true,
+                      child: ListView.builder(
+                        padding: .only(
+                          top: 20.h,
+                          left: 24.w,
+                          right: 24.w,
+                          bottom: 120.h,
+                        ),
+                        itemCount: 4,
+                        itemBuilder: (context, index) {
+                          return SeekerCard(seeker: dummySeeker, isSaved: true);
+                        },
+                      ),
+                    );
+                  }
 
                   if (savedSeekers.isEmpty) {
                     return EmptyStateSavedWidget();

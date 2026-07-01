@@ -28,12 +28,10 @@ void main() async {
   // Initialize GetIt service locator
   await initGetIt();
 
-  // Initialize Local Notifications
+  // Initialize Local Notifications (init & permissions for all user types)
   final notificationService = getIt<LocalNotificationService>();
   await notificationService.init();
   await notificationService.requestPermissions();
-  await notificationService.scheduleDailyCheckInReminder();
-  await notificationService.scheduleProfileViewsReminder();
 
   // Determine initial route from session state
   String initialRoute = Routes.onBoardingScreen;
@@ -43,6 +41,10 @@ void main() async {
     final userType = await SharedPrefHelper.getString(AppConstants.userTypeKey);
 
     if (userType == "company") {
+      // Cancel any previously scheduled user-specific notifications
+      await notificationService.cancelNotification(1);
+      await notificationService.cancelNotification(2);
+
       bool isCompanyInfoCompleted = false;
       try {
         final managerData = await Supabase.instance.client
@@ -72,6 +74,10 @@ void main() async {
         initialRoute = Routes.companyInfoScreen;
       }
     } else {
+      // Schedule notifications only for regular users (job seekers)
+      await notificationService.scheduleDailyCheckInReminder();
+      await notificationService.scheduleProfileViewsReminder();
+
       bool isInfoCompleted = false;
       try {
         final userData = await Supabase.instance.client

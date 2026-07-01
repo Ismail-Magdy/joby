@@ -86,6 +86,29 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
   }
 
   @override
+  Future<Either<String, List<UserInfoModel>>> getSeekersByIds(
+    Set<String> ids,
+  ) async {
+    try {
+      if (ids.isEmpty) return const Right([]);
+
+      final response = await supabaseClient
+          .from('users')
+          .select()
+          .inFilter('id', ids.toList())
+          .order('total_points', ascending: false);
+
+      final dataList = List<Map<String, dynamic>>.from(response as List);
+      final seekers = dataList
+          .map((json) => UserInfoModel.fromJson(json))
+          .toList();
+      return Right(seekers);
+    } catch (e) {
+      return Left(ErrorHandler.handleError(e));
+    }
+  }
+
+  @override
   Future<Either<String, void>> saveSeekerIds(Set<String> savedIds) async {
     try {
       await sharedPreferences.setStringList(

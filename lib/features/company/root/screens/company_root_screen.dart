@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
+import "package:joby/features/company/home/manager/company_home_cubit.dart";
 import "package:joby/features/company/home/presentation/screens/company_home_screen.dart";
 import "package:joby/features/company/profile_company/screens/company_profile_screen.dart";
 import "package:joby/features/company/saved/screens/saved_screen.dart";
@@ -16,6 +18,19 @@ class CompanyRootScreen extends StatefulWidget {
 
 class _CompanyRootScreenState extends State<CompanyRootScreen> {
   int currentIndex = 0;
+  final Set<int> _initializedTabs = {0};
+
+  void _onTabChanged(int index) {
+    setState(() {
+      currentIndex = index;
+      _initializedTabs.add(index);
+    });
+
+    // Fetch saved seeker profiles when switching to Saved tab
+    if (index == 1) {
+      context.read<CompanyHomeCubit>().fetchSavedSeekers();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +41,12 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
         index: currentIndex,
         children: [
           const CompanyHomeScreen(),
-          const SavedScreen(),
-          const CompanyProfileScreen(),
+          _initializedTabs.contains(1)
+              ? const SavedScreen()
+              : const SizedBox.shrink(),
+          _initializedTabs.contains(2)
+              ? const CompanyProfileScreen()
+              : const SizedBox.shrink(),
         ],
       ),
       //
@@ -71,7 +90,7 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
     final isSelected = currentIndex == index;
 
     return GestureDetector(
-      onTap: () => setState(() => currentIndex = index),
+      onTap: () => _onTabChanged(index),
       child: Column(
         mainAxisAlignment: .center,
         children: [

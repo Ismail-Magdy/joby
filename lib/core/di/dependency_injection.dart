@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:joby/features/users/notification/data/services/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -101,6 +102,9 @@ Future<void> initGetIt() async {
   getIt.registerLazySingleton<LocalNotificationService>(
     () => LocalNotificationService(),
   );
+
+  /// Shared AudioPlayer (reused across all cards)
+  getIt.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
 
   /// Company Part
 

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
+import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import 'company_home_state.dart';
 
 class CompanyHomeCubit extends Cubit<CompanyHomeState> {
@@ -25,16 +26,19 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
     _isFetchingMore = false;
 
     Set<String> currentSaved = {};
-    if (state is CompanyHomeLoaded) {
-      currentSaved = (state as CompanyHomeLoaded).savedSeekerIds;
-    } else {
-      final savedResult = await repo.getSavedSeekerIds();
-      savedResult.fold((error) => null, (saved) => currentSaved = saved);
+    List<UserInfoModel>? existingSavedProfiles;
+    final bool alreadyHaveSaved = state is CompanyHomeLoaded;
+
+    if (alreadyHaveSaved) {
+      final loadedState = state as CompanyHomeLoaded;
+      currentSaved = loadedState.savedSeekerIds;
+      existingSavedProfiles = loadedState.savedSeekerProfiles;
     }
 
     emit(CompanyHomeLoading());
 
-    final result = await repo.getSeekers(
+    // Start both futures simultaneously (parallel I/O)
+    final seekersFuture = repo.getSeekers(
       searchQuery: currentSearchQuery,
       jobCategory: currentJobCategory,
       jobTitle: currentJobTitle,
@@ -42,6 +46,16 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
       level: currentLevel,
       page: _currentPage,
     );
+    final savedFuture = alreadyHaveSaved ? null : repo.getSavedSeekerIds();
+
+    // Await saved IDs if needed (runs in parallel with seekersFuture)
+    if (savedFuture != null) {
+      final savedResult = await savedFuture;
+      savedResult.fold((error) => null, (saved) => currentSaved = saved);
+    }
+
+    // Await seekers
+    final result = await seekersFuture;
 
     result.fold(
       (error) => emit(CompanyHomeError(error)),
@@ -49,6 +63,7 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
         CompanyHomeLoaded(
           seekers: seekers,
           savedSeekerIds: currentSaved,
+          savedSeekerProfiles: existingSavedProfiles,
           hasReachedMax: seekers.length < _pageSize,
         ),
       ),
@@ -95,6 +110,27 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
     _isFetchingMore = false;
   }
 
+  /// Fetch full profiles for saved seeker IDs from Supabase
+  Future<void> fetchSavedSeekers() async {
+    if (state is! CompanyHomeLoaded) return;
+    final currentState = state as CompanyHomeLoaded;
+
+    if (currentState.savedSeekerIds.isEmpty) {
+      emit(currentState.copyWith(savedSeekerProfiles: []));
+      return;
+    }
+
+    final result = await repo.getSeekersByIds(currentState.savedSeekerIds);
+    // Only emit if state hasn't changed underneath us
+    if (state is! CompanyHomeLoaded) return;
+    result.fold(
+      (error) => null, // Keep current profiles on error
+      (profiles) => emit(
+        (state as CompanyHomeLoaded).copyWith(savedSeekerProfiles: profiles),
+      ),
+    );
+  }
+
   void applyFilters({
     String? searchQuery,
     String? jobCategory,
@@ -125,14 +161,31 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
     if (state is CompanyHomeLoaded) {
       final currentState = state as CompanyHomeLoaded;
       final newSaved = Set<String>.from(currentState.savedSeekerIds);
+      List<UserInfoModel>? updatedProfiles =
+          currentState.savedSeekerProfiles != null
+          ? List<UserInfoModel>.from(currentState.savedSeekerProfiles!)
+          : null;
 
       if (newSaved.contains(uniqueId)) {
         newSaved.remove(uniqueId);
+        updatedProfiles?.removeWhere((s) => s.id == uniqueId);
       } else {
         newSaved.add(uniqueId);
+        // Add to saved profiles if we have the full profile loaded
+        if (updatedProfiles != null) {
+          final matches = currentState.seekers.where((s) => s.id == uniqueId);
+          if (matches.isNotEmpty) {
+            updatedProfiles.add(matches.first);
+          }
+        }
       }
 
-      emit(currentState.copyWith(savedSeekerIds: newSaved));
+      emit(
+        currentState.copyWith(
+          savedSeekerIds: newSaved,
+          savedSeekerProfiles: updatedProfiles,
+        ),
+      );
       repo.saveSeekerIds(newSaved);
     }
   }

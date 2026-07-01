@@ -9,6 +9,7 @@ import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/features/company/home/presentation/widgets/seeker_preview_overlay.dart';
 import 'package:like_button/like_button.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:joby/core/di/dependency_injection.dart';
 import '../../../../users/user_info/data/models/user_info_model.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
@@ -31,19 +32,11 @@ class SeekerCard extends StatefulWidget {
 }
 
 class _SeekerCardState extends State<SeekerCard> {
-  late AudioPlayer audioPlayer;
   OverlayEntry? _previewOverlay;
-
-  @override
-  void initState() {
-    super.initState();
-    audioPlayer = AudioPlayer();
-  }
 
   @override
   void dispose() {
     _removePreview();
-    audioPlayer.dispose();
     super.dispose();
   }
 
@@ -226,7 +219,7 @@ class _SeekerCardState extends State<SeekerCard> {
                     }
 
                     if (!isCurrentlySaved) {
-                      audioPlayer.play(AssetSource("sounds/save.mp3"));
+                      getIt<AudioPlayer>().play(AssetSource("sounds/save.mp3"));
                     }
 
                     context.read<CompanyHomeCubit>().toggleBookmark(
@@ -295,11 +288,8 @@ class _SeekerCardState extends State<SeekerCard> {
   Widget _buildChip(String label, Color bgColor, Color textColor) {
     if (label.isEmpty) return const SizedBox.shrink();
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
+      padding: .symmetric(horizontal: 10.w, vertical: 6.h),
+      decoration: BoxDecoration(color: bgColor, borderRadius: .circular(8.r)),
       child: Text(
         label
             .trim()
@@ -314,5 +304,3 @@ class _SeekerCardState extends State<SeekerCard> {
     );
   }
 }
-
-// 614
