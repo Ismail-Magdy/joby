@@ -12,5 +12,6 @@ abstract class CompanyHomeRepo {
   });
 
   Future<Either<String, Set<String>>> getSavedSeekerIds();
+  Future<Either<String, List<UserInfoModel>>> getSeekersByIds(Set<String> ids);
   Future<Either<String, void>> saveSeekerIds(Set<String> savedIds);
 }
