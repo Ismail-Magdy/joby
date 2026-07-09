@@ -13,7 +13,7 @@ class ErrorHandler {
     if (error is AuthException) {
       switch (error.message.toLowerCase()) {
         case "invalid login credentials":
-          return "Invalid email or password. Please check your credentials";
+          return "Invalid email or password";
         case "user already registered":
           return "An account with this email already exists";
         case "email rate limit exceeded":

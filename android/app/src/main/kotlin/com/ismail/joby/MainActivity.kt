@@ -1,4 +1,4 @@
-package com.example.joby
+package com.ismail.joby
 
 import io.flutter.embedding.android.FlutterActivity
 
