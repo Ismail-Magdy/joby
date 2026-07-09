@@ -11,9 +11,9 @@ class AuthRepoImpl implements AuthRepo {
   final SupabaseClient supabaseClient;
 
   final String webClientId =
-      "39044447018-cclr5gn2dp3spu93uvqrg2as3o32er25.apps.googleusercontent.com";
+      "202946347612-djmbpgh2k3tv7gd586ucauco7tbi0vfs.apps.googleusercontent.com";
   final String iosClientId =
-      "39044447018-nefhnuaomgem3velpbl5hcue5c8n1j41.apps.googleusercontent.com";
+      "202946347612-60847ll616ifkjjh34l0ujbe5hers2u8.apps.googleusercontent.com";
 
   late final GoogleSignIn _googleSignIn = GoogleSignIn(
     clientId: iosClientId,
@@ -42,8 +42,9 @@ class AuthRepoImpl implements AuthRepo {
       } else {
         return const Left("Sign up failed. Please try again");
       }
-    } catch (e) {
-      return Left(ErrorHandler.handleError(e));
+    } catch (error) {
+      debugPrint("Google Auth Real Error: ${error.toString()}");
+      return Left(ErrorHandler.handleError(error));
     }
   }
 
@@ -62,8 +63,9 @@ class AuthRepoImpl implements AuthRepo {
       } else {
         return const Left("Sign in failed. Check your credentials");
       }
-    } catch (e) {
-      return Left(ErrorHandler.handleError(e));
+    } catch (error) {
+      debugPrint("Google Auth Real Error: ${error.toString()}");
+      return Left(ErrorHandler.handleError(error));
     }
   }
 
@@ -90,6 +92,7 @@ class AuthRepoImpl implements AuthRepo {
         return const Left("Google sign in failed");
       }
     } catch (error) {
+      debugPrint("Google Auth Real Error: ${error.toString()}");
       return Left(ErrorHandler.handleError(error));
     }
   }
@@ -119,6 +122,7 @@ class AuthRepoImpl implements AuthRepo {
         return const Left("Google sign in failed");
       }
     } catch (error) {
+      debugPrint("Google Auth Real Error: ${error.toString()}");
       return Left(ErrorHandler.handleError(error));
     }
   }

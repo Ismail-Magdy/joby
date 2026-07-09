@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:202946347612:android:14a051c6497db08af41c99",
+        "mobilesdk_app_id": "1:202946347612:android:75742bc41dbbbabbf41c99",
         "android_client_info": {
-          "package_name": "com.example.joby"
+          "package_name": "com.ismail.joby"
         }
       },
       "oauth_client": [],

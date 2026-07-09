@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.joby"
+    namespace = "com.ismail.joby"
 
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -30,7 +30,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.joby"
+        applicationId = "com.ismail.joby"
 
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
