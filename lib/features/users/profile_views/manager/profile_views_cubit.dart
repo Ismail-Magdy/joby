@@ -25,7 +25,31 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
         emit(ProfileViewsEmpty());
       } else {
         final views = data.map((e) => ProfileViewModel.fromJson(e)).toList();
-        emit(ProfileViewsLoaded(views));
+
+        final now = DateTime.now();
+        int viewsThisWeek = 0;
+        int viewsLastWeek = 0;
+
+        for (var view in views) {
+          final diffInDays = now.difference(view.viewedAt).inDays;
+          if (diffInDays <= 7) {
+            viewsThisWeek++;
+          } else if (diffInDays > 7 && diffInDays <= 14) {
+            viewsLastWeek++;
+          }
+        }
+
+        final bool isTrendUp = viewsThisWeek >= viewsLastWeek;
+        final int trendDifference = (viewsThisWeek - viewsLastWeek).abs();
+
+        emit(
+          ProfileViewsLoaded(
+            views: views,
+            totalViews: views.length,
+            isTrendUp: isTrendUp,
+            trendDifference: trendDifference,
+          ),
+        );
       }
     } catch (e) {
       emit(ProfileViewsError("Failed to load profile views"));
