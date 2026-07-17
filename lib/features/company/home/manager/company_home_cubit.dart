@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'company_home_state.dart';
 
 class CompanyHomeCubit extends Cubit<CompanyHomeState> {
@@ -129,6 +131,23 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
         (state as CompanyHomeLoaded).copyWith(savedSeekerProfiles: profiles),
       ),
     );
+  }
+
+  /// Record a profile view in the Supabase database
+  Future<void> recordProfileView(String seekerId) async {
+    try {
+      final companyId = Supabase.instance.client.auth.currentUser?.id;
+      if (companyId == null) return;
+
+      await Supabase.instance.client.from('profile_views').insert({
+        'company_id': companyId,
+        'seeker_id': seekerId,
+      });
+
+      debugPrint('✅ Profile view recorded successfully!');
+    } catch (e) {
+      debugPrint('🚨 Error recording profile view: $e');
+    }
   }
 
   void applyFilters({

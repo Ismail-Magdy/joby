@@ -17,6 +17,7 @@ import 'package:joby/features/common/about_us/screens/about_us_screen.dart';
 import 'package:joby/features/common/feed_back/presentation/screens/feed_back_screen.dart';
 import 'package:joby/features/users/home/presentation/screens/company_view_screen.dart';
 import 'package:joby/features/users/profile_users/screens/users_profile_screen.dart.dart';
+import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import '../../features/common/feed_back/manager/advice_cubit.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
@@ -86,6 +87,9 @@ class AppRouter {
                 ),
                 BlocProvider<PointsCubit>(
                   create: (context) => getIt<PointsCubit>(),
+                ),
+                BlocProvider<ProfileViewsCubit>(
+                  create: (context) => getIt<ProfileViewsCubit>(),
                 ),
               ],
               child: const UserRootScreen(),
