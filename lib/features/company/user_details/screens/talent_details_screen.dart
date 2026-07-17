@@ -17,8 +17,13 @@ import "package:joby/features/company/home/manager/company_home_state.dart";
 
 class TalentDetailsScreen extends StatefulWidget {
   final UserInfoModel seeker;
+  final bool isPreview;
 
-  const TalentDetailsScreen({super.key, required this.seeker});
+  const TalentDetailsScreen({
+    super.key,
+    required this.seeker,
+    this.isPreview = false,
+  });
 
   @override
   State<TalentDetailsScreen> createState() => _TalentDetailsScreenState();
@@ -59,7 +64,7 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
               behavior: SnackBarBehavior.floating,
               content: const Center(child: Text("Could not launch the link")),
               backgroundColor: Colors.red,
-              margin: .all(20),
+              margin: const .all(20),
               shape: RoundedRectangleBorder(borderRadius: .circular(10)),
             ),
           );
@@ -74,8 +79,10 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
             behavior: SnackBarBehavior.floating,
             content: const Center(child: Text("Invalid link format")),
             backgroundColor: Colors.red,
-            margin: .all(20),
-            shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+            margin: const EdgeInsets.all(20),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       }
@@ -133,33 +140,37 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
             delegate: ProfileHeaderDelegate(
               userId: user.id?.toString() ?? "",
               avatarUrl: user.avatarUrl,
-              title: "Talent Profile",
+              title: widget.isPreview ? "Company View" : "Talent Profile",
               name: _toTitleCase(user.displayShortName),
               jobTitle: _toTitleCase(user.jobTitle),
               showBackButton: true,
-              trailingAction: BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
-                builder: (context, state) {
-                  bool isSaved = false;
-                  if (state is CompanyHomeLoaded) {
-                    isSaved = state.savedSeekerIds.contains(user.id.toString());
-                  }
-                  return GestureDetector(
-                    behavior: .opaque,
-                    onTap: () {
-                      context.read<CompanyHomeCubit>().toggleBookmark(
-                        user.id.toString(),
-                      );
-                    },
-                    child: SvgPicture.asset(
-                      isSaved
-                          ? "assets/svgs/fill_saved.svg"
-                          : "assets/svgs/saved.svg",
-                      colorFilter: .mode(Colors.white, .srcIn),
-                      height: 24.h,
+              trailingAction: widget.isPreview
+                  ? const SizedBox.shrink()
+                  : BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
+                      builder: (context, state) {
+                        bool isSaved = false;
+                        if (state is CompanyHomeLoaded) {
+                          isSaved = state.savedSeekerIds.contains(
+                            user.id.toString(),
+                          );
+                        }
+                        return GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            context.read<CompanyHomeCubit>().toggleBookmark(
+                              user.id.toString(),
+                            );
+                          },
+                          child: SvgPicture.asset(
+                            isSaved
+                                ? "assets/svgs/fill_saved.svg"
+                                : "assets/svgs/saved.svg",
+                            colorFilter: const .mode(Colors.white, .srcIn),
+                            height: 24.h,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
           //
@@ -177,7 +188,7 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
                     _toTitleCase(user.displayShortName),
                     style: TextStyle(
                       fontSize: 22.sp,
-                      fontWeight: .bold,
+                      fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
@@ -242,9 +253,9 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
                   verticalSpace(20),
                   // CV Section
                   Padding(
-                    padding: .symmetric(horizontal: 24.w),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
                     child: Column(
-                      crossAxisAlignment: .start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         verticalSpace(30),
                         if (user.cvUrl != null && user.cvUrl!.isNotEmpty)

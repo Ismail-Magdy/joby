@@ -48,9 +48,9 @@ void main() async {
       bool isCompanyInfoCompleted = false;
       try {
         final managerData = await Supabase.instance.client
-            .from("managers_data")
-            .select("manager_id")
-            .eq("manager_id", session.user.id)
+            .from("companies")
+            .select("id")
+            .eq("id", session.user.id)
             .maybeSingle();
 
         if (managerData != null) {
@@ -81,7 +81,7 @@ void main() async {
       bool isInfoCompleted = false;
       try {
         final userData = await Supabase.instance.client
-            .from("users")
+            .from("seekers")
             .select("id, name")
             .eq("id", session.user.id)
             .maybeSingle();

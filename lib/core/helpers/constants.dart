@@ -5,6 +5,6 @@ class AppConstants {
   static const String isCompanyInfoCompletedKey = "isCompanyInfoCompleted";
 
   // Supabase Table Names
-  static const String usersTable = "users";
-  static const String resumesBucket = "resumes";
+  static const String usersTable = "seekers";
+  static const String companiesTable = "companies";
 }

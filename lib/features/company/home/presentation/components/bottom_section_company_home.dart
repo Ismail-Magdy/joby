@@ -103,6 +103,7 @@ class _BottomSectionCompanyHomeState extends State<BottomSectionCompanyHome> {
                     verticalSpace(5),
                     //
                     Text(
+                      textAlign: .center,
                       "No Talents Found Matching Your Criteria",
                       style: TextStyle(
                         fontSize: 16.sp,

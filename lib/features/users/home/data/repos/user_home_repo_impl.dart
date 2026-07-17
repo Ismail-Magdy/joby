@@ -19,7 +19,7 @@ class UserHomeRepoImpl implements UserHomeRepo {
       }
 
       final data = await supabaseClient
-          .from("users")
+          .from("seekers")
           .select()
           .eq("id", userId)
           .single();
@@ -44,7 +44,7 @@ class UserHomeRepoImpl implements UserHomeRepo {
       }
 
       await supabaseClient
-          .from("users")
+          .from("seekers")
           .update({
             "latitude": latitude,
             "longitude": longitude,

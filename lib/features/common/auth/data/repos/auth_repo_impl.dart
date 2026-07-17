@@ -61,7 +61,7 @@ class AuthRepoImpl implements AuthRepo {
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Sign in failed. Check your credentials");
+        return const Left("Sign in failed");
       }
     } catch (error) {
       debugPrint("Google Auth Real Error: ${error.toString()}");
@@ -111,7 +111,7 @@ class AuthRepoImpl implements AuthRepo {
       final googleAuth = await googleUser.authentication;
 
       final response = await supabaseClient.auth.signInWithIdToken(
-        provider: OAuthProvider.google,
+        provider: .google,
         idToken: googleAuth.idToken!,
         accessToken: googleAuth.accessToken!,
       );
@@ -146,7 +146,7 @@ class AuthRepoImpl implements AuthRepo {
       if (userId == null) return "none";
 
       final seekerData = await supabaseClient
-          .from("users")
+          .from("seekers")
           .select("id")
           .eq("id", userId)
           .maybeSingle();
@@ -154,9 +154,9 @@ class AuthRepoImpl implements AuthRepo {
       if (seekerData != null) return "seeker";
 
       final managerData = await supabaseClient
-          .from("managers_data")
-          .select("manager_id")
-          .eq("manager_id", userId)
+          .from("companies")
+          .select("id")
+          .eq("id", userId)
           .maybeSingle();
 
       if (managerData != null) return "company";

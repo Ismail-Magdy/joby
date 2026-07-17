@@ -26,7 +26,7 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
     required int page,
   }) async {
     try {
-      var query = supabaseClient.from('users').select();
+      var query = supabaseClient.from('seekers').select();
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
         query = query.or(
@@ -93,7 +93,7 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
       if (ids.isEmpty) return const Right([]);
 
       final response = await supabaseClient
-          .from('users')
+          .from('seekers')
           .select()
           .inFilter('id', ids.toList())
           .order('total_points', ascending: false);
