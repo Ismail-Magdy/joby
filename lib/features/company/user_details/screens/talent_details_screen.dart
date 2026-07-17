@@ -31,6 +31,17 @@ class TalentDetailsScreen extends StatefulWidget {
 
 class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
   ///
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.isPreview && widget.seeker.id != null) {
+      context.read<CompanyHomeCubit>().recordProfileView(
+        widget.seeker.id!.toString(),
+      );
+    }
+  }
+
+  ///
   Future<void> _launchUrl(String urlString, {bool isPhone = false}) async {
     Uri url;
 

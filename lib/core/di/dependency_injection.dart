@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:joby/features/users/notification/data/services/local_notification_service.dart';
+import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:joby/features/common/on_boarding/manager/on_boarding_cubit.dart';
@@ -86,6 +87,9 @@ Future<void> initGetIt() async {
   getIt.registerFactory<AdviceCubit>(
     () => AdviceCubit(adviceRepo: getIt<FeedBackRepo>()),
   );
+
+  /// Profile Views Feature
+  getIt.registerFactory<ProfileViewsCubit>(() => ProfileViewsCubit());
 
   /// Points Feature
   getIt.registerLazySingleton<PointsRepo>(
