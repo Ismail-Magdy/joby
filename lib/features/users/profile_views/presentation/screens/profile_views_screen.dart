@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/widgets/custom_app_bar_with_no_leading.dart';
 import 'package:joby/core/widgets/error_screen.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_state.dart';
+import 'package:joby/features/users/profile_views/presentation/widgets/build_stats_card.dart';
+import 'package:lottie/lottie.dart';
 
 class ProfileViewsScreen extends StatefulWidget {
   const ProfileViewsScreen({super.key});
@@ -42,167 +44,189 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
       //
       appBar: CustomAppBarWithNoLeading(text: "Profile Views"),
       //
-      body: BlocBuilder<ProfileViewsCubit, ProfileViewsState>(
-        builder: (context, state) {
-          // Loading
-          if (state is ProfileViewsLoading) {
-            return const Center(
-              child: CupertinoActivityIndicator(color: AppColors.primaryColor),
-            );
-          }
-          //
-          // Error
-          else if (state is ProfileViewsError) {
-            return ErrorScreen(errorText: state.message);
-          }
-          //
-          // Empty State
-          else if (state is ProfileViewsEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: .center,
-                children: [
-                  //
-                  Icon(
-                    Ionicons.eye_off_outline,
-                    size: 80.sp,
-                    color: Colors.grey.shade300,
-                  ),
-                  //
-                  verticalSpace(15),
-                  //
-                  Text(
-                    "No views yet!\nKeep updating your profile",
-                    textAlign: .center,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Colors.grey.shade500,
+      body: SafeArea(
+        child: BlocBuilder<ProfileViewsCubit, ProfileViewsState>(
+          builder: (context, state) {
+            //
+            return Column(
+              children: [
+                // Loaded
+                if (state is ProfileViewsLoaded)
+                  Padding(
+                    padding: .only(
+                      left: 20.w,
+                      right: 20.w,
+                      bottom: 10.h,
+                      top: 10.h,
                     ),
+                    child: BuildStatsCard(state: state),
                   ),
-                  //
-                ],
-              ),
+                //
+                //
+                Expanded(child: _buildBodyContent(state)),
+              ],
             );
-          }
-          //
-          // Loaded
-          else if (state is ProfileViewsLoaded) {
-            return ListView.builder(
-              padding: .symmetric(vertical: 10.h, horizontal: 16.w),
-              itemCount: state.views.length,
-              itemBuilder: (context, index) {
-                final view = state.views[index];
-
-                // أنيميشن لذيذ للستة (بيظهر العناصر ورا بعض بـ Delay بسيط)
-                return TweenAnimationBuilder<double>(
-                  duration: Duration(
-                    milliseconds: 400 + (index * 100).clamp(0, 500),
-                  ),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  curve: Curves.easeOutQuart,
-                  builder: (context, value, child) {
-                    return Transform.translate(
-                      offset: Offset(0, 50 * (1 - value)),
-                      child: Opacity(opacity: value, child: child),
-                    );
-                  },
-                  child: Container(
-                    margin: .only(bottom: 16.h),
-                    child: Row(
-                      children: [
-                        // Company Image
-                        Container(
-                          width: 55.w,
-                          height: 55.w,
-                          decoration: BoxDecoration(
-                            shape: .circle,
-                            border: .all(color: Colors.grey.shade200, width: 1),
-                            image: view.companyAvatar != null
-                                ? DecorationImage(
-                                    image: CachedNetworkImageProvider(
-                                      view.companyAvatar!,
-                                    ),
-                                    fit: .cover,
-                                  )
-                                : null,
-                          ),
-                          child: view.companyAvatar == null
-                              ? Icon(
-                                  Ionicons.business,
-                                  color: Colors.grey.shade400,
-                                )
-                              : null,
-                        ),
-                        //
-                        horizontalSpace(15),
-                        //
-                        // Company Name & Time
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            children: [
-                              //
-                              Text(
-                                view.companyName,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: .bold,
-                                  color: Colors.black87,
-                                ),
-                                maxLines: 1,
-                                overflow: .ellipsis,
-                              ),
-                              //
-                              verticalSpace(4),
-                              //
-                              Text(
-                                _timeAgo(view.viewedAt),
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  color: Colors.grey.shade500,
-                                ),
-                              ),
-                              //
-                            ],
-                          ),
-                        ),
-                        //
-                        // زرار View Company (مكان زرار الفولو في تيك توك)
-                        ElevatedButton(
-                          onPressed: () {
-                            // TODO: انتقل لصفحة تفاصيل الشركة باستخدام view.companyId
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xffF0F0F0),
-                            elevation: 0,
-                            padding: .symmetric(
-                              horizontal: 16.w,
-                              vertical: 8.h,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: .circular(8.r),
-                            ),
-                          ),
-                          child: Text(
-                            "View",
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: .bold,
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                        ),
-                        //
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-          return const SizedBox.shrink();
-        },
+            //
+          },
+        ),
       ),
     );
   }
+
+  ///
+  Widget _buildBodyContent(ProfileViewsState state) {
+    // Loading
+    if (state is ProfileViewsLoading) {
+      return const Center(
+        child: CupertinoActivityIndicator(color: AppColors.primaryColor),
+      );
+    }
+    //
+    // Error
+    else if (state is ProfileViewsError) {
+      return ErrorScreen(errorText: state.message);
+    }
+    //
+    // Empty
+    else if (state is ProfileViewsEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: .center,
+          children: [
+            //
+            Lottie.asset(
+              "assets/lotties/no_views.json",
+              width: 180.w,
+              height: 180.h,
+              fit: .contain,
+            ),
+            //
+            verticalSpace(15),
+            //
+            Text(
+              "No views yet\nKeep updating your profile",
+              textAlign: .center,
+              style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
+            ),
+            //
+          ],
+        ),
+      );
+      //
+      // Loaded
+    } else if (state is ProfileViewsLoaded) {
+      //
+      return ListView.builder(
+        padding: .symmetric(vertical: 10.h, horizontal: 20.w),
+        itemCount: state.views.length,
+        itemBuilder: (context, index) {
+          final view = state.views[index];
+
+          return Container(
+            margin: .only(bottom: 12.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: .circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade100,
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: Padding(
+                padding: .symmetric(horizontal: 16.w, vertical: 12.h),
+                child: Row(
+                  children: [
+                    // Company Avatar
+                    Container(
+                      width: 55.w,
+                      height: 55.w,
+                      decoration: BoxDecoration(
+                        shape: .circle,
+                        border: .all(color: Colors.grey.shade200, width: 1),
+                        image: view.companyAvatar != null
+                            ? DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                  view.companyAvatar!,
+                                ),
+                                fit: .cover,
+                              )
+                            : null,
+                      ),
+                      child: view.companyAvatar == null
+                          ? Icon(Ionicons.business, color: Colors.grey.shade400)
+                          : null,
+                    ),
+                    horizontalSpace(15),
+
+                    // Company Name & Time
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          Text(
+                            view.companyName,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: .bold,
+                              color: Colors.black87,
+                            ),
+                            maxLines: 1,
+                            overflow: .ellipsis,
+                          ),
+                          verticalSpace(4),
+                          Text(
+                            _timeAgo(view.viewedAt),
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // New Badge OR Eye Icon
+                    DateTime.now().difference(view.viewedAt).inHours < 24
+                        ? Container(
+                            padding: .symmetric(
+                              horizontal: 10.w,
+                              vertical: 4.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor.withValues(
+                                alpha: 0.1,
+                              ),
+                              borderRadius: .circular(12.r),
+                            ),
+                            child: Text(
+                              "New",
+                              style: TextStyle(
+                                color: AppColors.primaryColor,
+                                fontSize: 12.sp,
+                                fontWeight: .bold,
+                              ),
+                            ),
+                          )
+                        : Icon(
+                            Ionicons.eye_outline,
+                            color: Colors.grey.shade300,
+                            size: 22.sp,
+                          ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+      //
+    }
+    return const SizedBox.shrink();
+  }
 }
+// 322
