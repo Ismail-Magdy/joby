@@ -45,12 +45,12 @@ class UserInfoModel {
 
   Map<String, dynamic> toMap() {
     return {
-      if (id != null) "user_id": id,
+      if (id != null) "id": id,
       "name": name,
       "job_category": jobCategory,
       "job_title": jobTitle,
       "level": level,
-      "type_of_work": typeOfWork,
+      "work_type": typeOfWork,
       "whatsapp": whatsapp,
       if (linkedin != null && linkedin!.isNotEmpty) "linkedin": linkedin,
       if (github != null && github!.isNotEmpty) "github": github,
@@ -67,12 +67,12 @@ class UserInfoModel {
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
     return UserInfoModel(
-      id: json["user_id"]?.toString() ?? json["id"]?.toString(),
+      id: json["id"]?.toString(),
       name: json["name"] ?? "",
       jobCategory: json["job_category"] ?? "",
       jobTitle: json["job_title"] ?? "",
       level: json["level"] ?? "",
-      typeOfWork: json["type_of_work"] ?? "",
+      typeOfWork: json["work_type"] ?? "",
       whatsapp: json["whatsapp"] ?? "",
       linkedin: json["linkedin"],
       github: json["github"],

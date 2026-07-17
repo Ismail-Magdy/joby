@@ -71,7 +71,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               backgroundColor: Colors.red,
               behavior: SnackBarBehavior.floating,
               margin: EdgeInsets.all(20.r),
-              shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
             ),
           );
         } else {
@@ -116,7 +118,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     }
 
     try {
-      if (!await launchUrl(url, mode: .externalApplication)) {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -125,7 +127,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               backgroundColor: Colors.red,
               margin: EdgeInsets.all(20.r),
               shape: RoundedRectangleBorder(
-                borderRadius: .all(.circular(10.r)),
+                borderRadius: BorderRadius.all(Radius.circular(10.r)),
               ),
             ),
           );
@@ -139,7 +141,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             content: Center(child: const Text("Invalid link format")),
             backgroundColor: Colors.red,
             margin: EdgeInsets.all(20.r),
-            shape: RoundedRectangleBorder(borderRadius: .all(.circular(10.r))),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.r)),
+            ),
           ),
         );
       }
@@ -205,7 +209,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 backgroundColor: Colors.red,
                 margin: EdgeInsets.all(20.r),
                 shape: RoundedRectangleBorder(
-                  borderRadius: .all(.circular(10.r)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.r)),
                 ),
               ),
             );
@@ -224,7 +228,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 backgroundColor: AppColors.primaryColor,
                 margin: EdgeInsets.all(20.r),
                 shape: RoundedRectangleBorder(
-                  borderRadius: .all(.circular(10.r)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.r)),
                 ),
               ),
             );

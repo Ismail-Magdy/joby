@@ -150,14 +150,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: .circular(20.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         //
         title: Text(
           "Unsaved Changes",
           style: TextStyle(
             fontFamily: "BrunoAceSC",
             fontSize: 18.sp,
-            fontWeight: .bold,
+            fontWeight: FontWeight.bold,
           ),
         ),
         //
@@ -179,7 +181,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               style: TextStyle(
                 color: Colors.red.shade400,
                 fontSize: 14.sp,
-                fontWeight: .w600,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -189,16 +191,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () => Navigator.pop(context, "save"),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
-              shape: RoundedRectangleBorder(borderRadius: .circular(12.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
               elevation: 0,
-              padding: .symmetric(horizontal: 20.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
             ),
             child: Text(
               "Save Changes",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14.sp,
-                fontWeight: .w600,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -296,7 +300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: TextStyle(
               color: Colors.black87,
               fontSize: 20.sp,
-              fontWeight: .bold,
+              fontWeight: FontWeight.bold,
               fontFamily: "BrunoAceSC",
             ),
           ),
@@ -330,7 +334,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   content: Center(child: Text("Profile updated successfully")),
                   backgroundColor: Colors.green,
                   margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
               );
               // Pop with `true` so the home screen knows to refresh
@@ -343,7 +349,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   content: Center(child: Text(state.message)),
                   backgroundColor: Colors.red,
                   margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
               );
               //
@@ -357,9 +365,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return Form(
               key: _formKey,
               child: SingleChildScrollView(
-                padding: .symmetric(horizontal: 24.w, vertical: 20.h),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
                 child: Column(
-                  crossAxisAlignment: .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Avatar
                     CustomAvatarWidget(
@@ -604,7 +612,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       label,
       style: TextStyle(
         fontSize: 14.sp,
-        fontWeight: .w600,
+        fontWeight: FontWeight.w600,
         color: Colors.grey.shade700,
       ),
     );

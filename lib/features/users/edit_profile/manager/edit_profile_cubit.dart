@@ -55,7 +55,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   Future<void> pickCv() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: .custom,
+        type: FileType.custom,
         allowedExtensions: ["pdf"],
       );
 
@@ -70,9 +70,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   }
 
   /// Save all profile changes to Supabase.
-  ///
-  /// All fields are optional — only non-empty values are sent to the database.
-  /// Existing data is preserved for any field the user didn't change.
   Future<void> saveChanges({
     required String name,
     required String jobTitle,
@@ -92,20 +89,25 @@ class EditProfileCubit extends Cubit<EditProfileState> {
 
       // Upload new avatar if picked
       if (_pickedAvatarFile != null) {
-        finalAvatarUrl = await editProfileRepo.uploadAvatar(_pickedAvatarFile!);
-        if (finalAvatarUrl == null) {
+        String? rawAvatarUrl = await editProfileRepo.uploadAvatar(
+          _pickedAvatarFile!,
+        );
+        if (rawAvatarUrl == null) {
           emit(EditProfileError("Failed to upload profile picture."));
           return;
         }
+        finalAvatarUrl =
+            "$rawAvatarUrl?t=${DateTime.now().millisecondsSinceEpoch}";
       }
 
       // Upload new CV if picked
       if (_pickedCvFile != null) {
-        finalCvUrl = await editProfileRepo.uploadCv(_pickedCvFile!);
-        if (finalCvUrl == null) {
+        String? rawCvUrl = await editProfileRepo.uploadCv(_pickedCvFile!);
+        if (rawCvUrl == null) {
           emit(EditProfileError("Failed to upload CV."));
           return;
         }
+        finalCvUrl = "$rawCvUrl?t=${DateTime.now().millisecondsSinceEpoch}";
       }
 
       // Update profile data — only non-empty fields are sent

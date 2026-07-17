@@ -36,15 +36,13 @@ class CompanyInfoRepoImpl implements CompanyInfoRepo {
         avatarUrl = null;
       }
 
-      // Use RPC to atomically upsert profiles + managers_data (bypasses RLS)
-      await supabaseClient.rpc(
-        'create_company_profile',
-        params: {
-          'p_name': name,
-          'p_email': user.email ?? '',
-          'p_avatar_url': avatarUrl,
-        },
-      );
+      ///
+      await supabaseClient.from('companies').upsert({
+        'id': user.id,
+        'name': name,
+        'email': user.email ?? '',
+        'avatar_url': avatarUrl,
+      });
 
       return const Right(null);
     } catch (e) {

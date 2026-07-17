@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:joby/core/helpers/constants.dart';
 
 class EditProfileRepo {
   final SupabaseClient _supabaseClient;
@@ -14,14 +13,12 @@ class EditProfileRepo {
       final userId = _supabaseClient.auth.currentUser?.id;
       if (userId == null) {
         debugPrint(
-          'EditProfileRepo: Cannot upload avatar — user not authenticated.',
+          'EditProfileRepo: Cannot upload avatar — user not authenticated',
         );
         return null;
       }
 
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final fileName = '${userId}_$timestamp.jpg';
-
+      final fileName = '$userId.jpg';
       final bytes = await file.readAsBytes();
 
       await _supabaseClient.storage
@@ -30,17 +27,13 @@ class EditProfileRepo {
             fileName,
             bytes,
             fileOptions: const FileOptions(
-              cacheControl: "3600",
+              cacheControl: "0",
               upsert: true,
               contentType: "image/jpeg",
             ),
           );
 
-      final publicUrl = _supabaseClient.storage
-          .from("avatars")
-          .getPublicUrl(fileName);
-
-      return publicUrl;
+      return _supabaseClient.storage.from("avatars").getPublicUrl(fileName);
     } catch (e) {
       debugPrint('EditProfileRepo: Error uploading avatar: $e');
       return null;
@@ -58,29 +51,23 @@ class EditProfileRepo {
         return null;
       }
 
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final fileName = '${userId}_$timestamp.pdf';
-
+      // CV
+      final fileName = '$userId.pdf';
       final bytes = await file.readAsBytes();
 
-      // Uses "cvs" bucket — same as user_info_repo_impl
       await _supabaseClient.storage
           .from("cvs")
           .uploadBinary(
             fileName,
             bytes,
             fileOptions: const FileOptions(
-              cacheControl: "3600",
+              cacheControl: "0",
               upsert: true,
               contentType: "application/pdf",
             ),
           );
 
-      final publicUrl = _supabaseClient.storage
-          .from("cvs")
-          .getPublicUrl(fileName);
-
-      return publicUrl;
+      return _supabaseClient.storage.from("cvs").getPublicUrl(fileName);
     } catch (e) {
       debugPrint('EditProfileRepo: Error uploading CV: $e');
       return null;
@@ -88,9 +75,6 @@ class EditProfileRepo {
   }
 
   /// Updates the user's profile info in the database.
-  ///
-  /// Only non-empty fields are sent — existing data is preserved
-  /// for any field the user didn't modify.
   Future<bool> updateUserInfo({
     required String userId,
     required String name,
@@ -109,20 +93,19 @@ class EditProfileRepo {
         if (name.isNotEmpty) 'name': name,
         if (jobTitle.isNotEmpty) 'job_title': jobTitle,
         if (level.isNotEmpty) 'level': level,
-        if (typeOfWork.isNotEmpty) 'type_of_work': typeOfWork,
+        if (typeOfWork.isNotEmpty) 'work_type': typeOfWork,
         if (whatsapp.isNotEmpty) 'whatsapp': whatsapp,
         if (linkedin != null && linkedin.isNotEmpty) 'linkedin': linkedin,
         if (github != null && github.isNotEmpty) 'github': github,
         if (behance != null && behance.isNotEmpty) 'behance': behance,
-        'cv_url': ?cvUrl,
-        'avatar_url': ?avatarUrl,
+        if (cvUrl != null) 'cv_url': cvUrl,
+        if (avatarUrl != null) 'avatar_url': avatarUrl,
       };
 
-      // Nothing to update
       if (dataToUpdate.isEmpty) return true;
 
       await _supabaseClient
-          .from(AppConstants.usersTable)
+          .from("seekers")
           .update(dataToUpdate)
           .eq('id', userId);
 

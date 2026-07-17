@@ -1,5 +1,6 @@
 import "dart:io";
 import "package:dartz/dartz.dart";
+import "package:flutter/foundation.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "../models/user_info_model.dart";
 import "user_info_repo.dart";
@@ -18,6 +19,7 @@ class UserInfoRepoImpl implements UserInfoRepo {
   }) async {
     try {
       final userId = supabaseClient.auth.currentUser?.id;
+      final userEmail = supabaseClient.auth.currentUser?.email ?? '';
 
       if (userId == null) {
         return const Left("User is not authenticated.");
@@ -25,46 +27,57 @@ class UserInfoRepoImpl implements UserInfoRepo {
 
       String? finalAvatarUrl = userInfo.avatarUrl;
       String? finalCvUrl = userInfo.cvUrl;
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
 
       if (avatarFile != null) {
-        final String avatarName = "${userId}_$timestamp.jpg";
+        if (await avatarFile.exists()) {
+          //
+          final String avatarName = "$userId.jpg";
+          final avatarBytes = await avatarFile.readAsBytes();
 
-        final avatarBytes = await avatarFile.readAsBytes();
-
-        await supabaseClient.storage
-            .from("avatars")
-            .uploadBinary(
-              avatarName,
-              avatarBytes,
-              fileOptions: const FileOptions(
-                cacheControl: "3600",
-                upsert: true,
-                contentType: "image/jpeg",
-              ),
-            );
-        finalAvatarUrl = supabaseClient.storage
-            .from("avatars")
-            .getPublicUrl(avatarName);
+          await supabaseClient.storage
+              .from("avatars")
+              .uploadBinary(
+                avatarName,
+                avatarBytes,
+                fileOptions: const FileOptions(
+                  cacheControl: "0",
+                  upsert: true,
+                  contentType: "image/jpeg",
+                ),
+              );
+          finalAvatarUrl = supabaseClient.storage
+              .from("avatars")
+              .getPublicUrl(avatarName);
+        } else {
+          return const Left(
+            "Profile picture file does not exist. Please select it again",
+          );
+        }
       }
 
       if (cvFile != null) {
-        final String cvName = "${userId}_$timestamp.pdf";
+        if (await cvFile.exists()) {
+          //
+          final String cvName = "$userId.pdf";
+          final cvBytes = await cvFile.readAsBytes();
 
-        final cvBytes = await cvFile.readAsBytes();
-
-        await supabaseClient.storage
-            .from("cvs")
-            .uploadBinary(
-              cvName,
-              cvBytes,
-              fileOptions: const FileOptions(
-                cacheControl: "3600",
-                upsert: true,
-                contentType: "application/pdf",
-              ),
-            );
-        finalCvUrl = supabaseClient.storage.from("cvs").getPublicUrl(cvName);
+          await supabaseClient.storage
+              .from("cvs")
+              .uploadBinary(
+                cvName,
+                cvBytes,
+                fileOptions: const FileOptions(
+                  cacheControl: "0",
+                  upsert: true,
+                  contentType: "application/pdf",
+                ),
+              );
+          finalCvUrl = supabaseClient.storage.from("cvs").getPublicUrl(cvName);
+        } else {
+          return const Left(
+            "Curriculum vitae file does not exist. Please select it again.",
+          );
+        }
       }
 
       final updatedUserInfo = UserInfoModel(
@@ -84,13 +97,15 @@ class UserInfoRepoImpl implements UserInfoRepo {
         longitude: userInfo.longitude,
       );
 
-      await supabaseClient.from("users").upsert({
+      await supabaseClient.from("seekers").upsert({
         "id": userId,
+        "email": userEmail,
         ...updatedUserInfo.toMap(),
       });
 
       return const Right(null);
     } catch (e) {
+      debugPrint("🚨 CRITICAL SaveUserData Error: $e");
       return Left(ErrorHandler.handleError(e));
     }
   }
