@@ -21,7 +21,7 @@ class CustomAvatarWidget extends StatelessWidget {
       child: Stack(
         alignment: .bottomRight,
         children: [
-          // Image - shows picked file, or network avatar, or fallback icon
+          // Image
           CircleAvatar(
             radius: 50.r,
             backgroundColor: Colors.grey.shade100,
@@ -37,7 +37,7 @@ class CustomAvatarWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 shape: .circle,
-                border: Border.all(color: Colors.white, width: 2),
+                border: .all(color: Colors.white, width: 2),
               ),
               child: SvgPicture.asset(
                 icon,

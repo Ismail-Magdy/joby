@@ -33,6 +33,7 @@ class EditProfileCvUpload extends StatelessWidget {
         ),
         child: Column(
           children: [
+            //
             Icon(
               pickedCvName != null
                   ? Ionicons.document_text
@@ -40,7 +41,9 @@ class EditProfileCvUpload extends StatelessWidget {
               color: AppColors.primaryColor,
               size: 35.sp,
             ),
+            //
             verticalSpace(10),
+            //
             Text(
               pickedCvName ?? "Upload New CV (PDF)",
               style: TextStyle(
@@ -52,6 +55,7 @@ class EditProfileCvUpload extends StatelessWidget {
               maxLines: 1,
               overflow: .ellipsis,
             ),
+            //
           ],
         ),
       ),
