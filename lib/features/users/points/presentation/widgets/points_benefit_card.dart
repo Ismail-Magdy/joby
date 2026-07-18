@@ -35,6 +35,7 @@ class PointsBenefitCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: .start,
         children: [
+          //
           Container(
             padding: .all(12.r),
             decoration: BoxDecoration(
@@ -47,11 +48,14 @@ class PointsBenefitCard extends StatelessWidget {
               size: 26.sp,
             ),
           ),
+          //
           horizontalSpace(16),
+          //
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
               children: [
+                //
                 Text(
                   title,
                   style: TextStyle(
@@ -60,7 +64,9 @@ class PointsBenefitCard extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
+                //
                 verticalSpace(6),
+                //
                 Text(
                   description,
                   style: TextStyle(
@@ -69,9 +75,11 @@ class PointsBenefitCard extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
+                //
               ],
             ),
           ),
+          //
         ],
       ),
     );
