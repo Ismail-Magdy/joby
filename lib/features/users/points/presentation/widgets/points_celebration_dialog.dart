@@ -175,7 +175,7 @@ class _PointsCelebrationDialogState extends State<PointsCelebrationDialog> {
     );
   }
 
-  /// A custom Path to paint stars.
+  /// A custom Path to paint stars
   Path drawStar(Size size) {
     double degToRad(double deg) => deg * (pi / 180.0);
 

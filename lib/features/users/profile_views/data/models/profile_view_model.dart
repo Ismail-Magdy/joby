@@ -12,13 +12,13 @@ class ProfileViewModel {
   });
 
   factory ProfileViewModel.fromJson(Map<String, dynamic> json) {
-    final companyData = json['companies'] as Map<String, dynamic>? ?? {};
+    final companyData = json["companies"] as Map<String, dynamic>? ?? {};
 
     return ProfileViewModel(
-      companyId: companyData['id'] ?? '',
-      companyName: companyData['name'] ?? 'Unknown Company',
-      companyAvatar: companyData['avatar_url'],
-      viewedAt: DateTime.parse(json['viewed_at']).toLocal(),
+      companyId: companyData["id"] ?? "",
+      companyName: companyData["name"] ?? "Unknown Company",
+      companyAvatar: companyData["avatar_url"],
+      viewedAt: DateTime.parse(json["viewed_at"]).toLocal(),
     );
   }
 }

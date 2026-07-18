@@ -363,6 +363,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     onSurface: Colors.black87,
                   ),
                 ),
+                //
                 child: Stepper(
                   type: .vertical,
                   physics: const BouncingScrollPhysics(),
@@ -615,6 +616,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     //
                   ],
                 ),
+                //
               ),
             );
           },
