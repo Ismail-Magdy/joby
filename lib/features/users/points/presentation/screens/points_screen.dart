@@ -47,7 +47,7 @@ class PointsScreen extends StatelessWidget {
                         right: 20.w,
                         bottom: 15.h,
                       ),
-                      //
+                      // Scroll Screen
                       title: AnimatedOpacity(
                         duration: const Duration(milliseconds: 200),
                         opacity: isCollapsed ? 1.0 : 0.0,
@@ -55,6 +55,7 @@ class PointsScreen extends StatelessWidget {
                           mainAxisAlignment: .spaceBetween,
                           crossAxisAlignment: .end,
                           children: [
+                            //
                             Text(
                               "Your Total Points",
                               style: TextStyle(
@@ -64,6 +65,7 @@ class PointsScreen extends StatelessWidget {
                                 fontFamily: "BrunoAceSC",
                               ),
                             ),
+                            //
                             Text(
                               "$points",
                               style: TextStyle(
@@ -73,6 +75,7 @@ class PointsScreen extends StatelessWidget {
                                 fontFamily: "BrunoAceSC",
                               ),
                             ),
+                            //
                           ],
                         ),
                       ),
@@ -91,6 +94,7 @@ class PointsScreen extends StatelessWidget {
                           ),
                           //
                         ),
+                        // Normal Screen
                         child: SafeArea(
                           child: AnimatedOpacity(
                             duration: const Duration(milliseconds: 200),
@@ -110,6 +114,7 @@ class PointsScreen extends StatelessWidget {
                                 ),
                                 //
                                 verticalSpace(10),
+                                //
                                 // Animated Counter
                                 TweenAnimationBuilder<int>(
                                   tween: IntTween(begin: 0, end: points),
@@ -120,6 +125,7 @@ class PointsScreen extends StatelessWidget {
                                     return Row(
                                       mainAxisAlignment: .center,
                                       children: [
+                                        //
                                         SvgPicture.asset(
                                           "assets/svgs/points_count.svg",
                                           colorFilter: .mode(
@@ -136,10 +142,11 @@ class PointsScreen extends StatelessWidget {
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 60.sp,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: .bold,
                                             fontFamily: "BrunoAceSC",
                                           ),
                                         ),
+                                        //
                                       ],
                                     );
                                     //
@@ -202,9 +209,9 @@ class PointsScreen extends StatelessWidget {
                     ),
                     //
                     const PointsBenefitCard(
-                      title: "Top Priority for Companies",
+                      title: "Top Priority",
                       description:
-                          "When employers search for candidates, profiles with higher point totals rank at the top of the list",
+                          "Profiles with higher point totals rank at the top of the list",
                       icon: Ionicons.trending_up_outline,
                     ),
                     //
@@ -220,13 +227,6 @@ class PointsScreen extends StatelessWidget {
                       description:
                           "Accumulate points to earn the 'Active Talent' badge, making your resume stand out in the crowd",
                       icon: Ionicons.ribbon_outline,
-                    ),
-                    //
-                    const PointsBenefitCard(
-                      title: "Early Job Alerts",
-                      description:
-                          "Top point earners receive notifications for exclusive and high-matching job openings before others",
-                      icon: Ionicons.notifications_outline,
                     ),
                     //
                     const PointsBenefitCard(
@@ -249,3 +249,4 @@ class PointsScreen extends StatelessWidget {
     );
   }
 }
+// 260
