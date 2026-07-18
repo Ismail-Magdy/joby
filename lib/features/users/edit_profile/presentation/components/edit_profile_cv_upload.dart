@@ -4,8 +4,8 @@ import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
-class CvUploadWidget extends StatelessWidget {
-  const CvUploadWidget({
+class EditProfileCvUpload extends StatelessWidget {
+  const EditProfileCvUpload({
     super.key,
     required this.onTap,
     required this.pickedCvName,
