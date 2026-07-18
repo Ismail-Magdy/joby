@@ -40,12 +40,15 @@ class LocationMapSection extends StatelessWidget {
           //
           Row(
             children: [
+              //
               Icon(
                 Icons.location_on,
                 color: AppColors.primaryColor,
                 size: 24.sp,
               ),
+              //
               horizontalSpace(8),
+              //
               Expanded(
                 child: Text(
                   locationName,
@@ -56,6 +59,7 @@ class LocationMapSection extends StatelessWidget {
                   ),
                 ),
               ),
+              //
             ],
           ),
           //
@@ -105,6 +109,7 @@ class LocationMapSection extends StatelessWidget {
                     Icon(Icons.location_pin, color: Colors.red, size: 40.sp),
                     //
                     if (onEditTap != null)
+                      //
                       Positioned(
                         bottom: 10.h,
                         right: 10.w,
@@ -124,12 +129,15 @@ class LocationMapSection extends StatelessWidget {
                           child: Row(
                             mainAxisSize: .min,
                             children: [
+                              //
                               Icon(
                                 Icons.edit_location_alt,
                                 color: Colors.white,
                                 size: 16.sp,
                               ),
-                              SizedBox(width: 4.w),
+                              //
+                              horizontalSpace(4),
+                              //
                               Text(
                                 "Change",
                                 style: TextStyle(
@@ -138,10 +146,12 @@ class LocationMapSection extends StatelessWidget {
                                   fontWeight: .w600,
                                 ),
                               ),
+                              //
                             ],
                           ),
                         ),
                       ),
+                    //
                   ],
                 ),
               ),

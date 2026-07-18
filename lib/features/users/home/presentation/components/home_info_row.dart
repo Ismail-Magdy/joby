@@ -5,8 +5,8 @@ import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/features/users/home/presentation/widgets/build_badge_widget.dart';
 
-class CustomInfoRow extends StatelessWidget {
-  const CustomInfoRow({
+class HomeInfoRow extends StatelessWidget {
+  const HomeInfoRow({
     super.key,
     required this.levelText,
     required this.jobCategoryText,
@@ -23,8 +23,11 @@ class CustomInfoRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: .center,
         children: [
+          //
           BuildBadgeWidget(icon: Ionicons.stats_chart_outline, text: levelText),
+          //
           horizontalSpace(15),
+          //
           Container(
             padding: .symmetric(horizontal: 14.w, vertical: 8.h),
             decoration: BoxDecoration(
@@ -43,11 +46,14 @@ class CustomInfoRow extends StatelessWidget {
               ),
             ),
           ),
+          //
           horizontalSpace(15),
+          //
           BuildBadgeWidget(
             icon: Ionicons.business_outline,
             text: typeOfWorkText,
           ),
+          //
         ],
       ),
     );

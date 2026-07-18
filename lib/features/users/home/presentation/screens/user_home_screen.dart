@@ -1,15 +1,15 @@
 import "package:flutter/material.dart";
 import "package:joby/core/widgets/home_shimmer_loading.dart";
-import "package:joby/features/users/home/presentation/widgets/custom_info_row.dart";
-import "package:joby/features/users/home/presentation/widgets/cv_section.dart";
+import "package:joby/features/users/home/presentation/components/home_info_row.dart";
+import "package:joby/features/users/home/presentation/components/cv_section.dart";
 import "package:joby/features/users/home/presentation/widgets/location_map_section.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/widgets/error_screen.dart";
-import "package:joby/features/users/home/presentation/widgets/social_media_row.dart";
-import "package:joby/features/users/home/presentation/widgets/total_points_container.dart";
+import "package:joby/features/users/home/presentation/components/social_media_row.dart";
+import "package:joby/features/users/home/presentation/widgets/home_total_points_container.dart";
 import "package:joby/features/users/points/manager/points_cubit.dart";
 import "package:joby/features/users/points/manager/points_state.dart";
 import "package:joby/features/users/points/presentation/widgets/points_celebration_dialog.dart";
@@ -182,8 +182,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       body: BlocListener<PointsCubit, PointsState>(
         //
         listener: (context, state) {
+          // Points Claim Celebration
           if (state is PointsClaimCelebration) {
-            //
             showGeneralDialog(
               context: context,
               barrierDismissible: true,
@@ -194,9 +194,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 );
               },
             );
-            //
-          } else if (state is PointsClaimError) {
-            //
+          }
+          //
+          // Points Claim Error
+          else if (state is PointsClaimError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 behavior: SnackBarBehavior.floating,
@@ -207,15 +208,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
                 backgroundColor: Colors.red,
-                margin: EdgeInsets.all(20.r),
+                margin: .all(20.r),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                  borderRadius: .all(Radius.circular(10.r)),
                 ),
               ),
             );
-            //
-          } else if (state is PointsClaimAlreadyClaimed) {
-            //
+          }
+          //
+          // Points Already Claimed
+          else if (state is PointsClaimAlreadyClaimed) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 behavior: SnackBarBehavior.floating,
@@ -226,14 +228,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
                 backgroundColor: AppColors.primaryColor,
-                margin: EdgeInsets.all(20.r),
+                margin: .all(20.r),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                  borderRadius: .all(Radius.circular(10.r)),
                 ),
               ),
             );
-            //
           }
+          //
         },
         //
         child: BlocConsumer<UserHomeCubit, UserHomeState>(
@@ -311,10 +313,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       },
                     ),
                   ),
+                  //
                   // Body content
                   SliverPadding(
                     padding: .only(bottom: 140.h),
                     sliver: SliverToBoxAdapter(
+                      //
                       child: Column(
                         children: [
                           //
@@ -328,6 +332,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               color: Colors.black87,
                             ),
                           ),
+                          //
                           verticalSpace(5),
                           // Job Title
                           Text(
@@ -341,7 +346,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           //
                           verticalSpace(15),
                           // Total Points
-                          TotalPointsContainer(
+                          HomeTotalPointsContainer(
                             text: user.totalPoints.toString(),
                           ),
                           //
@@ -350,7 +355,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           SingleChildScrollView(
                             scrollDirection: .horizontal,
                             physics: BouncingScrollPhysics(),
-                            child: CustomInfoRow(
+                            child: HomeInfoRow(
                               levelText: user.level,
                               jobCategoryText: user.jobCategory,
                               typeOfWorkText: user.typeOfWork,
@@ -414,7 +419,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           // Location Map
                           if (user.locationName.isNotEmpty &&
                               user.latitude != 0.0) ...[
+                            //
                             verticalSpace(30),
+                            //
                             LocationMapSection(
                               latitude: user.latitude,
                               longitude: user.longitude,
@@ -425,9 +432,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                 user.locationName,
                               ),
                             ),
+                            //
                           ],
                         ],
                       ),
+                      //
                     ),
                   ),
                   //
@@ -441,3 +450,4 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 }
+// 444

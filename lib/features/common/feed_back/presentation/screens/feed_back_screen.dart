@@ -5,8 +5,8 @@ import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/core/widgets/custom_app_bar.dart';
 import 'package:joby/core/widgets/snack_bar_text.dart';
-import 'package:joby/features/common/feed_back/manager/advice_cubit.dart';
-import 'package:joby/features/common/feed_back/manager/advice_state.dart';
+import 'package:joby/features/common/feed_back/manager/feed_back_cubit.dart';
+import 'package:joby/features/common/feed_back/manager/feed_back_state.dart';
 import 'package:joby/features/common/feed_back/presentation/widgets/feed_back_footer.dart';
 import 'package:joby/features/common/feed_back/presentation/widgets/custom_head_section.dart';
 import 'package:joby/features/common/feed_back/presentation/widgets/custom_send_button.dart';
@@ -51,7 +51,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
       return;
     }
 
-    context.read<AdviceCubit>().sendFeedback(message);
+    context.read<FeedBackCubit>().sendFeedback(message);
   }
 
   @override
@@ -61,12 +61,12 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
       // App Bar
       appBar: CustomAppBar(text: "Feedback"),
       //
-      body: BlocConsumer<AdviceCubit, AdviceState>(
+      body: BlocConsumer<FeedBackCubit, FeedBackState>(
         //
         listener: (context, state) {
-          if (state is AdviceSent) {
+          if (state is FeedBackSent) {
             _messageController.clear();
-          } else if (state is AdviceError) {
+          } else if (state is FeedBackError) {
             //
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -93,10 +93,10 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                 verticalSpace(36),
                 //
                 // Success State
-                if (state is AdviceSent) ...[
+                if (state is FeedBackSent) ...[
                   //
                   SuccessStateWidget(
-                    onPressed: () => context.read<AdviceCubit>().reset(),
+                    onPressed: () => context.read<FeedBackCubit>().reset(),
                   ),
                   //
                 ]
@@ -194,8 +194,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                   //
                   // Send Button (disabled while sending)
                   CustomSendButton(
-                    onPressed: state is AdviceSending ? null : _sendFeedback,
-                    isLoading: state is AdviceSending,
+                    onPressed: state is FeedBackSending ? null : _sendFeedback,
+                    isLoading: state is FeedBackSending,
                   ),
                   //
                   verticalSpace(16),
