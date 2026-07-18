@@ -3,7 +3,7 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
 import "package:joby/features/users/points/presentation/screens/points_screen.dart";
-import "package:joby/features/users/profile_users/screens/users_profile_screen.dart.dart";
+import "package:joby/features/users/settings_users/screens/settings_users_screen.dart.dart";
 import "package:joby/features/users/profile_views/presentation/screens/profile_views_screen.dart";
 import "../../../../core/helpers/spacing.dart";
 import "../../../../core/themes/app_colors.dart";
@@ -29,46 +29,50 @@ class _UserRootScreenState extends State<UserRootScreen> {
           const UserHomeScreen(),
           const PointsScreen(),
           const ProfileViewsScreen(),
-          const UsersProfileScreen(),
+          const SettingsUsersScreen(),
         ],
       ),
       //
       bottomNavigationBar: Padding(
-        padding: .only(left: 20.w, right: 20.w, bottom: 35.h),
-        child: Container(
-          height: 68.h,
-          decoration: BoxDecoration(
-            color: AppColors.primaryColor,
-            borderRadius: .circular(40.r),
+        padding: .only(left: 20.w, right: 20.w, bottom: 30.h),
+        child: SafeArea(
+          top: false,
+          bottom: true,
+          child: Container(
+            height: 68.h,
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              borderRadius: .circular(40.r),
+            ),
+            //
+            child: Row(
+              mainAxisAlignment: .spaceAround,
+              children: [
+                //
+                _navItem(
+                  index: 0,
+                  icon: "assets/svgs/profile.svg",
+                  title: "Profile",
+                ),
+                //
+                _navItem(
+                  index: 1,
+                  icon: "assets/svgs/points.svg",
+                  title: "Points",
+                ),
+                //
+                _navItem(index: 2, icon: "assets/svgs/eye.svg", title: "Views"),
+                //
+                _navItem(
+                  index: 3,
+                  icon: "assets/svgs/settings.svg",
+                  title: "Settings",
+                ),
+                //
+              ],
+            ),
+            //
           ),
-          //
-          child: Row(
-            mainAxisAlignment: .spaceAround,
-            children: [
-              //
-              _navItem(
-                index: 0,
-                icon: "assets/svgs/profile.svg",
-                title: "Profile",
-              ),
-              //
-              _navItem(
-                index: 1,
-                icon: "assets/svgs/points.svg",
-                title: "Points",
-              ),
-              //
-              _navItem(index: 2, icon: "assets/svgs/eye.svg", title: "Views"),
-              //
-              _navItem(
-                index: 3,
-                icon: "assets/svgs/settings.svg",
-                title: "Settings",
-              ),
-              //
-            ],
-          ),
-          //
         ),
       ),
       //
@@ -106,7 +110,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
                 scale: isSelected ? 1.1 : 1.0,
                 child: SvgPicture.asset(
                   icon,
-                  height: 22.h,
+                  height: 20.h,
                   colorFilter: const .mode(Colors.white, .srcIn),
                 ),
               ),

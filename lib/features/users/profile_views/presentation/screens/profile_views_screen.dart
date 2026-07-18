@@ -52,6 +52,7 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
               children: [
                 // Loaded
                 if (state is ProfileViewsLoaded)
+                  //
                   Padding(
                     padding: .only(
                       left: 20.w,
@@ -61,7 +62,6 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                     ),
                     child: BuildStatsCard(state: state),
                   ),
-                //
                 //
                 Expanded(child: _buildBodyContent(state)),
               ],
