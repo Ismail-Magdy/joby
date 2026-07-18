@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
-/// Builds a styled dropdown matching the app's design system.
-
 class EditProfileDropDown extends StatelessWidget {
   const EditProfileDropDown({
     super.key,

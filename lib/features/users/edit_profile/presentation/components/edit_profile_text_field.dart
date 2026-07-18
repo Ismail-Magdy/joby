@@ -31,6 +31,7 @@ class EditProfileTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
+        //
         Text(
           label,
           style: TextStyle(
@@ -39,7 +40,9 @@ class EditProfileTextField extends StatelessWidget {
             color: Colors.grey.shade700,
           ),
         ),
+        //
         verticalSpace(8),
+        //
         TextFormField(
           keyboardType: keyboardType,
           controller: controller,
@@ -49,10 +52,10 @@ class EditProfileTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13.sp),
-            prefixIcon: Icon(icon, color: iconColor, size: 22.sp),
+            prefixIcon: Icon(icon, color: iconColor, size: 20.sp),
             filled: true,
             fillColor: Colors.grey.shade50,
-            contentPadding: .symmetric(horizontal: 20.w, vertical: 16.h),
+            contentPadding: .symmetric(horizontal: 18.w, vertical: 16.h),
             border: OutlineInputBorder(
               borderRadius: .circular(14.r),
               borderSide: BorderSide.none,
@@ -75,6 +78,7 @@ class EditProfileTextField extends StatelessWidget {
             ),
           ),
         ),
+        //
       ],
     );
   }
