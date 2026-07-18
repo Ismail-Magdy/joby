@@ -15,7 +15,7 @@ import 'package:joby/features/company/profile_company/screens/company_profile_sc
 import 'package:joby/features/company/root/screens/company_root_screen.dart';
 import 'package:joby/features/common/about_us/screens/about_us_screen.dart';
 import 'package:joby/features/common/feed_back/presentation/screens/feed_back_screen.dart';
-import 'package:joby/features/users/home/presentation/screens/company_view_screen.dart';
+import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
 import 'package:joby/features/users/profile_users/screens/users_profile_screen.dart.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';

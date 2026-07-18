@@ -4,8 +4,8 @@ import 'package:joby/core/themes/app_colors.dart';
 
 /// Builds a styled dropdown matching the app's design system.
 
-class DropDownWidget extends StatelessWidget {
-  const DropDownWidget({
+class EditProfileDropDown extends StatelessWidget {
+  const EditProfileDropDown({
     super.key,
     this.value,
     required this.hint,

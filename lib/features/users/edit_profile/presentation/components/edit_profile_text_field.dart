@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import '../../../../../core/themes/app_colors.dart';
 
-class BuildTextField extends StatelessWidget {
-  const BuildTextField({
+class EditProfileTextField extends StatelessWidget {
+  const EditProfileTextField({
     super.key,
     required this.controller,
     required this.label,

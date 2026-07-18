@@ -6,8 +6,8 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
-class IntlPhoneWidget extends StatelessWidget {
-  const IntlPhoneWidget({
+class EditProfileIntlPhone extends StatelessWidget {
+  const EditProfileIntlPhone({
     super.key,
     required this.initialValue,
     required this.initialCountryCode,

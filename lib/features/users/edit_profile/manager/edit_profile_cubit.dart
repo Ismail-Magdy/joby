@@ -20,24 +20,24 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   EditProfileCubit(this.editProfileRepo, this.supabaseClient)
     : super(EditProfileInitial());
 
-  /// Pick an avatar image from the gallery.
+  /// Pick an avatar image from the gallery
   Future<void> pickAvatar() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await picker.pickImage(source: .gallery);
 
       if (image != null) {
         final CroppedFile? croppedFile = await ImageCropper().cropImage(
           sourcePath: image.path,
           uiSettings: [
             AndroidUiSettings(
-              toolbarTitle: 'Crop Image',
+              toolbarTitle: "Crop Image",
               toolbarColor: AppColors.primaryColor,
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.square,
               lockAspectRatio: false,
             ),
-            IOSUiSettings(title: 'Crop Image'),
+            IOSUiSettings(title: "Crop Image"),
           ],
         );
 
@@ -51,7 +51,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     }
   }
 
-  /// Pick a PDF file from the device.
+  /// Pick a PDF file from the device
   Future<void> pickCv() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -69,7 +69,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     }
   }
 
-  /// Save all profile changes to Supabase.
+  /// Save all profile changes to Supabase
   Future<void> saveChanges({
     required String name,
     required String jobTitle,
@@ -93,7 +93,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
           _pickedAvatarFile!,
         );
         if (rawAvatarUrl == null) {
-          emit(EditProfileError("Failed to upload profile picture."));
+          emit(EditProfileError("Failed to upload profile picture"));
           return;
         }
         finalAvatarUrl =
@@ -104,7 +104,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       if (_pickedCvFile != null) {
         String? rawCvUrl = await editProfileRepo.uploadCv(_pickedCvFile!);
         if (rawCvUrl == null) {
-          emit(EditProfileError("Failed to upload CV."));
+          emit(EditProfileError("Failed to upload CV"));
           return;
         }
         finalCvUrl = "$rawCvUrl?t=${DateTime.now().millisecondsSinceEpoch}";
@@ -128,7 +128,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       if (success) {
         emit(EditProfileSuccess());
       } else {
-        emit(EditProfileError("Failed to update profile data."));
+        emit(EditProfileError("Failed to update profile data"));
       }
     } catch (error) {
       emit(EditProfileError(ErrorHandler.handleError(error)));

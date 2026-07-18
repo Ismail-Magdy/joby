@@ -10,13 +10,13 @@ import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_cubit.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_state.dart';
-import 'package:joby/features/users/edit_profile/presentation/widgets/build_text_field.dart';
+import 'package:joby/features/users/edit_profile/presentation/components/edit_profile_text_field.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/custom_avatar_widget.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/custom_edit_profile_bold_text.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/custom_save_button.dart';
-import 'package:joby/features/users/edit_profile/presentation/widgets/cv_upload_widget.dart';
-import 'package:joby/features/users/edit_profile/presentation/widgets/drop_down_widget.dart';
-import 'package:joby/features/users/edit_profile/presentation/widgets/intl_phone_widget.dart';
+import 'package:joby/features/users/edit_profile/presentation/components/edit_profile_cv_upload.dart';
+import 'package:joby/features/users/edit_profile/presentation/components/edit_profile_drop_down.dart';
+import 'package:joby/features/users/edit_profile/presentation/components/edit_profile_intl_phone.dart';
 import 'package:joby/features/users/edit_profile/presentation/widgets/show_valid_message.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 
@@ -94,7 +94,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return "+20$dbWhatsapp";
   }
 
-  /// Pre-fill all controllers & dropdowns with existing user data.
+  /// Pre-fill all controllers & dropdowns with existing user data
   void _prefillFields() {
     final user = widget.currentUserInfo;
     if (user != null) {
@@ -128,7 +128,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _initialWorkType = _selectedWorkType;
   }
 
-  /// Check if any field has been modified from its initial value.
+  /// Check if any field has been modified from its initial value
   bool get _hasUnsavedChanges {
     return _nameController.text != _initialName ||
         _jobTitleController.text != _initialJobTitle ||
@@ -142,7 +142,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _pickedCvName != null;
   }
 
-  /// Show a confirmation dialog when the user tries to leave with unsaved changes.
+  /// Show a confirmation dialog when the user tries to leave with unsaved changes
   Future<bool> _onWillPop() async {
     if (!_hasUnsavedChanges) return true;
 
@@ -150,16 +150,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: .circular(20.r)),
         //
         title: Text(
           "Unsaved Changes",
           style: TextStyle(
             fontFamily: "BrunoAceSC",
             fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
         //
@@ -181,7 +179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               style: TextStyle(
                 color: Colors.red.shade400,
                 fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
+                fontWeight: .w600,
               ),
             ),
           ),
@@ -202,7 +200,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
+                fontWeight: .w600,
               ),
             ),
           ),
@@ -236,7 +234,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return result == "discard";
   }
 
-  /// Trigger the save via cubit.
+  /// Trigger the save via cubit
   void _triggerSave() {
     if (!_formKey.currentState!.validate() || !_isPhoneValid) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -244,10 +242,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           content: Center(child: Text("Please fill required fields properly")),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(20.r),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
+          margin: .all(20.r),
+          shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
         ),
       );
       return;
@@ -264,6 +260,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  /// Dispose Controllers
   @override
   void dispose() {
     _nameController.dispose();
@@ -300,7 +297,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: TextStyle(
               color: Colors.black87,
               fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               fontFamily: "BrunoAceSC",
             ),
           ),
@@ -318,40 +315,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         body: BlocConsumer<EditProfileCubit, EditProfileState>(
           //
           listener: (context, state) {
+            //
             if (state is EditProfileAvatarPicked) {
               setState(() {
                 _pickedAvatarFile = state.file;
               });
-            } else if (state is EditProfileCvPicked) {
+            }
+            //
+            else if (state is EditProfileCvPicked) {
               setState(() {
                 _pickedCvName = state.fileName;
               });
-            } else if (state is EditProfileSuccess) {
-              //
+            }
+            //
+            // Success
+            else if (state is EditProfileSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   behavior: SnackBarBehavior.floating,
                   content: Center(child: Text("Profile updated successfully")),
                   backgroundColor: Colors.green,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
               // Pop with `true` so the home screen knows to refresh
               Navigator.pop(context, true);
-            } else if (state is EditProfileError) {
-              //
+            }
+            // Error
+            else if (state is EditProfileError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   behavior: SnackBarBehavior.floating,
                   content: Center(child: Text(state.message)),
                   backgroundColor: Colors.red,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
               //
@@ -365,9 +364,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return Form(
               key: _formKey,
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+                padding: .symmetric(horizontal: 24.w, vertical: 20.h),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     // Avatar
                     CustomAvatarWidget(
@@ -394,13 +393,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     verticalSpace(20),
                     //
                     // Name
-                    BuildTextField(
+                    EditProfileTextField(
                       controller: _nameController,
                       label: "Full Name",
                       hint: "eg. Ahmed Mohamed",
                       icon: Ionicons.person_outline,
                       iconColor: AppColors.primaryColor,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      autovalidateMode: .onUserInteraction,
                       validator: (val) {
                         final v = val?.trim() ?? "";
                         if (v.isEmpty) return "Please enter your name";
@@ -422,13 +421,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     verticalSpace(15),
                     //
                     // Job Title
-                    BuildTextField(
+                    EditProfileTextField(
                       controller: _jobTitleController,
                       label: "Job Title",
                       hint: "eg. Flutter Developer",
                       icon: Ionicons.briefcase_outline,
                       iconColor: AppColors.primaryColor,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      autovalidateMode: .onUserInteraction,
                       validator: (val) {
                         final v = val?.trim() ?? "";
                         if (v.isEmpty) return "Please enter your job title";
@@ -446,7 +445,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     verticalSpace(8),
                     //
-                    DropDownWidget(
+                    EditProfileDropDown(
                       value: _selectedLevel,
                       hint: "Select your level",
                       icon: Ionicons.stats_chart_outline,
@@ -461,7 +460,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     verticalSpace(8),
                     //
-                    DropDownWidget(
+                    EditProfileDropDown(
                       value: _selectedWorkType,
                       hint: "Select work type",
                       icon: Ionicons.location_outline,
@@ -477,7 +476,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     verticalSpace(20),
                     //
-                    IntlPhoneWidget(
+                    EditProfileIntlPhone(
                       initialValue: _initialWhatsapp.isNotEmpty
                           ? _initialWhatsapp
                           : null,
@@ -526,7 +525,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     verticalSpace(15),
                     //
-                    BuildTextField(
+                    EditProfileTextField(
                       controller: _linkedinController,
                       label: "LinkedIn URL",
                       hint: "https://linkedin.com/in/username",
@@ -536,7 +535,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     verticalSpace(15),
                     //
-                    BuildTextField(
+                    EditProfileTextField(
                       controller: _githubController,
                       label: "GitHub URL",
                       hint: "https://github.com/username",
@@ -546,7 +545,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     verticalSpace(15),
                     //
-                    BuildTextField(
+                    EditProfileTextField(
                       controller: _behanceController,
                       label: "Behance URL",
                       hint: "https://behance.net/username",
@@ -562,7 +561,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     verticalSpace(15),
                     //
                     // CV Upload
-                    CvUploadWidget(
+                    EditProfileCvUpload(
                       onTap: isLoading ? null : () => cubit.pickCv(),
                       pickedCvName: _pickedCvName,
                     ),
@@ -618,3 +617,4 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
+// 620
