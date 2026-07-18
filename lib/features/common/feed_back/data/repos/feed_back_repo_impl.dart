@@ -1,12 +1,12 @@
 import "package:dartz/dartz.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
-import "advice_repo.dart";
+import "feed_back_repo.dart";
 import "../../../../../core/errors/error_handler.dart";
 
-class AdviceRepoImpl implements FeedBackRepo {
+class FeedBackRepoImpl implements FeedBackRepo {
   final SupabaseClient supabaseClient;
 
-  AdviceRepoImpl({required this.supabaseClient});
+  FeedBackRepoImpl({required this.supabaseClient});
 
   @override
   Future<Either<String, Unit>> sendFeedback(String message) async {

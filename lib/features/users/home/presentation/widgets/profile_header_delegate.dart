@@ -54,17 +54,18 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     final double screenW = MediaQuery.of(context).size.width;
     final double currentHeight = max(maxExtent - shrinkOffset, minExtent);
 
-    // --- Opacities ---
-    final double fadeOpacity = (1.0 - (shrinkOffset / (maxExtent - minExtent))).clamp(0.0, 1.0);
+    // Opacities
+    final double fadeOpacity = (1.0 - (shrinkOffset / (maxExtent - minExtent)))
+        .clamp(0.0, 1.0);
     final double expandedOpacity = max(0.0, 1.0 - t * 2.0); // Fades out early
     final double collapsedOpacity = max(0.0, (t - 0.5) * 2.0); // Fades in late
 
-    // --- Avatar sizes ---
+    // Avatar sizes
     final double maxRadius = 60.r;
     final double minRadius = 25.r;
     final double avatarRadius = maxRadius - (maxRadius - minRadius) * t;
 
-    // --- Avatar position ---
+    // Avatar position
     // Expanded: centered horizontally, at the bottom of the blue area
     final double expandedAvatarCX = screenW / 2;
     final double expandedAvatarCY = maxExtent - maxRadius * 0.2;
@@ -77,14 +78,14 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     final double avatarCY =
         expandedAvatarCY + (collapsedAvatarCY - expandedAvatarCY) * t;
 
-    // --- Title "My Profile" position (only visible when expanded) ---
+    // Title "My Profile" position (only visible when expanded)
     final double titleTop = statusBarH + 15.h;
 
-    // --- Name & Job Title position (only visible when collapsed) ---
+    // Name & Job Title position (only visible when collapsed)
     final double infoLeft = collapsedAvatarCX + minRadius + 15.w;
     final double infoTop = statusBarH + (minExtent - statusBarH) / 2 - 20.h;
 
-    // --- Icons position ---
+    // Icons position
     final double iconsExpandedTop = statusBarH + 54.h;
     final double iconsCollapsedTop =
         statusBarH + (minExtent - statusBarH) / 2 - 11.h;
@@ -266,13 +267,19 @@ class ProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
                   child: Opacity(
                     opacity: fadeOpacity,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 10.h,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (showBackButton)
                             IconButton(
-                              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                              icon: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                              ),
                               onPressed: () => Navigator.pop(context),
                             )
                           else

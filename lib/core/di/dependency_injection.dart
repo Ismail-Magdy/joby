@@ -10,9 +10,9 @@ import 'package:joby/features/common/auth/data/repos/auth_repo.dart';
 import 'package:joby/features/common/auth/data/repos/auth_repo_impl.dart';
 import 'package:joby/features/common/auth/manager/auth_cubit.dart';
 import '../../features/common/on_boarding/data/repositories/user_type_repository.dart';
-import '../../features/common/feed_back/data/repos/advice_repo.dart';
-import '../../features/common/feed_back/data/repos/advice_repo_impl.dart';
-import '../../features/common/feed_back/manager/advice_cubit.dart';
+import '../../features/common/feed_back/data/repos/feed_back_repo.dart';
+import '../../features/common/feed_back/data/repos/feed_back_repo_impl.dart';
+import '../../features/common/feed_back/manager/feed_back_cubit.dart';
 import '../../features/users/edit_profile/data/repos/edit_profile_repo.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/home/data/repos/user_home_repo.dart';
@@ -82,10 +82,10 @@ Future<void> initGetIt() async {
 
   /// Advice (Feedback) Feature
   getIt.registerLazySingleton<FeedBackRepo>(
-    () => AdviceRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+    () => FeedBackRepoImpl(supabaseClient: getIt<SupabaseClient>()),
   );
-  getIt.registerFactory<AdviceCubit>(
-    () => AdviceCubit(adviceRepo: getIt<FeedBackRepo>()),
+  getIt.registerFactory<FeedBackCubit>(
+    () => FeedBackCubit(feedBackRepo: getIt<FeedBackRepo>()),
   );
 
   /// Profile Views Feature

@@ -22,6 +22,7 @@ class CvSection extends StatelessWidget {
         ),
         child: Row(
           children: [
+            //
             Container(
               padding: .all(10.r),
               decoration: BoxDecoration(
@@ -34,11 +35,14 @@ class CvSection extends StatelessWidget {
                 size: 26.sp,
               ),
             ),
+            //
             horizontalSpace(15),
+            //
             Expanded(
               child: Column(
                 crossAxisAlignment: .start,
                 children: [
+                  //
                   Text(
                     "My Resume",
                     style: TextStyle(
@@ -47,7 +51,9 @@ class CvSection extends StatelessWidget {
                       color: Colors.black87,
                     ),
                   ),
+                  //
                   verticalSpace(3),
+                  //
                   Text(
                     "PDF Document",
                     style: TextStyle(
@@ -55,14 +61,17 @@ class CvSection extends StatelessWidget {
                       color: Colors.grey.shade600,
                     ),
                   ),
+                  //
                 ],
               ),
             ),
+            //
             SvgPicture.asset(
               "assets/svgs/show_cv.svg",
               colorFilter: .mode(AppColors.primaryColor, .srcIn),
               height: 20.h,
             ),
+            //
           ],
         ),
       ),

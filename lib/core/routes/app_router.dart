@@ -19,7 +19,7 @@ import 'package:joby/features/users/company_view/presentation/screens/company_vi
 import 'package:joby/features/users/profile_users/screens/users_profile_screen.dart.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
-import '../../features/common/feed_back/manager/advice_cubit.dart';
+import '../../features/common/feed_back/manager/feed_back_cubit.dart';
 import '../../features/users/edit_profile/manager/edit_profile_cubit.dart';
 import '../../features/users/edit_profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/users/home/manager/user_home_cubit.dart';
@@ -118,8 +118,8 @@ class AppRouter {
       /// Advice / Feedback Screen
       case Routes.feedBackScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<AdviceCubit>(
-            create: (context) => getIt<AdviceCubit>(),
+          builder: (_) => BlocProvider<FeedBackCubit>(
+            create: (context) => getIt<FeedBackCubit>(),
             child: const FeedBackScreen(),
           ),
         );

@@ -26,36 +26,47 @@ class SocialMediaRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
+        //
         BuildContactIconButton(
           icon: Ionicons.logo_whatsapp,
           color: Colors.green,
           onTap: whatsappTap,
         ),
+        //
         if (showLinkedin) ...[
+          //
           horizontalSpace(20),
+          //
           BuildContactIconButton(
             icon: Ionicons.logo_linkedin,
             color: const Color(0xff0077B5),
             onTap: linkedinTap ?? () {},
           ),
+          //
         ],
         if (showGithub) ...[
+          //
           horizontalSpace(20),
+          //
           BuildContactIconButton(
             icon: Ionicons.logo_github,
             color: const Color(0xff333333),
             onTap: githubTap ?? () {},
           ),
+          //
         ],
         if (showBehance) ...[
+          //
           horizontalSpace(20),
+          //
           BuildContactIconButton(
             icon: Ionicons.logo_behance,
             color: const Color(0xff1769FF),
             onTap: behanceTap ?? () {},
           ),
+          //
         ],
       ],
     );

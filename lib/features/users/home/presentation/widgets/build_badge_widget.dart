@@ -18,8 +18,11 @@ class BuildBadgeWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
+          //
           Icon(icon, size: 17.sp, color: Colors.grey.shade600),
+          //
           horizontalSpace(6),
+          //
           Text(
             text,
             style: TextStyle(
@@ -28,6 +31,7 @@ class BuildBadgeWidget extends StatelessWidget {
               color: Colors.grey.shade800,
             ),
           ),
+          //
         ],
       ),
     );

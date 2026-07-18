@@ -29,7 +29,7 @@ class BuildContactIconButton extends StatelessWidget {
               offset: const Offset(0, 2),
             ),
           ],
-          border: Border.all(color: Colors.grey.shade100),
+          border: .all(color: Colors.grey.shade100),
         ),
         child: Icon(icon, color: color, size: 26.sp),
       ),

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:joby/core/helpers/extensions.dart';
 
 void showFullScreenAvatarDialog(
   BuildContext context,
@@ -22,7 +23,7 @@ void showFullScreenAvatarDialog(
             children: [
               // Blurred Background
               GestureDetector(
-                onTap: () => Navigator.pop(context),
+                onTap: () => context.pop(),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                   child: Container(color: Colors.black.withValues(alpha: 0.6)),
@@ -37,12 +38,12 @@ void showFullScreenAvatarDialog(
                     width: 250.r,
                     height: 250.r,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      shape: .circle,
                       color: Colors.grey.shade800,
                       image: avatarUrl != null
                           ? DecorationImage(
                               image: NetworkImage(avatarUrl),
-                              fit: BoxFit.cover,
+                              fit: .cover,
                             )
                           : null,
                       boxShadow: [
@@ -70,6 +71,4 @@ void showFullScreenAvatarDialog(
     },
   );
 }
-
-
 // 190

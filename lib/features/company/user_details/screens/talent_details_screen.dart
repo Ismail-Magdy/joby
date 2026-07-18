@@ -5,11 +5,11 @@ import "package:url_launcher/url_launcher.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/widgets/pdf_viewer_screen.dart";
 import "package:joby/features/users/user_info/data/models/user_info_model.dart";
-import "package:joby/features/users/home/presentation/widgets/custom_info_row.dart";
-import "package:joby/features/users/home/presentation/widgets/cv_section.dart";
+import "package:joby/features/users/home/presentation/components/home_info_row.dart";
+import "package:joby/features/users/home/presentation/components/cv_section.dart";
 import "package:joby/features/users/home/presentation/widgets/location_map_section.dart";
-import "package:joby/features/users/home/presentation/widgets/social_media_row.dart";
-import "package:joby/features/users/home/presentation/widgets/total_points_container.dart";
+import "package:joby/features/users/home/presentation/components/social_media_row.dart";
+import "package:joby/features/users/home/presentation/widgets/home_total_points_container.dart";
 import "package:joby/features/users/home/presentation/widgets/profile_header_delegate.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:joby/features/company/home/manager/company_home_cubit.dart";
@@ -217,14 +217,14 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
                   //
                   verticalSpace(15),
                   //
-                  TotalPointsContainer(text: user.totalPoints.toString()),
+                  HomeTotalPointsContainer(text: user.totalPoints.toString()),
                   //
                   verticalSpace(25),
                   // Info Row
                   SingleChildScrollView(
                     scrollDirection: .horizontal,
                     physics: const BouncingScrollPhysics(),
-                    child: CustomInfoRow(
+                    child: HomeInfoRow(
                       levelText: _toTitleCase(user.level),
                       jobCategoryText: _toTitleCase(user.jobCategory),
                       typeOfWorkText: _toTitleCase(user.typeOfWork),
