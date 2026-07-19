@@ -34,7 +34,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
       ),
       //
       bottomNavigationBar: Padding(
-        padding: .only(left: 20.w, right: 20.w, bottom: 30.h),
+        padding: .only(left: 20.w, right: 20.w, bottom: 20.h),
         child: SafeArea(
           top: false,
           bottom: true,

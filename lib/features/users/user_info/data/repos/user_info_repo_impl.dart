@@ -1,6 +1,5 @@
 import "dart:io";
 import "package:dartz/dartz.dart";
-import "package:flutter/foundation.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "../models/user_info_model.dart";
 import "user_info_repo.dart";
@@ -105,7 +104,6 @@ class UserInfoRepoImpl implements UserInfoRepo {
 
       return const Right(null);
     } catch (e) {
-      debugPrint("🚨 CRITICAL SaveUserData Error: $e");
       return Left(ErrorHandler.handleError(e));
     }
   }
