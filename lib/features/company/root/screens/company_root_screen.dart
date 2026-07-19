@@ -51,31 +51,39 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
       ),
       //
       bottomNavigationBar: Padding(
-        padding: .only(left: 28.w, right: 28.w, bottom: 35.h),
-        child: Container(
-          height: 68.h,
-          decoration: BoxDecoration(
-            color: AppColors.primaryColor,
-            borderRadius: .circular(40.r),
+        padding: .only(left: 28.w, right: 28.w, bottom: 20.h),
+        child: SafeArea(
+          top: false,
+          bottom: true,
+          child: Container(
+            height: 68.h,
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              borderRadius: .circular(40.r),
+            ),
+            //
+            child: Row(
+              mainAxisAlignment: .spaceAround,
+              children: [
+                //
+                _navItem(index: 0, icon: "assets/svgs/home.svg", title: "Home"),
+                //
+                _navItem(
+                  index: 1,
+                  icon: "assets/svgs/saved.svg",
+                  title: "Saved",
+                ),
+                //
+                _navItem(
+                  index: 2,
+                  icon: "assets/svgs/settings.svg",
+                  title: "Settings",
+                ),
+                //
+              ],
+            ),
+            //
           ),
-          //
-          child: Row(
-            mainAxisAlignment: .spaceAround,
-            children: [
-              //
-              _navItem(index: 0, icon: "assets/svgs/home.svg", title: "Home"),
-              //
-              _navItem(index: 1, icon: "assets/svgs/saved.svg", title: "Saved"),
-              //
-              _navItem(
-                index: 2,
-                icon: "assets/svgs/settings.svg",
-                title: "Settings",
-              ),
-              //
-            ],
-          ),
-          //
         ),
       ),
       //
@@ -113,7 +121,7 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
                 scale: isSelected ? 1.1 : 1.0,
                 child: SvgPicture.asset(
                   icon,
-                  height: 22.h,
+                  height: 20.h,
                   colorFilter: const .mode(Colors.white, .srcIn),
                 ),
               ),
