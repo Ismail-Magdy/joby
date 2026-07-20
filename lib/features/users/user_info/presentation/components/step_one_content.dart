@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,6 +33,7 @@ class StepOneContent extends StatelessWidget {
           child: Stack(
             alignment: .bottomRight,
             children: [
+              //
               Container(
                 decoration: BoxDecoration(
                   shape: .circle,
@@ -52,6 +52,7 @@ class StepOneContent extends StatelessWidget {
                       : null,
                 ),
               ),
+              //
               GestureDetector(
                 onTap: onTapPickAvatar,
                 child: CircleAvatar(
@@ -61,7 +62,7 @@ class StepOneContent extends StatelessWidget {
                     backgroundImage == null
                         ? "assets/svgs/camera.svg"
                         : "assets/svgs/pen_edit.svg",
-                    colorFilter: .mode(Colors.white, .srcIn),
+                    colorFilter: const .mode(Colors.white, .srcIn),
                   ),
                 ),
               ),
@@ -71,7 +72,7 @@ class StepOneContent extends StatelessWidget {
         ),
         //
         verticalSpace(25),
-        //
+        // Name
         TextFormField(
           controller: nameController,
           decoration: const InputDecoration(
@@ -82,15 +83,15 @@ class StepOneContent extends StatelessWidget {
             final v = val?.trim() ?? "";
             if (v.isEmpty) return "Please enter your name";
             if (v.length < 2) {
-              return "Name must be at least 2 characters.";
+              return "Name must be at least 2 characters";
             }
 
             if (RegExp(r'[0-9]').hasMatch(v)) {
-              return "Name cannot contain numbers.";
+              return "Name cannot contain numbers";
             }
 
             if (!RegExp(r'^[a-zA-Z\u0600-\u06FF\s]+$').hasMatch(v)) {
-              return "Name can only contain letters.";
+              return "Name can only contain letters";
             }
             return null;
           },
@@ -103,7 +104,14 @@ class StepOneContent extends StatelessWidget {
           labelText: "Job Category (e.g. Graphic Design)",
           prefixIcon: Icons.category_outlined,
           suggestions: JobSuggestions.categories,
-          validator: (val) => val!.isEmpty ? "Required" : null,
+          validator: (val) {
+            final text = val?.trim() ?? "";
+            if (text.isEmpty) return "Required";
+            if (!JobSuggestions.categories.contains(text)) {
+              return "Please select a valid category from the suggestions";
+            }
+            return null;
+          },
         ),
         //
         verticalSpace(15),
@@ -113,8 +121,16 @@ class StepOneContent extends StatelessWidget {
           labelText: "Job Title (e.g. Flutter Developer)",
           prefixIcon: Icons.work_outline,
           suggestions: JobSuggestions.titles,
-          validator: (val) => val!.isEmpty ? "Required" : null,
+          validator: (val) {
+            final text = val?.trim() ?? "";
+            if (text.isEmpty) return "Required";
+            if (!JobSuggestions.titles.contains(text)) {
+              return "Please select a valid job title from the suggestions";
+            }
+            return null;
+          },
         ),
+        //
       ],
     );
     //

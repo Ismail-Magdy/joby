@@ -15,6 +15,7 @@ import "package:joby/core/helpers/spacing.dart";
 import "package:http/http.dart" as http;
 
 /// Full-screen Location Picker with search via OpenStreetMap Nominatim
+/// Full-screen Location Picker with search via OpenStreetMap Nominatim
 class LocationPickerScreen extends StatefulWidget {
   final double initialLatitude;
   final double initialLongitude;
@@ -65,14 +66,20 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
   Future<void> _updateLocationName(double lat, double lng) async {
     try {
       if (mounted) setState(() => _isLoadingLocation = true);
+
+      // 🚨 إجبار الباكدج ترجع الداتا بالإنجليزي
+      await geocoding.setLocaleIdentifier("en");
+
       List<geocoding.Placemark> placemarks = await geocoding
           .placemarkFromCoordinates(lat, lng);
       if (placemarks.isNotEmpty) {
         geocoding.Placemark place = placemarks[0];
-        String loc = place.administrativeArea ?? "";
-        if (place.country != null) {
-          loc += (loc.isNotEmpty ? ", " : "") + place.country!;
-        }
+
+        // تعديل شيك عشان يرجع (المدينة، الدولة) دايماً بالتنسيق ده
+        String city = place.administrativeArea ?? place.locality ?? "";
+        String country = place.country ?? "";
+        String loc = city.isNotEmpty ? "$city, $country" : country;
+
         if (mounted) {
           setState(
             () => _locationName = loc.isNotEmpty ? loc : "Unknown Location",
@@ -176,7 +183,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
       //
       resizeToAvoidBottomInset: false,
       //
-      appBar: CustomAppBar(text: "Pick Location"),
+      appBar: const CustomAppBar(text: "Pick Location"),
       //
       body: Stack(
         children: [
@@ -211,7 +218,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           // Center Pin
           Center(
             child: Padding(
-              padding: .only(bottom: 40.h),
+              padding: EdgeInsets.only(bottom: 40.h),
               child: Icon(Icons.location_pin, color: Colors.red, size: 50.sp),
             ),
           ),
@@ -238,7 +245,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 verticalSpace(6),
                 //
                 // Search Results Dropdown
-                if (_isSearching) SearchResultsDropdown(),
+                if (_isSearching) const SearchResultsDropdown(),
                 //
                 if (_searchResults.isNotEmpty && !_isSearching)
                   //
@@ -246,17 +253,17 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                     constraints: BoxConstraints(maxHeight: 250.h),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: .circular(14.r),
+                      borderRadius: BorderRadius.circular(14.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
+                          color: Colors.black.withOpacity(0.08),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: .circular(14.r),
+                      borderRadius: BorderRadius.circular(14.r),
                       child: ListView.separated(
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
