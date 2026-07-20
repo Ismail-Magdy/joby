@@ -12,6 +12,7 @@ import 'package:joby/core/widgets/error_screen.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_state.dart';
 import 'package:joby/features/users/profile_views/presentation/widgets/build_stats_card.dart';
+import 'package:joby/features/users/profile_views/presentation/widgets/profile_views_card_without_time.dart';
 import 'package:lottie/lottie.dart';
 
 class ProfileViewsScreen extends StatefulWidget {
@@ -164,21 +165,16 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                     ),
                     //
                     horizontalSpace(15),
-                    // Company Name & Time
+                    // Company Name, Badge & Time
                     Expanded(
                       child: Column(
                         crossAxisAlignment: .start,
                         children: [
-                          //
-                          Text(
-                            view.companyName,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: .bold,
-                              color: Colors.black87,
-                            ),
-                            maxLines: 1,
-                            overflow: .ellipsis,
+                          // 🔥 Fire Badge
+                          ProfileViewsCardWithoutTime(
+                            viewCompanyName: view.companyName,
+                            viewViewCountInt: view.viewCount,
+                            viewViewCountString: "x${view.viewCount}",
                           ),
                           //
                           verticalSpace(4),
@@ -240,4 +236,4 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
     return const SizedBox.shrink();
   }
 }
-// 322
+// 286

@@ -24,13 +24,29 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
       if (data.isEmpty) {
         emit(ProfileViewsEmpty());
       } else {
-        final views = data.map((e) => ProfileViewModel.fromJson(e)).toList();
+        final rawViews = data.map((e) => ProfileViewModel.fromJson(e)).toList();
 
+        //
+        final List<ProfileViewModel> uniqueViews = [];
+        for (var view in rawViews) {
+          if (uniqueViews.isEmpty) {
+            uniqueViews.add(view);
+          } else {
+            //
+            if (uniqueViews.last.companyId == view.companyId) {
+              uniqueViews.last.viewCount++;
+            } else {
+              uniqueViews.add(view);
+            }
+          }
+        }
+
+        //
         final now = DateTime.now();
         int viewsThisWeek = 0;
         int viewsLastWeek = 0;
 
-        for (var view in views) {
+        for (var view in uniqueViews) {
           final diffInDays = now.difference(view.viewedAt).inDays;
           if (diffInDays <= 7) {
             viewsThisWeek++;
@@ -40,14 +56,24 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
         }
 
         final bool isTrendUp = viewsThisWeek >= viewsLastWeek;
-        final int trendDifference = (viewsThisWeek - viewsLastWeek).abs();
+
+        //
+        int trendPercentage = 0;
+        if (viewsLastWeek == 0) {
+          trendPercentage = viewsThisWeek > 0 ? 100 : 0;
+        } else {
+          trendPercentage =
+              (((viewsThisWeek - viewsLastWeek) / viewsLastWeek) * 100)
+                  .round()
+                  .abs();
+        }
 
         emit(
           ProfileViewsLoaded(
-            views: views,
-            totalViews: views.length,
+            views: uniqueViews,
+            totalViews: uniqueViews.length,
             isTrendUp: isTrendUp,
-            trendDifference: trendDifference,
+            trendDifference: trendPercentage,
           ),
         );
       }

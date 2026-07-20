@@ -3,12 +3,14 @@ class ProfileViewModel {
   final String companyName;
   final String? companyAvatar;
   final DateTime viewedAt;
+  int viewCount;
 
   ProfileViewModel({
     required this.companyId,
     required this.companyName,
     this.companyAvatar,
     required this.viewedAt,
+    this.viewCount = 1,
   });
 
   factory ProfileViewModel.fromJson(Map<String, dynamic> json) {
