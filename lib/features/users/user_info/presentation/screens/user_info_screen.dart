@@ -117,9 +117,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
 
     permission = await Geolocator.checkPermission();
-    if (permission == .denied) {
+    if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == .denied) {
+      if (permission == LocationPermission.denied) {
         if (mounted) {
           setState(() => _locationName = "Location permissions denied");
         }
@@ -127,7 +127,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       }
     }
 
-    if (permission == .deniedForever) {
+    if (permission == LocationPermission.deniedForever) {
       if (mounted) {
         setState(
           () => _locationName = "Location permissions permanently denied.",
@@ -155,14 +155,20 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   Future<void> _updateLocationName(double lat, double lng) async {
     try {
       if (mounted) setState(() => _isLoadingLocation = true);
+
+      // 🚨 إجبار الباكدج ترجع الداتا بالإنجليزي
+      await geocoding.setLocaleIdentifier("en");
+
       List<geocoding.Placemark> placemarks = await geocoding
           .placemarkFromCoordinates(lat, lng);
       if (placemarks.isNotEmpty) {
         geocoding.Placemark place = placemarks[0];
-        String loc = place.administrativeArea ?? "";
-        if (place.country != null) {
-          loc += (loc.isNotEmpty ? ", " : "") + place.country!;
-        }
+
+        // تعديل شيك عشان يرجع (المدينة، الدولة) دايماً بالتنسيق ده
+        String city = place.administrativeArea ?? place.locality ?? "";
+        String country = place.country ?? "";
+        String loc = city.isNotEmpty ? "$city, $country" : country;
+
         if (mounted) {
           setState(
             () => _locationName = loc.isNotEmpty ? loc : "Unknown Location",
@@ -227,7 +233,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   /// Pick Avatar
   Future<void> _pickAvatar() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: .gallery);
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       final CroppedFile? croppedFile = await ImageCropper().cropImage(
@@ -327,8 +333,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   content: SnackBarText(title: "Profile saved successfully"),
                   backgroundColor: Colors.green,
                   behavior: SnackBarBehavior.floating,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                  margin: EdgeInsets.all(20.r),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
               );
               //
@@ -345,8 +353,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   content: SnackBarText(title: state.message),
                   backgroundColor: Colors.red,
                   behavior: SnackBarBehavior.floating,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
+                  margin: EdgeInsets.all(20.r),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
               );
               //
@@ -365,7 +375,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 ),
                 //
                 child: Stepper(
-                  type: .vertical,
+                  type: StepperType.vertical,
                   physics: const BouncingScrollPhysics(),
                   currentStep: _currentStep,
                   onStepTapped: null,
@@ -373,7 +383,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     final isLastStep = _currentStep == 3;
 
                     if (_currentStep == 0) {
-                      if (_pickedAvatarFile == null) {
+                      if (_pickedAvatarFile == null &&
+                          _networkAvatarUrl == null) {
                         //
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -382,9 +393,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
-                            margin: .all(20.r),
+                            margin: EdgeInsets.all(20.r),
                             shape: RoundedRectangleBorder(
-                              borderRadius: .circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         );
@@ -404,9 +415,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
-                            margin: .all(20.r),
+                            margin: EdgeInsets.all(20.r),
                             shape: RoundedRectangleBorder(
-                              borderRadius: .circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         );
@@ -423,9 +434,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
-                            margin: .all(20.r),
+                            margin: EdgeInsets.all(20.r),
                             shape: RoundedRectangleBorder(
-                              borderRadius: .circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         );
@@ -438,9 +449,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
-                            margin: .all(20.r),
+                            margin: EdgeInsets.all(20.r),
                             shape: RoundedRectangleBorder(
-                              borderRadius: .circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         );
@@ -453,9 +464,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
-                            margin: .all(20.r),
+                            margin: EdgeInsets.all(20.r),
                             shape: RoundedRectangleBorder(
-                              borderRadius: .circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         );
@@ -468,9 +479,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
-                            margin: .all(20.r),
+                            margin: EdgeInsets.all(20.r),
                             shape: RoundedRectangleBorder(
-                              borderRadius: .circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         );
@@ -497,12 +508,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       currentStep: _currentStep,
                       onStepCancelpressed: details.onStepCancel,
                       child: state is UserInfoLoading && isLastStep
-                          ? CupertinoActivityIndicator(color: Colors.white)
+                          ? const CupertinoActivityIndicator(
+                              color: Colors.white,
+                            )
                           : Text(
                               isLastStep ? "Submit" : "Next",
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                fontWeight: .bold,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
                             ),
@@ -513,9 +526,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     //
                     // Step One
                     Step(
-                      state: _currentStep > 0 ? .complete : .indexed,
+                      state: _currentStep > 0
+                          ? StepState.complete
+                          : StepState.indexed,
                       isActive: _currentStep >= 0,
-                      title: StepTitle(title: "Basic Information"),
+                      title: const StepTitle(title: "Basic Information"),
                       content: StepOneContent(
                         backgroundImage: _pickedAvatarFile != null
                             ? FileImage(_pickedAvatarFile!)
@@ -533,9 +548,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     //
                     // Step Two
                     Step(
-                      state: _currentStep > 1 ? .complete : .indexed,
+                      state: _currentStep > 1
+                          ? StepState.complete
+                          : StepState.indexed,
                       isActive: _currentStep >= 1,
-                      title: StepTitle(title: "Experience & Work Type"),
+                      title: const StepTitle(title: "Experience & Work Type"),
                       content: StepTwoContent(
                         onChangedLevel: (newValue) =>
                             setState(() => _selectedLevel = newValue),
@@ -547,8 +564,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     //
                     // Step Three
                     Step(
+                      state: _currentStep > 2
+                          ? StepState.complete
+                          : StepState.indexed,
                       isActive: _currentStep >= 2,
-                      title: StepTitle(title: "Links & Resume"),
+                      title: const StepTitle(title: "Links & Resume"),
                       content: StepThreeContent(
                         whatsappController: _whatsappController,
                         linkedinController: _linkedinController,
@@ -585,7 +605,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         onTapCV: () async {
                           FilePickerResult? result = await FilePicker.platform
                               .pickFiles(
-                                type: .custom,
+                                type: FileType.custom,
                                 allowedExtensions: ["pdf"],
                               );
 
@@ -603,7 +623,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     // Step Four
                     Step(
                       isActive: _currentStep >= 3,
-                      title: StepTitle(title: "Location"),
+                      title: const StepTitle(title: "Location"),
                       content: StepFourContent(
                         locationName: _locationName,
                         isLoadingLocation: _isLoadingLocation,

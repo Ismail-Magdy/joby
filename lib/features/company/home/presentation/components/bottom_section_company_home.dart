@@ -84,7 +84,10 @@ class _BottomSectionCompanyHomeState extends State<BottomSectionCompanyHome> {
             //
           } else if (state is CompanyHomeError) {
             return ErrorScreen(errorText: state.message);
-          } else if (state is CompanyHomeLoaded) {
+          }
+          //
+          // Loaded State
+          else if (state is CompanyHomeLoaded) {
             if (state.seekers.isEmpty) {
               return Center(
                 child: Column(
@@ -115,13 +118,13 @@ class _BottomSectionCompanyHomeState extends State<BottomSectionCompanyHome> {
                 ),
               );
             }
-
+            //
             final itemCount =
                 state.seekers.length + (state.isLoadingMore ? 1 : 0);
 
             return ListView.builder(
               controller: _scrollController,
-              padding: .only(top: 24.h, left: 24.w, right: 24.w, bottom: 24.h),
+              padding: .only(top: 24.h, left: 24.w, right: 24.w, bottom: 120.h),
               itemCount: itemCount,
               itemBuilder: (context, index) {
                 if (index >= state.seekers.length) {

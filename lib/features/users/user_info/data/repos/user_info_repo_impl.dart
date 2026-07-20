@@ -21,7 +21,7 @@ class UserInfoRepoImpl implements UserInfoRepo {
       final userEmail = supabaseClient.auth.currentUser?.email ?? '';
 
       if (userId == null) {
-        return const Left("User is not authenticated.");
+        return const Left("User is not authenticated");
       }
 
       String? finalAvatarUrl = userInfo.avatarUrl;
@@ -74,7 +74,7 @@ class UserInfoRepoImpl implements UserInfoRepo {
           finalCvUrl = supabaseClient.storage.from("cvs").getPublicUrl(cvName);
         } else {
           return const Left(
-            "Curriculum vitae file does not exist. Please select it again.",
+            "Curriculum vitae file does not exist. Please select it again",
           );
         }
       }

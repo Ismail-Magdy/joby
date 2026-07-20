@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/core/helpers/spacing.dart';
@@ -161,13 +162,14 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                           ? Icon(Ionicons.business, color: Colors.grey.shade400)
                           : null,
                     ),
+                    //
                     horizontalSpace(15),
-
                     // Company Name & Time
                     Expanded(
                       child: Column(
                         crossAxisAlignment: .start,
                         children: [
+                          //
                           Text(
                             view.companyName,
                             style: TextStyle(
@@ -178,7 +180,9 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                             maxLines: 1,
                             overflow: .ellipsis,
                           ),
+                          //
                           verticalSpace(4),
+                          //
                           Text(
                             _timeAgo(view.viewedAt),
                             style: TextStyle(
@@ -186,12 +190,14 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                               color: Colors.grey.shade500,
                             ),
                           ),
+                          //
                         ],
                       ),
                     ),
 
                     // New Badge OR Eye Icon
                     DateTime.now().difference(view.viewedAt).inHours < 24
+                        //
                         ? Container(
                             padding: .symmetric(
                               horizontal: 10.w,
@@ -212,11 +218,16 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                               ),
                             ),
                           )
-                        : Icon(
-                            Ionicons.eye_outline,
-                            color: Colors.grey.shade300,
-                            size: 22.sp,
+                        //
+                        : SvgPicture.asset(
+                            "assets/svgs/eye.svg",
+                            height: 22.h,
+                            colorFilter: const .mode(
+                              AppColors.primaryColor,
+                              .srcIn,
+                            ),
                           ),
+                    //
                   ],
                 ),
               ),
