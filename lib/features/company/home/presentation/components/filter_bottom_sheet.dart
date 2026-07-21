@@ -28,15 +28,15 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   //
   final Map<String, List<String>> locationsMap = {
-    'All': ['All'],
-    'Egypt': [
-      'All',
-      'Cairo',
-      'Giza',
-      'Alexandria',
-      'Mansoura',
-      'Assiut',
-      'Qalyubia',
+    "All": ["All"],
+    "Egypt": [
+      "All",
+      "Cairo",
+      "Giza",
+      "Alexandria",
+      "Mansoura",
+      "Assiut",
+      "Qalyubia",
       "Al Minya",
       "Aswan",
       "Luxor",
@@ -59,156 +59,156 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       "Menoufia",
       "Gharbia",
     ],
-    'Saudi Arabia': [
-      'All',
-      'Riyadh',
-      'Jeddah',
-      'Dammam',
-      'Mecca',
-      'Al Madinah',
-      'Al Khobar',
-      'Tabuk',
-      'Buraidah',
-      'Khamis Mushait',
-      'Hail',
-      'Najran',
-      'Al Ahsa',
-      'Jazan',
-      'Yanbu',
-      'Al Jubail',
-      'Abha',
-      'Taif',
-      'Al Qassim',
-      'Al Baha',
-      'Arar',
-      'Sakaka',
-      'Al Kharj',
-      'Al Qunfudhah',
-      'Al Wajh',
-      'Al Ula',
-      'Dahna',
-      'Rafha',
-      'Turaif',
+    "Saudi Arabia": [
+      "All",
+      "Riyadh",
+      "Jeddah",
+      "Dammam",
+      "Mecca",
+      "Al Madinah",
+      "Al Khobar",
+      "Tabuk",
+      "Buraidah",
+      "Khamis Mushait",
+      "Hail",
+      "Najran",
+      "Al Ahsa",
+      "Jazan",
+      "Yanbu",
+      "Al Jubail",
+      "Abha",
+      "Taif",
+      "Al Qassim",
+      "Al Baha",
+      "Arar",
+      "Sakaka",
+      "Al Kharj",
+      "Al Qunfudhah",
+      "Al Wajh",
+      "Al Ula",
+      "Dahna",
+      "Rafha",
+      "Turaif",
     ],
-    'Qatar': [
-      'All',
-      'Doha',
-      'Al Rayyan',
-      'Al Wakrah',
-      'Al Khor',
-      'Al Shamal',
-      'Al Daayen',
-      'Umm Salal',
-      'Al Shahaniya',
-      'Al Jumail',
-      'Al Ghuwariyah',
-      'Mesaieed',
+    "Qatar": [
+      "All",
+      "Doha",
+      "Al Rayyan",
+      "Al Wakrah",
+      "Al Khor",
+      "Al Shamal",
+      "Al Daayen",
+      "Umm Salal",
+      "Al Shahaniya",
+      "Al Jumail",
+      "Al Ghuwariyah",
+      "Mesaieed",
       "Dukhan",
     ],
-    'UAE': [
-      'All',
-      'Dubai',
-      'Abu Dhabi',
-      'Sharjah',
-      'Ajman',
-      'Fujairah',
-      'Ras Al Khaimah',
-      'Umm Al Quwain',
-      'Al Ain',
-      'Khor Fakkan',
-      'Dibba Al-Fujairah',
-      'Kalba',
-      'Masafi',
-      'Hatta',
-      'Jebel Ali',
-      'Mussafah',
-      'Al Hamriyah',
-      'Al Dhaid',
-      'Al Madam',
-      'Al Liwa',
-      'Al Jazirah Al Hamra',
-      'Al Faqa',
-      'Al Qusais',
-      'Al Safa',
-      'Al Satwa',
-      'Al Warqa',
-      'Jumeirah',
-      'Jumeirah Beach Residence (JBR)',
-      'Palm Jumeirah',
-      'The World Islands',
-      'Bluewaters Island',
-      'Dubai Marina',
-      'Business Bay',
-      'Downtown Dubai',
-      'Al Barsha',
-      'Al Quoz',
-      'Al Wasl',
-      'Al Mankhool',
-      'Al Karama',
-      'Al Jaddaf',
-      'Al Sufouh',
-      'Al Warqa 1-4',
-      'Al Mizhar',
-      'Al Twar 1-3',
-      'Al Rashidiya',
-      'Al Khawaneej',
-      'Al Awir',
-      'Al Qusais Industrial Area 1-3',
-      'Al Quoz Industrial Area 1-4',
-      'Al Jafiliya',
-      'Al Mamzar',
-      'Al Nahda 1-2',
-      'Al Barsha South',
-      'Al Barsha Heights (Tecom)',
-      'Al Barsha 1-3',
-      'Al Barsha South 1-2',
-      'Al Barsha South 3-4',
-      'Al Barsha South 5-6',
-      'Al Barsha South 7-8',
-      'Al Barsha South 9-10',
-      'Al Barsha South 11-12',
-      'Al Barsha South 13-14',
-      'Al Barsha South 15-16',
-      'Al Barsha South 17-18',
-      'Al Barsha South 19-20',
-      'Al Barsha South 21-22',
-      'Al Barsha South 23-24',
+    "UAE": [
+      "All",
+      "Dubai",
+      "Abu Dhabi",
+      "Sharjah",
+      "Ajman",
+      "Fujairah",
+      "Ras Al Khaimah",
+      "Umm Al Quwain",
+      "Al Ain",
+      "Khor Fakkan",
+      "Dibba Al-Fujairah",
+      "Kalba",
+      "Masafi",
+      "Hatta",
+      "Jebel Ali",
+      "Mussafah",
+      "Al Hamriyah",
+      "Al Dhaid",
+      "Al Madam",
+      "Al Liwa",
+      "Al Jazirah Al Hamra",
+      "Al Faqa",
+      "Al Qusais",
+      "Al Safa",
+      "Al Satwa",
+      "Al Warqa",
+      "Jumeirah",
+      "Jumeirah Beach Residence (JBR)",
+      "Palm Jumeirah",
+      "The World Islands",
+      "Bluewaters Island",
+      "Dubai Marina",
+      "Business Bay",
+      "Downtown Dubai",
+      "Al Barsha",
+      "Al Quoz",
+      "Al Wasl",
+      "Al Mankhool",
+      "Al Karama",
+      "Al Jaddaf",
+      "Al Sufouh",
+      "Al Warqa 1-4",
+      "Al Mizhar",
+      "Al Twar 1-3",
+      "Al Rashidiya",
+      "Al Khawaneej",
+      "Al Awir",
+      "Al Qusais Industrial Area 1-3",
+      "Al Quoz Industrial Area 1-4",
+      "Al Jafiliya",
+      "Al Mamzar",
+      "Al Nahda 1-2",
+      "Al Barsha South",
+      "Al Barsha Heights (Tecom)",
+      "Al Barsha 1-3",
+      "Al Barsha South 1-2",
+      "Al Barsha South 3-4",
+      "Al Barsha South 5-6",
+      "Al Barsha South 7-8",
+      "Al Barsha South 9-10",
+      "Al Barsha South 11-12",
+      "Al Barsha South 13-14",
+      "Al Barsha South 15-16",
+      "Al Barsha South 17-18",
+      "Al Barsha South 19-20",
+      "Al Barsha South 21-22",
+      "Al Barsha South 23-24",
     ],
-    'Remote': ['All', 'Worldwide'],
+    'Remote': ["All", "Worldwide"],
   };
   //
   //
-  final List<String> levels = ['All', 'Junior', 'Mid-Level', 'Senior', 'Lead'];
+  final List<String> levels = ["All", "Junior", "Mid-Level", "Senior", "Lead"];
 
   @override
   void initState() {
     super.initState();
     final cubit = context.read<CompanyHomeCubit>();
 
-    categories = ['All', ...JobSuggestions.categories];
-    titles = ['All', ...JobSuggestions.titles];
+    categories = ["All", ...JobSuggestions.categories];
+    titles = ["All", ...JobSuggestions.titles];
 
     selectedCategory = categories.contains(cubit.currentJobCategory)
         ? cubit.currentJobCategory
-        : 'All';
+        : "All";
 
     selectedTitle = titles.contains(cubit.currentJobTitle)
         ? cubit.currentJobTitle
-        : 'All';
+        : "All";
 
     selectedLevel = levels.contains(cubit.currentLevel)
         ? cubit.currentLevel
-        : 'All';
+        : "All";
 
-    selectedCountry = 'All';
-    selectedCity = 'All';
+    selectedCountry = "All";
+    selectedCity = "All";
 
     if (cubit.currentLocationName != null) {
       String loc = cubit.currentLocationName!;
       locationsMap.forEach((country, cities) {
         if (country == loc) {
           selectedCountry = country;
-          selectedCity = 'All';
+          selectedCity = "All";
         } else if (cities.contains(loc)) {
           selectedCountry = country;
           selectedCity = loc;
@@ -268,7 +268,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   ) {
                     setState(() {
                       selectedCategory = val;
-                      selectedTitle = 'All';
+                      selectedTitle = "All";
                     });
                   }),
                   //

@@ -231,3 +231,4 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
     }
   }
 }
+// 234
