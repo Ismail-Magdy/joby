@@ -42,18 +42,15 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
       if (jobTitle != null && jobTitle.isNotEmpty && jobTitle != 'All') {
         query = query.eq('job_title', jobTitle);
       }
-
       if (locationName != null &&
           locationName.isNotEmpty &&
           locationName != 'All') {
         query = query.ilike('location_name', '%$locationName%');
       }
-
       if (level != null && level.isNotEmpty && level != 'All') {
         query = query.eq('level', level);
       }
 
-      // Pagination range: page 0 => rows 0-9, page 1 => rows 10-19, ...
       final from = page * pageSize;
       final to = from + pageSize - 1;
 
@@ -75,13 +72,19 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
   @override
   Future<Either<String, Set<String>>> getSavedSeekerIds() async {
     try {
-      final List<String>? savedList = sharedPreferences.getStringList(
-        'saved_seeker_ids',
-      );
-      if (savedList != null) {
-        return Right(savedList.toSet());
-      }
-      return const Right({});
+      final companyId = supabaseClient.auth.currentUser?.id;
+      if (companyId == null) return const Right({});
+
+      final response = await supabaseClient
+          .from('saved_profiles')
+          .select('seeker_id')
+          .eq('company_id', companyId);
+
+      final Set<String> savedIds = (response as List)
+          .map((row) => row['seeker_id'].toString())
+          .toSet();
+
+      return Right(savedIds);
     } catch (e) {
       return Left(ErrorHandler.handleError(e));
     }
@@ -111,12 +114,25 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
   }
 
   @override
-  Future<Either<String, void>> saveSeekerIds(Set<String> savedIds) async {
+  Future<Either<String, void>> toggleSavedSeeker(
+    String seekerId,
+    bool isSaved,
+  ) async {
     try {
-      await sharedPreferences.setStringList(
-        'saved_seeker_ids',
-        savedIds.toList(),
-      );
+      final companyId = supabaseClient.auth.currentUser?.id;
+      if (companyId == null) return const Left("User not authenticated");
+
+      if (isSaved) {
+        await supabaseClient.from('saved_profiles').insert({
+          'company_id': companyId,
+          'seeker_id': seekerId,
+        });
+      } else {
+        await supabaseClient.from('saved_profiles').delete().match({
+          'company_id': companyId,
+          'seeker_id': seekerId,
+        });
+      }
       return const Right(null);
     } catch (e) {
       return Left(ErrorHandler.handleError(e));
