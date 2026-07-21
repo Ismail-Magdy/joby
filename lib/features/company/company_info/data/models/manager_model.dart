@@ -2,10 +2,7 @@ class ManagerModel {
   final String id;
   final String? avatarUrl;
 
-  ManagerModel({
-    required this.id,
-    this.avatarUrl,
-  });
+  ManagerModel({required this.id, this.avatarUrl});
 
   factory ManagerModel.fromJson(Map<String, dynamic> json) {
     return ManagerModel(
@@ -15,9 +12,6 @@ class ManagerModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'avatar_url': avatarUrl,
-    };
+    return {'id': id, 'avatar_url': avatarUrl};
   }
 }
