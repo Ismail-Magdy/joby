@@ -160,11 +160,30 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
                       ),
                       //
                       verticalSpace(50),
+                      //
                       // Submit Button
                       CustomSetupCompanyButton(
                         onPressed: state is CompanyInfoLoading
                             ? null
                             : () {
+                                //
+                                if (cubit.profileImage == null &&
+                                    cubit.prefilledAvatarUrl == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const SnackBarText(
+                                        title: "Please upload a company logo",
+                                      ),
+                                      backgroundColor: Colors.red,
+                                      behavior: SnackBarBehavior.floating,
+                                      margin: .all(20.r),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: .circular(10.r),
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
                                 if (_formKey.currentState!.validate()) {
                                   cubit.completeInfo(
                                     name: _nameController.text.trim(),
