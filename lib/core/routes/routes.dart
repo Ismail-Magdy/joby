@@ -4,6 +4,7 @@ class Routes {
   static const String authScreen = "/authScreen";
   static const String aboutUsScreen = "/aboutUsScreen";
   static const String feedBackScreen = "/feedBackScreen";
+  static const String forgotPasswordScreen = "/forgotPasswordScreen";
 
   /// User
   static const String userInfoScreen = "/userInfoScreen";

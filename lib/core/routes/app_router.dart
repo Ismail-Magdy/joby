@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/core/routes/routes.dart';
 import 'package:joby/core/di/dependency_injection.dart';
+import 'package:joby/features/common/forgot_password/manager/forgot_password_cubit.dart';
+import 'package:joby/features/common/forgot_password/presentation/screens/forgot_password_screen.dart';
 import 'package:joby/features/common/on_boarding/presentation/screens/on_boarding_screen.dart';
 import 'package:joby/features/common/on_boarding/manager/on_boarding_cubit.dart';
 import 'package:joby/features/common/auth/presentation/screens/auth_screen.dart';
@@ -61,6 +63,15 @@ class AppRouter {
           builder: (_) => BlocProvider<AuthCubit>(
             create: (context) => getIt<AuthCubit>(),
             child: const AuthScreen(),
+          ),
+        );
+
+      /// Forgot Password Screen
+      case Routes.forgotPasswordScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<ForgotPasswordCubit>(
+            create: (context) => getIt<ForgotPasswordCubit>(),
+            child: const ForgotPasswordScreen(),
           ),
         );
 
