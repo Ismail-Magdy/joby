@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
+import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
 import "package:joby/features/users/points/presentation/screens/points_screen.dart";
 import "package:joby/features/users/settings_users/screens/settings_users_screen.dart.dart";
@@ -20,7 +21,8 @@ class _UserRootScreenState extends State<UserRootScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ExitConfirmationWrapper(
+      child: Scaffold(
       extendBody: true,
       //
       body: IndexedStack(
@@ -76,6 +78,7 @@ class _UserRootScreenState extends State<UserRootScreen> {
         ),
       ),
       //
+    ),
     );
   }
 

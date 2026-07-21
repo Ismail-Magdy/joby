@@ -1,6 +1,7 @@
 import "dart:async";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/core/helpers/app_regex.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/helpers/spacing.dart";
@@ -121,7 +122,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ExitConfirmationWrapper(
+      child: Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: BlocConsumer<AuthCubit, AuthState>(
@@ -387,6 +389,7 @@ class _AuthScreenState extends State<AuthScreen> {
           },
           //
         ),
+      ),
       ),
     );
   }
