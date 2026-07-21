@@ -52,6 +52,7 @@ class _BottomSectionCompanyHomeState extends State<BottomSectionCompanyHome> {
       child: BlocBuilder<CompanyHomeCubit, CompanyHomeState>(
         builder: (context, state) {
           if (state is CompanyHomeLoading || state is CompanyHomeInitial) {
+            // Display skeleton loaders while data is being fetched
             final dummySeeker = UserInfoModel(
               id: "1",
               name: "Skeleton Name Loading",

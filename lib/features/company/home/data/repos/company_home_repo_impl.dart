@@ -26,36 +26,36 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
     required int page,
   }) async {
     try {
-      var query = supabaseClient.from('seekers').select();
+      var query = supabaseClient.from("seekers").select();
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
         query = query.or(
-          'name.ilike.%$searchQuery%,job_title.ilike.%$searchQuery%,job_category.ilike.%$searchQuery%',
+          "name.ilike.%$searchQuery%,job_title.ilike.%$searchQuery%,job_category.ilike.%$searchQuery%",
         );
       }
 
       if (jobCategory != null &&
           jobCategory.isNotEmpty &&
-          jobCategory != 'All') {
-        query = query.eq('job_category', jobCategory);
+          jobCategory != "All") {
+        query = query.eq("job_category", jobCategory);
       }
-      if (jobTitle != null && jobTitle.isNotEmpty && jobTitle != 'All') {
-        query = query.eq('job_title', jobTitle);
+      if (jobTitle != null && jobTitle.isNotEmpty && jobTitle != "All") {
+        query = query.eq("job_title", jobTitle);
       }
       if (locationName != null &&
           locationName.isNotEmpty &&
-          locationName != 'All') {
-        query = query.ilike('location_name', '%$locationName%');
+          locationName != "All") {
+        query = query.ilike("location_name", '%$locationName%');
       }
-      if (level != null && level.isNotEmpty && level != 'All') {
-        query = query.eq('level', level);
+      if (level != null && level.isNotEmpty && level != "All") {
+        query = query.eq("level", level);
       }
 
       final from = page * pageSize;
       final to = from + pageSize - 1;
 
       final response = await query
-          .order('total_points', ascending: false)
+          .order("total_points", ascending: false)
           .range(from, to);
 
       final dataList = List<Map<String, dynamic>>.from(response as List);
@@ -76,12 +76,12 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
       if (companyId == null) return const Right({});
 
       final response = await supabaseClient
-          .from('saved_profiles')
-          .select('seeker_id')
-          .eq('company_id', companyId);
+          .from("saved_profiles")
+          .select("seeker_id")
+          .eq("company_id", companyId);
 
       final Set<String> savedIds = (response as List)
-          .map((row) => row['seeker_id'].toString())
+          .map((row) => row["seeker_id"].toString())
           .toSet();
 
       return Right(savedIds);
@@ -98,10 +98,10 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
       if (ids.isEmpty) return const Right([]);
 
       final response = await supabaseClient
-          .from('seekers')
+          .from("seekers")
           .select()
-          .inFilter('id', ids.toList())
-          .order('total_points', ascending: false);
+          .inFilter("id", ids.toList())
+          .order("total_points", ascending: false);
 
       final dataList = List<Map<String, dynamic>>.from(response as List);
       final seekers = dataList
@@ -123,14 +123,14 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
       if (companyId == null) return const Left("User not authenticated");
 
       if (isSaved) {
-        await supabaseClient.from('saved_profiles').insert({
-          'company_id': companyId,
-          'seeker_id': seekerId,
+        await supabaseClient.from("saved_profiles").insert({
+          "company_id": companyId,
+          "seeker_id": seekerId,
         });
       } else {
-        await supabaseClient.from('saved_profiles').delete().match({
-          'company_id': companyId,
-          'seeker_id': seekerId,
+        await supabaseClient.from("saved_profiles").delete().match({
+          "company_id": companyId,
+          "seeker_id": seekerId,
         });
       }
       return const Right(null);

@@ -24,24 +24,24 @@ class CompanyInfoRepoImpl implements CompanyInfoRepo {
 
       if (profileImageFile != null) {
         final fileName =
-            '${user.id}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+            "${user.id}_${DateTime.now().millisecondsSinceEpoch}.jpg";
         await supabaseClient.storage
-            .from('avatars')
+            .from("avatars")
             .upload(fileName, profileImageFile);
 
         avatarUrl = supabaseClient.storage
-            .from('avatars')
+            .from("avatars")
             .getPublicUrl(fileName);
       } else if (avatarUrl == null || avatarUrl.isEmpty) {
         avatarUrl = null;
       }
 
       ///
-      await supabaseClient.from('companies').upsert({
-        'id': user.id,
-        'name': name,
-        'email': user.email ?? '',
-        'avatar_url': avatarUrl,
+      await supabaseClient.from("companies").upsert({
+        "id": user.id,
+        "name": name,
+        "email": user.email ?? "",
+        "avatar_url": avatarUrl,
       });
 
       return const Right(null);

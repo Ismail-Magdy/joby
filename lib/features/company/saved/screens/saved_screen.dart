@@ -66,6 +66,7 @@ class SavedScreen extends StatelessWidget {
                   // Profiles not yet loaded — show skeleton
                   // (fetchSavedSeekers is triggered by tab switch)
                   if (savedSeekers == null) {
+                    //
                     final dummySeeker = UserInfoModel(
                       name: "Skeleton Name Loading",
                       jobCategory: "Programming",
@@ -78,6 +79,7 @@ class SavedScreen extends StatelessWidget {
                       longitude: 0,
                       totalPoints: 100,
                     );
+                    //
                     return Skeletonizer(
                       enabled: true,
                       child: ListView.builder(
@@ -93,6 +95,7 @@ class SavedScreen extends StatelessWidget {
                         },
                       ),
                     );
+                    //
                   }
 
                   if (savedSeekers.isEmpty) {

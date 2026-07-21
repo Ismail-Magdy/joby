@@ -9,7 +9,6 @@ import "package:joby/features/users/home/presentation/components/home_info_row.d
 import "package:joby/features/users/home/presentation/components/cv_section.dart";
 import "package:joby/features/users/home/presentation/widgets/location_map_section.dart";
 import "package:joby/features/users/home/presentation/components/social_media_row.dart";
-import "package:joby/features/users/home/presentation/widgets/home_total_points_container.dart";
 import "package:joby/features/users/home/presentation/widgets/profile_header_delegate.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:joby/features/company/home/manager/company_home_cubit.dart";
@@ -215,11 +214,8 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
                     ),
                   ),
                   //
-                  verticalSpace(15),
+                  verticalSpace(40),
                   //
-                  HomeTotalPointsContainer(text: user.totalPoints.toString()),
-                  //
-                  verticalSpace(25),
                   // Info Row
                   SingleChildScrollView(
                     scrollDirection: .horizontal,
