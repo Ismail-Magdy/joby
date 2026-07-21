@@ -142,6 +142,7 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
         'company_id': companyId,
         'seeker_id': seekerId,
       });
+      // ignore: empty_catches
     } catch (e) {}
   }
 
@@ -180,7 +181,9 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
           ? List<UserInfoModel>.from(currentState.savedSeekerProfiles!)
           : null;
 
-      if (newSaved.contains(uniqueId)) {
+      final isCurrentlySaved = newSaved.contains(uniqueId);
+
+      if (isCurrentlySaved) {
         newSaved.remove(uniqueId);
         updatedProfiles?.removeWhere((s) => s.id == uniqueId);
       } else {
@@ -200,7 +203,8 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
           savedSeekerProfiles: updatedProfiles,
         ),
       );
-      repo.saveSeekerIds(newSaved);
+
+      repo.toggleSavedSeeker(uniqueId, !isCurrentlySaved);
     }
   }
 }
