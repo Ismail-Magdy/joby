@@ -84,7 +84,7 @@ class _BottomSectionCompanyHomeState extends State<BottomSectionCompanyHome> {
             );
             //
           } else if (state is CompanyHomeError) {
-            return ErrorScreen(errorText: state.message);
+            return ErrorScreen();
           }
           //
           // Loaded State

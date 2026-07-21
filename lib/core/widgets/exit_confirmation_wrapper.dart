@@ -4,11 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
-/// Wraps a screen to intercept the Android back button and show
-/// an exit confirmation dialog instead of navigating back.
-///
-/// Use this on any root-level screen (UserRootScreen, UserInfoScreen,
-/// CompanyHomeScreen) to prevent accidental back-navigation.
 class ExitConfirmationWrapper extends StatelessWidget {
   final Widget child;
 

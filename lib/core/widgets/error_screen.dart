@@ -4,9 +4,7 @@ import 'package:joby/core/themes/app_colors.dart';
 import '../helpers/spacing.dart';
 
 class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({super.key, required this.errorText});
-
-  final String errorText;
+  const ErrorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +47,6 @@ class ErrorScreen extends StatelessWidget {
                 fontWeight: .bold,
                 height: 1.5.h,
                 color: AppColors.primaryColor,
-              ),
-            ),
-            //
-            verticalSpace(15),
-            //
-            Text(
-              errorText,
-              textAlign: .center,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: .bold,
-                color: Colors.black,
               ),
             ),
             //

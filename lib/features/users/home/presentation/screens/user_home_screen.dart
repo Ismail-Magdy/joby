@@ -282,7 +282,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             }
             // Error State
             else if (state is UserHomeError) {
-              return ErrorScreen(errorText: state.message);
+              return ErrorScreen();
             }
             // Success State
             else if (state is UserHomeSuccess) {
