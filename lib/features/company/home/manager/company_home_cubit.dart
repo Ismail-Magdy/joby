@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
@@ -143,11 +142,7 @@ class CompanyHomeCubit extends Cubit<CompanyHomeState> {
         'company_id': companyId,
         'seeker_id': seekerId,
       });
-
-      debugPrint('✅ Profile view recorded successfully!');
-    } catch (e) {
-      debugPrint('🚨 Error recording profile view: $e');
-    }
+    } catch (e) {}
   }
 
   void applyFilters({
