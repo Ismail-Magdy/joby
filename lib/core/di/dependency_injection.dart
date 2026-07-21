@@ -1,5 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:joby/features/common/forgot_password/data/repo/forgot_password_repo.dart';
+import 'package:joby/features/common/forgot_password/data/repo/forgot_password_repo_impl.dart';
+import 'package:joby/features/common/forgot_password/manager/forgot_password_cubit.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
 import 'package:joby/features/users/notification/data/services/local_notification_service.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
@@ -52,6 +55,13 @@ Future<void> initGetIt() async {
   );
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(authRepo: getIt<AuthRepo>()),
+  );
+
+  getIt.registerLazySingleton<ForgotPasswordRepo>(
+    () => ForgotPasswordRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+  );
+  getIt.registerFactory<ForgotPasswordCubit>(
+    () => ForgotPasswordCubit(repo: getIt<ForgotPasswordRepo>()),
   );
 
   /// User Part

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joby/core/helpers/extensions.dart';
+import 'package:joby/core/routes/routes.dart';
 
 class ForgotPasswordWidget extends StatelessWidget {
   const ForgotPasswordWidget({super.key});
@@ -7,13 +9,11 @@ class ForgotPasswordWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: .centerRight,
-      child: TextButton(
-        onPressed: () {
-          // TODO: ADD Forgot Password
-        },
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: () => context.pushNamed(Routes.forgotPasswordScreen),
         child: Text(
-          "Forgot Password? (will work soon)",
+          "Forgot Password?",
           style: TextStyle(color: Colors.grey.shade700, fontSize: 13.sp),
         ),
       ),
