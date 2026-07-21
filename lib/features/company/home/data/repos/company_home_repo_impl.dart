@@ -42,11 +42,13 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
       if (jobTitle != null && jobTitle.isNotEmpty && jobTitle != 'All') {
         query = query.eq('job_title', jobTitle);
       }
+
       if (locationName != null &&
           locationName.isNotEmpty &&
           locationName != 'All') {
-        query = query.eq('location_name', locationName);
+        query = query.ilike('location_name', '%$locationName%');
       }
+
       if (level != null && level.isNotEmpty && level != 'All') {
         query = query.eq('level', level);
       }

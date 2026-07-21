@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/core/helpers/job_suggestions.dart'; // 🔥 ضفنا دي عشان نوحد البيانات
 import 'package:joby/features/company/home/presentation/widgets/action_filtter_buttons.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../manager/company_home_cubit.dart';
@@ -15,59 +16,190 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
+  String? selectedCategory;
   String? selectedTitle;
   String? selectedCountry;
   String? selectedCity;
   String? selectedLevel;
 
   //
-  final List<String> titles = [
-    'All',
-    'Flutter Developer',
-    'Android Developer',
-    'iOS Developer',
-    'Backend Developer',
-    'Frontend Developer',
-    'Full Stack Developer',
-    'UI/UX Designer',
-    'Graphic Designer',
-    'Mechatronics Engineer',
-    'Mechanical Engineer',
-    'Data Scientist',
-    'Data Analyst',
-    'Project Manager',
-    'DevOps Engineer',
-  ];
+  late List<String> categories;
+  late List<String> titles;
 
   //
   final Map<String, List<String>> locationsMap = {
     'All': ['All'],
-    'Egypt': ['All', 'Cairo', 'Giza', 'Alexandria', 'Mansoura', 'Assiut'],
-    'Saudi Arabia': ['All', 'Riyadh', 'Jeddah', 'Dammam', 'Mecca'],
-    'UAE': ['All', 'Dubai', 'Abu Dhabi', 'Sharjah'],
+    'Egypt': [
+      'All',
+      'Cairo',
+      'Giza',
+      'Alexandria',
+      'Mansoura',
+      'Assiut',
+      'Qalyubia',
+      "Al Minya",
+      "Aswan",
+      "Luxor",
+      "Suez",
+      "Port Said",
+      "Ismailia",
+      "Fayoum",
+      "Beni Suef",
+      "Daqahliya",
+      "Sharqia",
+      "Kafr El Sheikh",
+      "Beheira",
+      "Sohag",
+      "Qena",
+      "Red Sea",
+      "New Valley",
+      "North Sinai",
+      "South Sinai",
+      "Damietta",
+      "Menoufia",
+      "Gharbia",
+    ],
+    'Saudi Arabia': [
+      'All',
+      'Riyadh',
+      'Jeddah',
+      'Dammam',
+      'Mecca',
+      'Al Madinah',
+      'Al Khobar',
+      'Tabuk',
+      'Buraidah',
+      'Khamis Mushait',
+      'Hail',
+      'Najran',
+      'Al Ahsa',
+      'Jazan',
+      'Yanbu',
+      'Al Jubail',
+      'Abha',
+      'Taif',
+      'Al Qassim',
+      'Al Baha',
+      'Arar',
+      'Sakaka',
+      'Al Kharj',
+      'Al Qunfudhah',
+      'Al Wajh',
+      'Al Ula',
+      'Dahna',
+      'Rafha',
+      'Turaif',
+    ],
+    'Qatar': [
+      'All',
+      'Doha',
+      'Al Rayyan',
+      'Al Wakrah',
+      'Al Khor',
+      'Al Shamal',
+      'Al Daayen',
+      'Umm Salal',
+      'Al Shahaniya',
+      'Al Jumail',
+      'Al Ghuwariyah',
+      'Mesaieed',
+      "Dukhan",
+    ],
+    'UAE': [
+      'All',
+      'Dubai',
+      'Abu Dhabi',
+      'Sharjah',
+      'Ajman',
+      'Fujairah',
+      'Ras Al Khaimah',
+      'Umm Al Quwain',
+      'Al Ain',
+      'Khor Fakkan',
+      'Dibba Al-Fujairah',
+      'Kalba',
+      'Masafi',
+      'Hatta',
+      'Jebel Ali',
+      'Mussafah',
+      'Al Hamriyah',
+      'Al Dhaid',
+      'Al Madam',
+      'Al Liwa',
+      'Al Jazirah Al Hamra',
+      'Al Faqa',
+      'Al Qusais',
+      'Al Safa',
+      'Al Satwa',
+      'Al Warqa',
+      'Jumeirah',
+      'Jumeirah Beach Residence (JBR)',
+      'Palm Jumeirah',
+      'The World Islands',
+      'Bluewaters Island',
+      'Dubai Marina',
+      'Business Bay',
+      'Downtown Dubai',
+      'Al Barsha',
+      'Al Quoz',
+      'Al Wasl',
+      'Al Mankhool',
+      'Al Karama',
+      'Al Jaddaf',
+      'Al Sufouh',
+      'Al Warqa 1-4',
+      'Al Mizhar',
+      'Al Twar 1-3',
+      'Al Rashidiya',
+      'Al Khawaneej',
+      'Al Awir',
+      'Al Qusais Industrial Area 1-3',
+      'Al Quoz Industrial Area 1-4',
+      'Al Jafiliya',
+      'Al Mamzar',
+      'Al Nahda 1-2',
+      'Al Barsha South',
+      'Al Barsha Heights (Tecom)',
+      'Al Barsha 1-3',
+      'Al Barsha South 1-2',
+      'Al Barsha South 3-4',
+      'Al Barsha South 5-6',
+      'Al Barsha South 7-8',
+      'Al Barsha South 9-10',
+      'Al Barsha South 11-12',
+      'Al Barsha South 13-14',
+      'Al Barsha South 15-16',
+      'Al Barsha South 17-18',
+      'Al Barsha South 19-20',
+      'Al Barsha South 21-22',
+      'Al Barsha South 23-24',
+    ],
     'Remote': ['All', 'Worldwide'],
   };
-
   //
-  final List<String> levels = [
-    'All',
-    'Junior',
-    'Mid-level',
-    'Senior',
-    'Team Lead',
-    'Manager',
-  ];
+  //
+  final List<String> levels = ['All', 'Junior', 'Mid-Level', 'Senior', 'Lead'];
 
   @override
   void initState() {
     super.initState();
     final cubit = context.read<CompanyHomeCubit>();
+
+    categories = ['All', ...JobSuggestions.categories];
+    titles = ['All', ...JobSuggestions.titles];
+
+    selectedCategory = categories.contains(cubit.currentJobCategory)
+        ? cubit.currentJobCategory
+        : 'All';
+
     selectedTitle = titles.contains(cubit.currentJobTitle)
         ? cubit.currentJobTitle
         : 'All';
+
     selectedLevel = levels.contains(cubit.currentLevel)
         ? cubit.currentLevel
         : 'All';
+
     selectedCountry = 'All';
     selectedCity = 'All';
 
@@ -130,6 +262,18 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
+                  //  Job Category Dropdown
+                  _buildDropdown("Job Category", categories, selectedCategory, (
+                    val,
+                  ) {
+                    setState(() {
+                      selectedCategory = val;
+                      selectedTitle = 'All';
+                    });
+                  }),
+                  //
+                  verticalSpace(16),
+                  //
                   // Job Title Dropdown
                   _buildDropdown("Job Title", titles, selectedTitle, (val) {
                     setState(() => selectedTitle = val);
@@ -197,7 +341,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               }
 
               context.read<CompanyHomeCubit>().applyFilters(
-                jobCategory: null,
+                jobCategory: selectedCategory == 'All'
+                    ? null
+                    : selectedCategory,
                 jobTitle: selectedTitle == 'All' ? null : selectedTitle,
                 locationName: finalLocation,
                 level: selectedLevel == 'All' ? null : selectedLevel,
@@ -219,23 +365,26 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     ValueChanged<String?> onChanged,
   ) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
+        //
         Text(
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
+            fontWeight: .w600,
             color: Colors.grey.shade700,
           ),
         ),
+        //
         verticalSpace(8),
+        //
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: .symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: Colors.grey.shade200),
+            borderRadius: .circular(12.r),
+            border: .all(color: Colors.grey.shade200),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -246,7 +395,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 color: Colors.grey.shade600,
               ),
               dropdownColor: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: .circular(12.r),
               elevation: 3,
               items: items.asMap().entries.map((entry) {
                 int index = entry.key;
@@ -256,7 +405,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Container(
-                    width: double.infinity,
+                    width: .infinity,
                     decoration: BoxDecoration(
                       border: isLastItem
                           ? null
@@ -267,7 +416,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                               ),
                             ),
                     ),
-                    alignment: Alignment.centerLeft,
+                    alignment: .centerLeft,
                     child: Text(
                       item,
                       style: TextStyle(fontSize: 14.sp, color: Colors.black87),
