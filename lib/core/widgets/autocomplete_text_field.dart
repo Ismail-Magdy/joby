@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/themes/app_colors.dart';
 
-/// A styled text field with autocomplete suggestions.
-///
-/// Suggestions appear in a dropdown overlay as the user types.
-/// Tapping a suggestion fills the field. The user can also type freely.
 class AutocompleteTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
@@ -43,10 +39,12 @@ class AutocompleteTextField extends StatelessWidget {
           optionsViewBuilder: (context, onSelected, options) {
             return Align(
               alignment: .topLeft,
+              //
               child: Material(
                 elevation: 4,
                 borderRadius: .circular(12.r),
                 color: Colors.white,
+                //
                 child: Container(
                   width: constraints.maxWidth,
                   constraints: BoxConstraints(maxHeight: 200.h),
@@ -84,29 +82,30 @@ class AutocompleteTextField extends StatelessWidget {
                     },
                   ),
                 ),
+                //
               ),
             );
           },
-          fieldViewBuilder: (context, textController, focusNode, onFieldSubmitted) {
-            // Sync the external controller with the autocomplete's internal one
-            textController.text = controller.text;
-            textController.addListener(() {
-              if (controller.text != textController.text) {
-                controller.text = textController.text;
-              }
-            });
+          fieldViewBuilder:
+              (context, textController, focusNode, onFieldSubmitted) {
+                textController.text = controller.text;
+                textController.addListener(() {
+                  if (controller.text != textController.text) {
+                    controller.text = textController.text;
+                  }
+                });
 
-            return TextFormField(
-              controller: textController,
-              focusNode: focusNode,
-              validator: validator,
-              decoration: InputDecoration(
-                labelText: labelText,
-                prefixIcon: Icon(prefixIcon),
-              ),
-              onFieldSubmitted: (_) => onFieldSubmitted(),
-            );
-          },
+                return TextFormField(
+                  controller: textController,
+                  focusNode: focusNode,
+                  validator: validator,
+                  decoration: InputDecoration(
+                    labelText: labelText,
+                    prefixIcon: Icon(prefixIcon),
+                  ),
+                  onFieldSubmitted: (_) => onFieldSubmitted(),
+                );
+              },
         );
       },
     );

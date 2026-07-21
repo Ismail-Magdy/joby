@@ -59,7 +59,7 @@ class SavedScreen extends StatelessWidget {
                   );
                   //
                 } else if (state is CompanyHomeError) {
-                  return ErrorScreen(errorText: state.message);
+                  return ErrorScreen();
                 } else if (state is CompanyHomeLoaded) {
                   final savedSeekers = state.savedSeekerProfiles;
 

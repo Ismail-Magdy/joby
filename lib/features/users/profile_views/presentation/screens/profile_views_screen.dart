@@ -86,7 +86,7 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
     //
     // Error
     else if (state is ProfileViewsError) {
-      return ErrorScreen(errorText: state.message);
+      return ErrorScreen();
     }
     //
     // Empty

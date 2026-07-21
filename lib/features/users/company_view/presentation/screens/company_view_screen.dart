@@ -59,7 +59,7 @@ class _CompanyViewScreenState extends State<CompanyViewScreen> {
     }
 
     if (user == null) {
-      return ErrorScreen(errorText: "Failed to load profile preview");
+      return ErrorScreen();
     }
 
     return TalentDetailsScreen(seeker: user!, isPreview: true);
