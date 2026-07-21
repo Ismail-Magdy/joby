@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:joby/core/widgets/custom_app_bar.dart';
 import 'package:joby/features/common/forgot_password/manager/forgot_password_cubit.dart';
 import 'package:joby/features/common/forgot_password/manager/forgot_password_state.dart';
 
@@ -26,68 +28,52 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 💡 لم نستخدم ExitConfirmationWrapper هنا لأنها شاشة فرعية
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: Text(
-          "Forgot Password",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      //
+      appBar: CustomAppBar(text: "Forgot Password"),
+      //
       body: SafeArea(
         child: BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
           listener: (context, state) {
             if (state is ForgotPasswordSuccess) {
-              // إظهار رسالة النجاح
+              //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text(
-                    "Password reset link sent! Check your inbox or spam folder.",
+                    "Password reset link sent! Check your inbox or spam folder",
                   ),
                   backgroundColor: Colors.green,
                   behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
-              // الرجوع تلقائياً لشاشة تسجيل الدخول بعد الإرسال
-              Navigator.pop(context);
+              //
+              context.pop();
               //
             } else if (state is ForgotPasswordError) {
-              // إظهار رسالة الخطأ (مثل: الإيميل غير مسجل)
+              //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
                   backgroundColor: Colors.red,
                   behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
+                  margin: .all(20.r),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
                 ),
               );
             }
           },
           builder: (context, state) {
             return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+              padding: .symmetric(horizontal: 24.w, vertical: 20.h),
               child: Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: .center,
                   children: [
-                    // أيقونة تعبيرية
+                    //
                     Icon(
                       Icons.lock_reset_rounded,
                       size: 100.sp,
@@ -100,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       "Reset Password",
                       style: TextStyle(
                         fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                         color: AppColors.primaryColor,
                         fontFamily: "BrunoAceSC",
                       ),
@@ -109,8 +95,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     verticalSpace(10),
                     //
                     Text(
-                      "Enter the email associated with your account and we'll send an email with instructions to reset your password.",
-                      textAlign: TextAlign.center,
+                      "Enter the email associated with your account and we'll send an email with instructions to reset your password",
+                      textAlign: .center,
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: Colors.grey.shade600,
@@ -120,7 +106,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     //
                     verticalSpace(40),
                     //
-                    // حقل إدخال الإيميل
+                    //
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -129,7 +115,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         prefixIcon: const Icon(Icons.email_outlined),
                         filled: true,
                         fillColor: Colors.grey.shade50,
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: .symmetric(
                           horizontal: 16.w,
                           vertical: 16.h,
                         ),
@@ -164,16 +150,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     //
                     verticalSpace(30),
                     //
-                    // زر الإرسال
+                    //
                     SizedBox(
-                      width: double.infinity,
+                      width: .infinity,
                       height: 55.h,
                       child: ElevatedButton(
                         onPressed: state is ForgotPasswordLoading
                             ? null
                             : () {
                                 if (_formKey.currentState!.validate()) {
-                                  // إخفاء الكيبورد عند الضغط
                                   FocusScope.of(context).unfocus();
 
                                   context
@@ -214,3 +199,4 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
+// 218
