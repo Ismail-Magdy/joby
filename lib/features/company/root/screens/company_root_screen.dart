@@ -4,6 +4,7 @@ import "package:flutter_svg/svg.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
+import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/features/company/home/manager/company_home_cubit.dart";
 import "package:joby/features/company/home/presentation/screens/company_home_screen.dart";
 import "package:joby/features/company/profile_company/screens/company_profile_screen.dart";
@@ -34,7 +35,8 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ExitConfirmationWrapper(
+      child: Scaffold(
       extendBody: true,
       //
       body: IndexedStack(
@@ -87,6 +89,7 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
         ),
       ),
       //
+    ),
     );
   }
 

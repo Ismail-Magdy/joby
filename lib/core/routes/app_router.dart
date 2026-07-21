@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/core/routes/routes.dart';
-import 'package:joby/core/widgets/exit_confirmation_wrapper.dart';
 import 'package:joby/core/di/dependency_injection.dart';
 import 'package:joby/features/common/on_boarding/presentation/screens/on_boarding_screen.dart';
 import 'package:joby/features/common/on_boarding/manager/on_boarding_cubit.dart';
@@ -68,32 +67,28 @@ class AppRouter {
       /// User Info Screen
       case Routes.userInfoScreen:
         return MaterialPageRoute(
-          builder: (_) => ExitConfirmationWrapper(
-            child: BlocProvider<UserInfoCubit>(
-              create: (context) => getIt<UserInfoCubit>(),
-              child: const UserInfoScreen(),
-            ),
+          builder: (_) => BlocProvider<UserInfoCubit>(
+            create: (context) => getIt<UserInfoCubit>(),
+            child: const UserInfoScreen(),
           ),
         );
 
       /// User Root Screen
       case Routes.userRootScreen:
         return MaterialPageRoute(
-          builder: (_) => ExitConfirmationWrapper(
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider<UserHomeCubit>(
-                  create: (context) => getIt<UserHomeCubit>(),
-                ),
-                BlocProvider<PointsCubit>(
-                  create: (context) => getIt<PointsCubit>(),
-                ),
-                BlocProvider<ProfileViewsCubit>(
-                  create: (context) => getIt<ProfileViewsCubit>(),
-                ),
-              ],
-              child: const UserRootScreen(),
-            ),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<UserHomeCubit>(
+                create: (context) => getIt<UserHomeCubit>(),
+              ),
+              BlocProvider<PointsCubit>(
+                create: (context) => getIt<PointsCubit>(),
+              ),
+              BlocProvider<ProfileViewsCubit>(
+                create: (context) => getIt<ProfileViewsCubit>(),
+              ),
+            ],
+            child: const UserRootScreen(),
           ),
         );
 
@@ -141,23 +136,18 @@ class AppRouter {
 
       /// Company Home Screen
       case Routes.companyHomeScreen:
-        return MaterialPageRoute(
-          builder: (_) =>
-              const ExitConfirmationWrapper(child: CompanyHomeScreen()),
-        );
+        return MaterialPageRoute(builder: (_) => const CompanyHomeScreen());
 
       /// Company Root Screen
       case Routes.companyRootScreen:
         return MaterialPageRoute(
-          builder: (_) => ExitConfirmationWrapper(
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider<CompanyHomeCubit>(
-                  create: (context) => getIt<CompanyHomeCubit>(),
-                ),
-              ],
-              child: const CompanyRootScreen(),
-            ),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<CompanyHomeCubit>(
+                create: (context) => getIt<CompanyHomeCubit>(),
+              ),
+            ],
+            child: const CompanyRootScreen(),
           ),
         );
 
