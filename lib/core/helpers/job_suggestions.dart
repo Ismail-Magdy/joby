@@ -66,6 +66,8 @@ class JobSuggestions {
     "Sports & Recreation",
     "Arts & Culture",
     "Event Planning",
+    "Health Information Management",
+    "Medical Registration & Statistics",
   ];
 
   /// Common job titles (specific roles)
@@ -216,5 +218,7 @@ class JobSuggestions {
     "Aerospace Engineer",
     "Architect",
     "Interior Designer",
+    "Medical Registration & Statistics Specialist",
+    "Health Information Technician",
   ];
 }
