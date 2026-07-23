@@ -1,6 +1,7 @@
 # JOBY
 
 **A Gamified Recruitment Platform for Mobile**
+<img width="1080" height="710" alt="joby" src="https://github.com/user-attachments/assets/f56a3658-1c08-4f2c-bc61-6de0aea4ba79" />
 
 ---
 
@@ -71,7 +72,9 @@ The Job Seeker module delivers a gamified, engagement-driven experience designed
 
 ### Walkthrough
 
-> **[Insert Job Seeker Walkthrough Video URL Here]**
+
+https://github.com/user-attachments/assets/243c29b3-1a0f-4e28-a060-b6f1286d9b87
+
 
 ### Directory Structure
 
