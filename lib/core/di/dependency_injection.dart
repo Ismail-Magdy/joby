@@ -144,3 +144,8 @@ Future<void> initGetIt() async {
     () => CompanyHomeCubit(repo: getIt<CompanyHomeRepo>()),
   );
 }
+
+// ismailmagdy021@gmail.com
+// www.linkedin.com/in/ismailmagdy021
+// https://github.com/Ismail-Magdy
+// https://www.behance.net/ismailmagdy4
