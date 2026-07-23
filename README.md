@@ -1,6 +1,9 @@
 # JOBY
 
 **A Gamified Recruitment Platform for Mobile**
+---
+[JOBY Website](https://joby-site.vercel.app/)
+---
 <img width="1080" height="710" alt="joby" src="https://github.com/user-attachments/assets/f56a3658-1c08-4f2c-bc61-6de0aea4ba79" />
 
 ---
@@ -73,7 +76,7 @@ The Job Seeker module delivers a gamified, engagement-driven experience designed
 ### Walkthrough
 
 
-https://github.com/user-attachments/assets/243c29b3-1a0f-4e28-a060-b6f1286d9b87
+https://github.com/user-attachments/assets/3fd65718-e701-41b6-9e45-d6bd2263997d
 
 
 ### Directory Structure
@@ -200,7 +203,9 @@ The Company module provides employers with a powerful talent discovery and pipel
 
 ### Walkthrough
 
-> **[Insert Employer Dashboard Walkthrough Video URL Here]**
+
+https://github.com/user-attachments/assets/6da4b6c3-bbdb-481c-a95b-5781fc551fa5
+
 
 ### Directory Structure
 
