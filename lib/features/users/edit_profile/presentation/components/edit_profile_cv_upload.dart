@@ -36,8 +36,8 @@ class EditProfileCvUpload extends StatelessWidget {
             //
             Icon(
               pickedCvName != null
-                  ? Ionicons.document_text
-                  : Ionicons.cloud_upload_outline,
+                  ? Ionicons.documentText
+                  : Ionicons.cloudUploadOutline,
               color: AppColors.primaryColor,
               size: 35.sp,
             ),

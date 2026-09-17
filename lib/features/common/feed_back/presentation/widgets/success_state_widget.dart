@@ -22,7 +22,7 @@ class SuccessStateWidget extends StatelessWidget {
       child: Column(
         children: [
           Icon(
-            Ionicons.checkmark_circle_outline,
+            Ionicons.checkmarkCircleOutline,
             color: Colors.green,
             size: 52.sp,
           ),

@@ -205,35 +205,35 @@ class PointsScreen extends StatelessWidget {
                       title: "Daily Check in Boost",
                       description:
                           "Open the app daily to instantly receive 10 points. Consistency is key",
-                      icon: Ionicons.calendar_outline,
+                      icon: Ionicons.calendarOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Top Priority",
                       description:
                           "Profiles with higher point totals rank at the top of the list",
-                      icon: Ionicons.trending_up_outline,
+                      icon: Ionicons.trendingUpOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Trust Score",
                       description:
                           "A high point balance proves you are an active, eager, and committed job seeker",
-                      icon: Ionicons.shield_checkmark_outline,
+                      icon: Ionicons.shieldCheckmarkOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Featured Profile Badge",
                       description:
                           "Accumulate points to earn the 'Active Talent' badge, making your resume stand out in the crowd",
-                      icon: Ionicons.ribbon_outline,
+                      icon: Ionicons.ribbonOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Unlock Premium Perks",
                       description:
                           "Keep growing your balance to eventually unlock future rewards and direct communication with recruiters",
-                      icon: Ionicons.diamond_outline,
+                      icon: Ionicons.diamondOutline,
                     ),
                     //
                     verticalSpace(90),
