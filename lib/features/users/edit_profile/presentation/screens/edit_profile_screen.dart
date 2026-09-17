@@ -214,6 +214,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _triggerSave();
         return false;
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Center(
