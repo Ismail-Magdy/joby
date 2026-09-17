@@ -273,15 +273,17 @@ class _AuthScreenState extends State<AuthScreen> {
                             ? (val) {
                                 final v = val?.trim() ?? "";
                                 if (v.isEmpty) return "Please enter a password";
-                                if (v.length < 8)
+                                if (v.length < 8) {
                                   return "At least 8 characters";
+                                }
                                 return null;
                               }
                             : (val) {
                                 final v = val?.trim() ?? "";
                                 if (v.isEmpty) return "Please enter a password";
-                                if (v.length < 8)
+                                if (v.length < 8) {
                                   return "At least 8 characters";
+                                }
                                 if (!AppRegex.hasUpperCase(v)) {
                                   return "Include an uppercase letter";
                                 }
