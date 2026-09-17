@@ -20,7 +20,7 @@ class CardsAndFooterSection extends StatelessWidget {
         verticalSpace(24),
         // Mission Card
         CardWidget(
-          icon: Ionicons.rocket_outline,
+          icon: Ionicons.rocketOutline,
           title: "Our Mission",
           child: Text(
             "Joby bridges the gap between passionate job seekers and "
@@ -38,7 +38,7 @@ class CardsAndFooterSection extends StatelessWidget {
         verticalSpace(16),
         // Creator Card
         CardWidget(
-          icon: Ionicons.person_circle_outline,
+          icon: Ionicons.personCircleOutline,
           title: "Meet the Creator",
           child: Row(
             children: [
@@ -91,7 +91,7 @@ class CardsAndFooterSection extends StatelessWidget {
                         children: [
                           //
                           Icon(
-                            Ionicons.mail_outline,
+                            Ionicons.mailOutline,
                             size: 12.sp,
                             color: AppColors.primaryColor,
                           ),
@@ -123,25 +123,25 @@ class CardsAndFooterSection extends StatelessWidget {
         //
         // Tech Stack Card
         CardWidget(
-          icon: Ionicons.code_slash_outline,
+          icon: Ionicons.codeSlashOutline,
           title: "Built With",
           child: Column(
             children: [
               //
               CustomTechRow(
-                icon: Ionicons.phone_portrait_outline,
+                icon: Ionicons.phonePortraitOutline,
                 name: "Flutter",
                 description: "Cross platform mobile framework by Google",
               ),
               //
               CustomTechRow(
-                icon: Ionicons.server_outline,
+                icon: Ionicons.serverOutline,
                 name: "Supabase",
                 description: "Open source backend & PostgreSQL database",
               ),
               //
               CustomTechRow(
-                icon: Ionicons.logo_github,
+                icon: Ionicons.logoGithub,
                 name: "GitHub",
                 description: "Version control and code hosting platform",
               ),
@@ -154,7 +154,7 @@ class CardsAndFooterSection extends StatelessWidget {
         //
         // Connect Card
         CardWidget(
-          icon: Ionicons.share_social_outline,
+          icon: Ionicons.shareSocialOutline,
           title: "Connect With Us",
           child: Wrap(
             alignment: .center,
@@ -163,7 +163,7 @@ class CardsAndFooterSection extends StatelessWidget {
             children: [
               // Facebook
               CustomSocialButton(
-                icon: Ionicons.logo_facebook,
+                icon: Ionicons.logoFacebook,
                 label: "Facebook",
                 color: const Color(0xFF1877F2),
                 onTap: () =>
@@ -171,7 +171,7 @@ class CardsAndFooterSection extends StatelessWidget {
               ),
               // Instagram
               CustomSocialButton(
-                icon: Ionicons.logo_instagram,
+                icon: Ionicons.logoInstagram,
                 label: "Instagram",
                 color: const Color(0xFFE4405F),
                 onTap: () => _launchUrl(
@@ -180,7 +180,7 @@ class CardsAndFooterSection extends StatelessWidget {
               ),
               // LinkedIn
               CustomSocialButton(
-                icon: Ionicons.logo_linkedin,
+                icon: Ionicons.logoLinkedin,
                 label: "LinkedIn",
                 color: const Color(0xFF0077B5),
                 onTap: () => _launchUrl(
@@ -189,7 +189,7 @@ class CardsAndFooterSection extends StatelessWidget {
               ),
               // TikTok
               CustomSocialButton(
-                icon: Ionicons.logo_tiktok,
+                icon: Ionicons.logoTiktok,
                 label: "TikTok",
                 color: Colors.black,
                 onTap: () => _launchUrl(
@@ -198,21 +198,21 @@ class CardsAndFooterSection extends StatelessWidget {
               ),
               // WhatsApp
               CustomSocialButton(
-                icon: Ionicons.logo_whatsapp,
+                icon: Ionicons.logoWhatsapp,
                 label: "WhatsApp",
                 color: Colors.green,
                 onTap: () => _launchUrl("https://wa.me/+201507090603"),
               ),
               // Site
               CustomSocialButton(
-                icon: Ionicons.globe_outline,
+                icon: Ionicons.globeOutline,
                 label: "Website",
                 color: AppColors.primaryColor,
                 onTap: () => _launchUrl("https://joby-site.vercel.app/"),
               ),
               // Email
               CustomSocialButton(
-                icon: Ionicons.mail_outline,
+                icon: Ionicons.mailOutline,
                 label: "Email",
                 color: AppColors.primaryColor,
                 onTap: () => _launchUrl("mailto:ismailmagdy920@gmail.com"),

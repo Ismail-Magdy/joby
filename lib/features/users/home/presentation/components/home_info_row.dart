@@ -24,7 +24,7 @@ class HomeInfoRow extends StatelessWidget {
         mainAxisAlignment: .center,
         children: [
           //
-          BuildBadgeWidget(icon: Ionicons.stats_chart_outline, text: levelText),
+          BuildBadgeWidget(icon: Ionicons.statsChartOutline, text: levelText),
           //
           horizontalSpace(15),
           //
@@ -50,7 +50,7 @@ class HomeInfoRow extends StatelessWidget {
           horizontalSpace(15),
           //
           BuildBadgeWidget(
-            icon: Ionicons.business_outline,
+            icon: Ionicons.businessOutline,
             text: typeOfWorkText,
           ),
           //

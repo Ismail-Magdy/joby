@@ -30,7 +30,7 @@ class SocialMediaRow extends StatelessWidget {
       children: [
         //
         BuildContactIconButton(
-          icon: Ionicons.logo_whatsapp,
+          icon: Ionicons.logoWhatsapp,
           color: Colors.green,
           onTap: whatsappTap,
         ),
@@ -40,7 +40,7 @@ class SocialMediaRow extends StatelessWidget {
           horizontalSpace(20),
           //
           BuildContactIconButton(
-            icon: Ionicons.logo_linkedin,
+            icon: Ionicons.logoLinkedin,
             color: const Color(0xff0077B5),
             onTap: linkedinTap ?? () {},
           ),
@@ -51,7 +51,7 @@ class SocialMediaRow extends StatelessWidget {
           horizontalSpace(20),
           //
           BuildContactIconButton(
-            icon: Ionicons.logo_github,
+            icon: Ionicons.logoGithub,
             color: const Color(0xff333333),
             onTap: githubTap ?? () {},
           ),
@@ -62,7 +62,7 @@ class SocialMediaRow extends StatelessWidget {
           horizontalSpace(20),
           //
           BuildContactIconButton(
-            icon: Ionicons.logo_behance,
+            icon: Ionicons.logoBehance,
             color: const Color(0xff1769FF),
             onTap: behanceTap ?? () {},
           ),

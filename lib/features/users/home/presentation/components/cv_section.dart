@@ -30,7 +30,7 @@ class CvSection extends StatelessWidget {
                 borderRadius: .circular(10.r),
               ),
               child: Icon(
-                Ionicons.document_text_outline,
+                Ionicons.documentTextOutline,
                 color: AppColors.primaryColor,
                 size: 26.sp,
               ),

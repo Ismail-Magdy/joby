@@ -397,7 +397,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       controller: _nameController,
                       label: "Full Name",
                       hint: "eg. Ahmed Mohamed",
-                      icon: Ionicons.person_outline,
+                      icon: Ionicons.personOutline,
                       iconColor: AppColors.primaryColor,
                       autovalidateMode: .onUserInteraction,
                       validator: (val) {
@@ -425,7 +425,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       controller: _jobTitleController,
                       label: "Job Title",
                       hint: "eg. Flutter Developer",
-                      icon: Ionicons.briefcase_outline,
+                      icon: Ionicons.briefcaseOutline,
                       iconColor: AppColors.primaryColor,
                       autovalidateMode: .onUserInteraction,
                       validator: (val) {
@@ -448,7 +448,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     EditProfileDropDown(
                       value: _selectedLevel,
                       hint: "Select your level",
-                      icon: Ionicons.stats_chart_outline,
+                      icon: Ionicons.statsChartOutline,
                       items: _levelOptions,
                       onChanged: (val) => setState(() => _selectedLevel = val),
                     ),
@@ -463,7 +463,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     EditProfileDropDown(
                       value: _selectedWorkType,
                       hint: "Select work type",
-                      icon: Ionicons.location_outline,
+                      icon: Ionicons.locationOutline,
                       items: _workTypeOptions,
                       onChanged: (val) =>
                           setState(() => _selectedWorkType = val),
@@ -529,7 +529,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       controller: _linkedinController,
                       label: "LinkedIn URL",
                       hint: "https://linkedin.com/in/username",
-                      icon: Ionicons.logo_linkedin,
+                      icon: Ionicons.logoLinkedin,
                       iconColor: const Color(0xff0077B5),
                     ),
                     //
@@ -539,7 +539,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       controller: _githubController,
                       label: "GitHub URL",
                       hint: "https://github.com/username",
-                      icon: Ionicons.logo_github,
+                      icon: Ionicons.logoGithub,
                       iconColor: const Color(0xff333333),
                     ),
                     //
@@ -549,7 +549,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       controller: _behanceController,
                       label: "Behance URL",
                       hint: "https://behance.net/username",
-                      icon: Ionicons.logo_behance,
+                      icon: Ionicons.logoBehance,
                       iconColor: const Color(0xff1769FF),
                     ),
                     //
@@ -611,7 +611,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       label,
       style: TextStyle(
         fontSize: 14.sp,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: Colors.grey.shade700,
       ),
     );
