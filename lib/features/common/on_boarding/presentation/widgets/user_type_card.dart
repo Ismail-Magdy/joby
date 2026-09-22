@@ -6,7 +6,7 @@ import 'package:joby/core/helpers/spacing.dart';
 class UserTypeCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
+  final FaIconData icon;
   final bool isSelected;
   final VoidCallback onTap;
 
