@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
-
 import '../../../../../core/helpers/spacing.dart';
 import '../../../../../core/themes/app_colors.dart';
 
@@ -28,7 +27,7 @@ class SuccessStateWidget extends StatelessWidget {
           ),
           verticalSpace(12),
           Text(
-            "Thank you for your feedback",
+            "Thank You for Your Feedback",
             style: TextStyle(
               fontSize: 17.sp,
               fontWeight: .bold,
@@ -37,8 +36,8 @@ class SuccessStateWidget extends StatelessWidget {
           ),
           verticalSpace(8),
           Text(
-            "Your feedback has been sent successfully "
-            "We appreciate you helping us improve Joby",
+            "Your Feedback Has Been Sent Successfully "
+            "We Appreciate You Helping Us Improve Joby",
             textAlign: .center,
             style: TextStyle(
               fontSize: 13.sp,

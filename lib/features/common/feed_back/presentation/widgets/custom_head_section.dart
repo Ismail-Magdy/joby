@@ -35,7 +35,7 @@ class CustomHeadSection extends StatelessWidget {
           verticalSpace(10),
           //
           Text(
-            "We read every suggestion.\nHelp us make Joby even better",
+            "We Read Every Suggestion.\nHelp Us Make Joby Even Better",
             textAlign: .center,
             style: TextStyle(
               fontSize: 14.sp,

@@ -4,7 +4,7 @@ import 'package:joby/features/common/forgot_password/data/repo/forgot_password_r
 import 'package:joby/features/common/forgot_password/data/repo/forgot_password_repo_impl.dart';
 import 'package:joby/features/common/forgot_password/manager/forgot_password_cubit.dart';
 import 'package:joby/features/company/home/data/repos/company_home_repo.dart';
-import 'package:joby/features/users/notification/data/services/local_notification_service.dart';
+import 'package:joby/features/users/notification/services/local_notification_service.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

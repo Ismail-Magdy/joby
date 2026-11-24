@@ -6,7 +6,7 @@ import "package:joby/core/helpers/constants.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/routes/app_router.dart";
 import "package:joby/core/routes/routes.dart";
-import "package:joby/features/users/notification/data/services/local_notification_service.dart";
+import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "package:joby/joby_app.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import 'package:flutter_dotenv/flutter_dotenv.dart';

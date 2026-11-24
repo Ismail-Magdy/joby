@@ -15,7 +15,7 @@ class UserHomeRepoImpl implements UserHomeRepo {
       final userId = supabaseClient.auth.currentUser?.id;
 
       if (userId == null) {
-        return const Left("User not found");
+        return const Left("User Not Found");
       }
 
       final data = await supabaseClient
@@ -40,7 +40,7 @@ class UserHomeRepoImpl implements UserHomeRepo {
       final userId = supabaseClient.auth.currentUser?.id;
 
       if (userId == null) {
-        return const Left("User not found");
+        return const Left("User Not Found");
       }
 
       await supabaseClient

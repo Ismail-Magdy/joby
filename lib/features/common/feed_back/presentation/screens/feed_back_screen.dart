@@ -37,7 +37,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
       CustomFeedbackDialog.showWarning(
         context,
         title: "Feedback Empty",
-        message: "Please write your feedback first",
+        message: "Please Write Your Feedback First",
       );
       return;
     }
@@ -124,8 +124,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                                 }) => null,
                             decoration: InputDecoration(
                               hintText:
-                                  "Share your ideas, bugs you found, or anything "
-                                  "you'd like us to improve...",
+                                  "Share Your Ideas, Bugs You Found, or Anything "
+                                  "You'd Like Us to Improve...",
                               hintStyle: TextStyle(
                                 color: Colors.grey.shade400,
                                 fontSize: 13.sp,

@@ -48,7 +48,7 @@ class StepTwoContent extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
             ),
           ),
-          items: ["Junior", "Mid-Level", "Senior", "Lead"].map((String value) {
+          items: ["Junior", "Mid Level", "Senior", "Lead"].map((String value) {
             return DropdownMenuItem<String>(value: value, child: Text(value));
           }).toList(),
           onChanged: onChangedLevel,
@@ -85,7 +85,7 @@ class StepTwoContent extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
             ),
           ),
-          items: ["Remote", "On-site", "Hybrid"].map((String value) {
+          items: ["Remote", "On Site", "Hybrid"].map((String value) {
             return DropdownMenuItem<String>(value: value, child: Text(value));
           }).toList(),
           onChanged: onChangedTypeOfWork,

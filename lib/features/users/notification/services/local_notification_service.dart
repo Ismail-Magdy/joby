@@ -67,8 +67,8 @@ class LocalNotificationService {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id: 1,
-      title: "We miss you today",
-      body: "Come in now and collect your 10 points before they\"re gone",
+      title: "We Miss You Today",
+      body: "Come in Now and Collect Your 10 points Before They\"re Gone",
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -104,9 +104,9 @@ class LocalNotificationService {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id: 2,
-      title: "Great news",
+      title: "Great News",
       body:
-          "Did any company see your CV today? Check out who viewed your profile",
+          "Did any Company See Your CV Today? Check Out Who Viewed Your Profile",
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(

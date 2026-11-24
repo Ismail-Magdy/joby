@@ -23,10 +23,10 @@ class CardsAndFooterSection extends StatelessWidget {
           icon: Ionicons.rocketOutline,
           title: "Our Mission",
           child: Text(
-            "Joby bridges the gap between passionate job seekers and "
-            "forward thinking companies in Egypt and beyond. We believe "
-            "the right talent and the right opportunity should always "
-            "find each other fast, smart, and effortlessly.",
+            "Joby Bridges The Gap Between Passionate Job Seekers and "
+            "Forward Thinking Companies in Egypt and Beyond. We Believe "
+            "The Right Talent and the Right Opportunity Should Always "
+            "Find Each Other Fast, Smart, and Effortlessly",
             style: TextStyle(
               fontSize: 14.sp,
               color: Colors.grey.shade700,
@@ -39,7 +39,7 @@ class CardsAndFooterSection extends StatelessWidget {
         // Creator Card
         CardWidget(
           icon: Ionicons.personCircleOutline,
-          title: "Meet the Creator",
+          title: "Meet The Creator",
           child: Row(
             children: [
               //
@@ -131,19 +131,19 @@ class CardsAndFooterSection extends StatelessWidget {
               CustomTechRow(
                 icon: Ionicons.phonePortraitOutline,
                 name: "Flutter",
-                description: "Cross platform mobile framework by Google",
+                description: "Cross Platform Mobile Framework by Google",
               ),
               //
               CustomTechRow(
                 icon: Ionicons.serverOutline,
                 name: "Supabase",
-                description: "Open source backend & PostgreSQL database",
+                description: "Open Source Backend & PostgreSQL Database",
               ),
               //
               CustomTechRow(
                 icon: Ionicons.logoGithub,
                 name: "GitHub",
-                description: "Version control and code hosting platform",
+                description: "Version Control and Code Hosting Platform",
               ),
               //
             ],

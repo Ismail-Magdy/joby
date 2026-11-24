@@ -31,6 +31,8 @@ class EditProfileCubit extends Cubit<EditProfileState> {
           sourcePath: image.path,
           uiSettings: [
             AndroidUiSettings(
+              activeControlsWidgetColor: AppColors.primaryColor,
+              hideBottomControls: false,
               toolbarTitle: "Crop Image",
               toolbarColor: AppColors.primaryColor,
               toolbarWidgetColor: Colors.white,
@@ -93,7 +95,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
           _pickedAvatarFile!,
         );
         if (rawAvatarUrl == null) {
-          emit(EditProfileError("Failed to upload profile picture"));
+          emit(EditProfileError("Failed to Upload Profile Picture"));
           return;
         }
         finalAvatarUrl =
@@ -104,7 +106,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       if (_pickedCvFile != null) {
         String? rawCvUrl = await editProfileRepo.uploadCv(_pickedCvFile!);
         if (rawCvUrl == null) {
-          emit(EditProfileError("Failed to upload CV"));
+          emit(EditProfileError("Failed to Upload CV"));
           return;
         }
         finalCvUrl = "$rawCvUrl?t=${DateTime.now().millisecondsSinceEpoch}";
@@ -128,7 +130,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       if (success) {
         emit(EditProfileSuccess());
       } else {
-        emit(EditProfileError("Failed to update profile data"));
+        emit(EditProfileError("Failed to Update Profile Data"));
       }
     } catch (error) {
       emit(EditProfileError(ErrorHandler.handleError(error)));

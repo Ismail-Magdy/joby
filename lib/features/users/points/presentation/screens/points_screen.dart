@@ -165,7 +165,7 @@ class PointsScreen extends StatelessWidget {
                                     borderRadius: .circular(20.r),
                                   ),
                                   child: Text(
-                                    "Keep checking in to level up",
+                                    "Keep Checking in To Level Up",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14.sp,
@@ -190,7 +190,7 @@ class PointsScreen extends StatelessWidget {
                   delegate: SliverChildListDelegate([
                     // Title
                     Text(
-                      "Why collect points?",
+                      "Why Collect Points?",
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: .bold,
@@ -204,35 +204,35 @@ class PointsScreen extends StatelessWidget {
                     const PointsBenefitCard(
                       title: "Daily Check in Boost",
                       description:
-                          "Open the app daily to instantly receive 10 points. Consistency is key",
+                          "Open The App Daily to Instantly Receive 10 Points. Consistency is Key",
                       icon: Ionicons.calendarOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Top Priority",
                       description:
-                          "Profiles with higher point totals rank at the top of the list",
+                          "Profiles with Higher Point Totals Rank at The Top of The List",
                       icon: Ionicons.trendingUpOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Trust Score",
                       description:
-                          "A high point balance proves you are an active, eager, and committed job seeker",
+                          "A high Point Balance Proves You are an Active, Eager, and Committed Job Seeker",
                       icon: Ionicons.shieldCheckmarkOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Featured Profile Badge",
                       description:
-                          "Accumulate points to earn the 'Active Talent' badge, making your resume stand out in the crowd",
+                          "Accumulate Points to Earn the 'Active Talent' Badge, Making Your Resume Stand out in The Crowd",
                       icon: Ionicons.ribbonOutline,
                     ),
                     //
                     const PointsBenefitCard(
                       title: "Unlock Premium Perks",
                       description:
-                          "Keep growing your balance to eventually unlock future rewards and direct communication with recruiters",
+                          "Keep Growing Your Balance to Eventually Unlock Future Rewards and Direct Communication with Recruiters",
                       icon: Ionicons.diamondOutline,
                     ),
                     //

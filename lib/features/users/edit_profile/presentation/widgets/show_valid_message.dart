@@ -16,7 +16,7 @@ class ShowValidMessage extends StatelessWidget {
           horizontalSpace(5),
           //
           Text(
-            "Valid phone number format",
+            "Valid Phone Number Format",
             style: TextStyle(color: Colors.green, fontSize: 12.sp),
           ),
         ],

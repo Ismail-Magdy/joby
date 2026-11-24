@@ -11,7 +11,7 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
     try {
       final userId = Supabase.instance.client.auth.currentUser?.id;
       if (userId == null) {
-        emit(ProfileViewsError("User not authenticated"));
+        emit(ProfileViewsError("User Not Authenticated"));
         return;
       }
 
@@ -78,7 +78,7 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
         );
       }
     } catch (e) {
-      emit(ProfileViewsError("Failed to load profile views"));
+      emit(ProfileViewsError("Failed to Load Profile Views"));
     }
   }
 }
