@@ -27,7 +27,7 @@ import "package:intl_phone_field/countries.dart";
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
+import 'package:joby/core/helpers/location_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'location_picker_screen.dart';
 
@@ -156,22 +156,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     try {
       if (mounted) setState(() => _isLoadingLocation = true);
 
-      await geocoding.setLocaleIdentifier("en");
+      final loc = await LocationHelper.getEnglishLocationName(lat, lng);
 
-      List<geocoding.Placemark> placemarks = await geocoding
-          .placemarkFromCoordinates(lat, lng);
-      if (placemarks.isNotEmpty) {
-        geocoding.Placemark place = placemarks[0];
-
-        String city = place.administrativeArea ?? place.locality ?? "";
-        String country = place.country ?? "";
-        String loc = city.isNotEmpty ? "$city, $country" : country;
-
-        if (mounted) {
-          setState(
-            () => _locationName = loc.isNotEmpty ? loc : "Unknown Location",
-          );
-        }
+      if (mounted) {
+        setState(() => _locationName = loc);
       }
     } catch (e) {
       if (mounted) setState(() => _locationName = "Unknown Location");

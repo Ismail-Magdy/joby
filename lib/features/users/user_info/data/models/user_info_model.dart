@@ -1,3 +1,5 @@
+import 'package:joby/core/helpers/location_helper.dart';
+
 class UserInfoModel {
   final String? id;
   final String name;
@@ -59,7 +61,7 @@ class UserInfoModel {
       if (avatarUrl != null) "avatar_url": avatarUrl,
       "total_points": totalPoints,
       if (lastCheckIn != null) "last_check_in": lastCheckIn,
-      "location_name": locationName,
+      "location_name": LocationHelper.normalizeLocationName(locationName),
       "latitude": latitude,
       "longitude": longitude,
     };
@@ -81,7 +83,9 @@ class UserInfoModel {
       avatarUrl: json["avatar_url"],
       totalPoints: json["total_points"] ?? 0,
       lastCheckIn: json["last_check_in"],
-      locationName: json["location_name"] ?? "",
+      locationName: LocationHelper.normalizeLocationName(
+        json["location_name"] ?? "",
+      ),
       latitude: (json["latitude"] as num?)?.toDouble() ?? 0.0,
       longitude: (json["longitude"] as num?)?.toDouble() ?? 0.0,
     );

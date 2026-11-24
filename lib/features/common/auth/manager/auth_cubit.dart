@@ -54,12 +54,6 @@ class AuthCubit extends Cubit<AuthState> {
     _handleResult(result);
   }
 
-  Future<void> signInWithGoogleChooseAccount() async {
-    emit(AuthLoading());
-    final result = await authRepo.signInWithGoogleChooseAccount();
-    _handleResult(result);
-  }
-
   // ignore: strict_top_level_inference
   void _handleResult(result) async {
     result.fold((errorMessage) => emit(AuthError(errorMessage)), (user) async {

@@ -9,7 +9,7 @@ import "package:joby/features/users/user_info/presentation/widgets/location_foot
 import "package:joby/features/users/user_info/data/models/location_picker_result.dart";
 import "package:joby/features/users/user_info/presentation/widgets/search_results_dropdown.dart";
 import "package:latlong2/latlong.dart";
-import "package:geocoding/geocoding.dart" as geocoding;
+import "package:joby/core/helpers/location_helper.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:http/http.dart" as http;
@@ -49,7 +49,9 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
     super.initState();
     _latitude = widget.initialLatitude;
     _longitude = widget.initialLongitude;
-    _locationName = widget.initialLocationName;
+    _locationName = LocationHelper.normalizeLocationName(
+      widget.initialLocationName,
+    );
   }
 
   @override
@@ -60,27 +62,15 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
     super.dispose();
   }
 
-  /// Reverse geocode to get a human-readable name
+  /// Reverse geocode to get a human-readable English name
   Future<void> _updateLocationName(double lat, double lng) async {
     try {
       if (mounted) setState(() => _isLoadingLocation = true);
 
-      await geocoding.setLocaleIdentifier("en");
+      final loc = await LocationHelper.getEnglishLocationName(lat, lng);
 
-      List<geocoding.Placemark> placemarks = await geocoding
-          .placemarkFromCoordinates(lat, lng);
-      if (placemarks.isNotEmpty) {
-        geocoding.Placemark place = placemarks[0];
-
-        String city = place.administrativeArea ?? place.locality ?? "";
-        String country = place.country ?? "";
-        String loc = city.isNotEmpty ? "$city, $country" : country;
-
-        if (mounted) {
-          setState(
-            () => _locationName = loc.isNotEmpty ? loc : "Unknown Location",
-          );
-        }
+      if (mounted) {
+        setState(() => _locationName = loc);
       }
     } catch (e) {
       if (mounted) setState(() => _locationName = "Unknown Location");
@@ -112,7 +102,10 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
       final response = await http.get(
         url,
-        headers: {"User-Agent": "Joby-App/1.0"},
+        headers: {
+          "User-Agent": "Joby-App/1.0",
+          "Accept-Language": "en-US,en;q=0.9",
+        },
       );
 
       if (response.statusCode == 200) {
