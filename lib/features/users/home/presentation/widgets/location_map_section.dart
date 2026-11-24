@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joby/core/helpers/location_helper.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:joby/core/themes/app_colors.dart';
@@ -51,7 +52,7 @@ class LocationMapSection extends StatelessWidget {
               //
               Expanded(
                 child: Text(
-                  locationName,
+                  LocationHelper.normalizeLocationName(locationName),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: .w600,

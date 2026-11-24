@@ -342,38 +342,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                     cubit.signInWithGoogleQuick();
                                   },
                           ),
-                          //
-                          if (hasSignedInWithGoogleBefore) ...[
-                            //
-                            verticalSpace(12),
-                            //
-                            OutlinedButton.icon(
-                              onPressed: state is AuthLoading
-                                  ? null
-                                  : () {
-                                      _isAuthInProgress = true;
-                                      cubit.signInWithGoogleChooseAccount();
-                                    },
-                              icon: Icon(
-                                Icons.switch_account,
-                                color: AppColors.primaryColor,
-                              ),
-                              label: Text(
-                                "Use another account",
-                                style: TextStyle(
-                                  color: AppColors.primaryColor,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-
-                              style: OutlinedButton.styleFrom(
-                                minimumSize: Size(.infinity, 55.h),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: .circular(14.r),
-                                ),
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                       //
