@@ -8,7 +8,7 @@ import "package:image_cropper/image_cropper.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/themes/app_colors.dart";
-import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
+import "package:joby/core/widgets/custom_app_bar_without_leading.dart";
 import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/core/widgets/snack_bar_text.dart";
 import "package:joby/features/users/user_info/presentation/components/step_four_content.dart";
@@ -63,7 +63,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   double _latitude = 30.0444; // Default to Cairo
   double _longitude = 31.2357;
-  String _locationName = "Detecting location...";
+  String _locationName = "Detecting Location";
   final MapController _mapController = MapController();
   bool _isLoadingLocation = true;
   String? _networkAvatarUrl;
@@ -111,7 +111,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       if (mounted) {
-        setState(() => _locationName = "Location services disabled");
+        setState(() => _locationName = "Location Services Disabled");
       }
       return;
     }
@@ -121,7 +121,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         if (mounted) {
-          setState(() => _locationName = "Location permissions denied");
+          setState(() => _locationName = "Location Permissions Denied");
         }
         return;
       }
@@ -130,7 +130,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (permission == LocationPermission.deniedForever) {
       if (mounted) {
         setState(
-          () => _locationName = "Location permissions permanently denied.",
+          () => _locationName = "Location Permissions Permanently Denied",
         );
       }
       return;
@@ -147,7 +147,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         await _updateLocationName(_latitude, _longitude);
       }
     } catch (e) {
-      if (mounted) setState(() => _locationName = "Error getting location.");
+      if (mounted) setState(() => _locationName = "Error Getting Location");
     }
   }
 
@@ -156,7 +156,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     try {
       if (mounted) setState(() => _isLoadingLocation = true);
 
-      // 🚨 إجبار الباكدج ترجع الداتا بالإنجليزي
       await geocoding.setLocaleIdentifier("en");
 
       List<geocoding.Placemark> placemarks = await geocoding
@@ -164,7 +163,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       if (placemarks.isNotEmpty) {
         geocoding.Placemark place = placemarks[0];
 
-        // تعديل شيك عشان يرجع (المدينة، الدولة) دايماً بالتنسيق ده
         String city = place.administrativeArea ?? place.locality ?? "";
         String country = place.country ?? "";
         String loc = city.isNotEmpty ? "$city, $country" : country;
@@ -194,8 +192,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   String? _validateLinkedinUrl(String? val) {
     if (val == null || val.trim().isEmpty) return null; // optional
     final v = val.trim().toLowerCase();
-    if (!v.contains('linkedin.com')) {
-      return "Please enter a valid LinkedIn URL";
+    if (!v.contains("linkedin.com")) {
+      return "Please Enter a Valid LinkedIn URL";
     }
     return null;
   }
@@ -204,7 +202,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (val == null || val.trim().isEmpty) return null; // optional
     final v = val.trim().toLowerCase();
     if (!v.contains('github.com')) {
-      return "Please enter a valid GitHub URL";
+      return "Please Enter a Valid GitHub URL";
     }
     return null;
   }
@@ -213,7 +211,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (val == null || val.trim().isEmpty) return null; // optional
     final v = val.trim().toLowerCase();
     if (!v.contains('behance.net')) {
-      return "Please enter a valid Behance URL";
+      return "Please Enter a Valid Behance URL";
     }
     return null;
   }
@@ -233,7 +231,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   /// Pick Avatar
   Future<void> _pickAvatar() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await picker.pickImage(source: .gallery);
 
     if (image != null) {
       final CroppedFile? croppedFile = await ImageCropper().cropImage(
@@ -322,7 +320,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         // App Bar
-        appBar: CustomAppBarWithNoLeading(text: "Complete Your Profile"),
+        appBar: CustomAppBarWithoutLeading(text: "Complete Your Profile"),
         //
         body: BlocConsumer<UserInfoCubit, UserInfoState>(
           listener: (context, state) async {
@@ -375,7 +373,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 ),
                 //
                 child: Stepper(
-                  type: StepperType.vertical,
+                  type: .vertical,
                   physics: const BouncingScrollPhysics(),
                   currentStep: _currentStep,
                   onStepTapped: null,
@@ -389,7 +387,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: SnackBarText(
-                              title: "Please upload your profile picture",
+                              title: "Please Upload Your Profile Picture",
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
@@ -411,7 +409,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           SnackBar(
                             content: SnackBarText(
                               title:
-                                  "Please select your Level and Type of Work",
+                                  "Please Select Your Level and Type of Work",
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
@@ -445,7 +443,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: SnackBarText(
-                              title: "Please enter your WhatsApp number",
+                              title: "Please Enter Your WhatsApp Number",
                             ),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,

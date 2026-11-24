@@ -24,7 +24,7 @@ class SharedPrefHelper {
   static Future<void> setData(String key, dynamic value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     debugPrint("SharedPrefHelper : setData with key : $key and value : $value");
-    
+
     if (value is String) {
       await sharedPreferences.setString(key, value);
     } else if (value is int) {

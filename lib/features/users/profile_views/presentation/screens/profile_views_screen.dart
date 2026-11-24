@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/core/helpers/spacing.dart';
-import 'package:joby/core/widgets/custom_app_bar_with_no_leading.dart';
+import 'package:joby/core/widgets/custom_app_bar_without_leading.dart';
 import 'package:joby/core/widgets/error_screen.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_state.dart';
@@ -44,7 +44,7 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       //
-      appBar: CustomAppBarWithNoLeading(text: "Profile Views"),
+      appBar: CustomAppBarWithoutLeading(text: "Profile Views"),
       //
       body: SafeArea(
         child: BlocBuilder<ProfileViewsCubit, ProfileViewsState>(

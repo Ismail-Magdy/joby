@@ -21,7 +21,7 @@ class UserInfoRepoImpl implements UserInfoRepo {
       final userEmail = supabaseClient.auth.currentUser?.email ?? '';
 
       if (userId == null) {
-        return const Left("User is not authenticated");
+        return const Left("User is not Authenticated");
       }
 
       String? finalAvatarUrl = userInfo.avatarUrl;
@@ -49,7 +49,7 @@ class UserInfoRepoImpl implements UserInfoRepo {
               .getPublicUrl(avatarName);
         } else {
           return const Left(
-            "Profile picture file does not exist. Please select it again",
+            "Profile Picture File does not Exist. Please Select it Again",
           );
         }
       }
@@ -73,9 +73,7 @@ class UserInfoRepoImpl implements UserInfoRepo {
               );
           finalCvUrl = supabaseClient.storage.from("cvs").getPublicUrl(cvName);
         } else {
-          return const Left(
-            "Curriculum vitae file does not exist. Please select it again",
-          );
+          return const Left("CV File does not Exist. Please Select it Again");
         }
       }
 
@@ -103,8 +101,8 @@ class UserInfoRepoImpl implements UserInfoRepo {
       });
 
       return const Right(null);
-    } catch (e) {
-      return Left(ErrorHandler.handleError(e));
+    } catch (error) {
+      return Left(ErrorHandler.handleError(error));
     }
   }
 }

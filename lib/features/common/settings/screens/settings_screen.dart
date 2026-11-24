@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:joby/core/widgets/custom_app_bar_with_no_leading.dart";
+import "package:joby/core/widgets/custom_app_bar_without_leading.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/routes/routes.dart";
@@ -15,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       //
-      appBar: CustomAppBarWithNoLeading(text: "Settings"),
+      appBar: CustomAppBarWithoutLeading(text: "Settings"),
       //
       body: Padding(
         padding: .symmetric(horizontal: 20.w, vertical: 20.h),

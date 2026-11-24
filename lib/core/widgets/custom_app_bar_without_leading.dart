@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomAppBarWithNoLeading extends StatelessWidget
+class CustomAppBarWithoutLeading extends StatelessWidget
     implements PreferredSizeWidget {
-  const CustomAppBarWithNoLeading({super.key, required this.text});
+  const CustomAppBarWithoutLeading({super.key, required this.text});
   final String text;
 
   @override
