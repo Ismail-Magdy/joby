@@ -26,6 +26,7 @@ class StepThreeContent extends StatelessWidget {
     required this.cvFile,
     required this.cvFileName,
   });
+
   final TextEditingController whatsappController;
   final TextEditingController linkedinController;
   final TextEditingController githubController;
@@ -57,9 +58,9 @@ class StepThreeContent extends StatelessWidget {
           controller: whatsappController,
           initialCountryCode: "EG",
           invalidNumberMessage: "Invalid number for the selected country",
-          // ===================================
+          //
           pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
-          // ===================================
+          //
           decoration: InputDecoration(
             labelText: "WhatsApp Number",
             counterText: "",
@@ -68,6 +69,7 @@ class StepThreeContent extends StatelessWidget {
           onChanged: onChangedPhone,
           onCountryChanged: onChangedCountry,
         ),
+        //
         if (isPhoneValid && whatsappController.text.isNotEmpty)
           Padding(
             padding: .only(top: 8.h),
@@ -76,7 +78,7 @@ class StepThreeContent extends StatelessWidget {
                 Icon(Icons.check_circle, color: Colors.green, size: 16.sp),
                 horizontalSpace(5),
                 Text(
-                  "Valid phone number format",
+                  "Valid Phone Number Format",
                   style: TextStyle(color: Colors.green, fontSize: 12.sp),
                 ),
               ],
@@ -145,9 +147,7 @@ class StepThreeContent extends StatelessWidget {
                 ),
                 verticalSpace(8),
                 Text(
-                  cvFileName == null
-                      ? "Upload CV (PDF) *"
-                      : "CV Uploaded: $cvFileName",
+                  cvFileName == null ? "Upload CV (PDF) *" : "$cvFileName",
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: Colors.black87,

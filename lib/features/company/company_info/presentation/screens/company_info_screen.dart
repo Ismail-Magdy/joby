@@ -8,9 +8,9 @@ import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/routes/routes.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:joby/core/widgets/custom_feedback_dialog.dart';
 import 'package:joby/core/widgets/custom_text_field.dart';
 import 'package:joby/core/widgets/exit_confirmation_wrapper.dart';
-import 'package:joby/core/widgets/snack_bar_text.dart';
 import 'package:joby/features/company/company_info/manager/company_info_cubit.dart';
 import 'package:joby/features/company/company_info/manager/company_info_state.dart';
 import 'package:joby/features/company/company_info/presentation/widgets/custom_setup_company_button.dart';
@@ -56,19 +56,11 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
                   predicate: (Route<dynamic> route) => false,
                 );
               } else if (state is CompanyInfoError) {
-                // Show error message in a SnackBar
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: SnackBarText(title: state.message),
-                    backgroundColor: Colors.red,
-                    behavior: SnackBarBehavior.floating,
-                    margin: .all(20.r),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: .circular(10.r),
-                    ),
-                  ),
+                CustomFeedbackDialog.showError(
+                  context,
+                  title: "Setup Failed",
+                  message: state.message,
                 );
-                //
               }
             },
             builder: (context, state) {
@@ -169,18 +161,10 @@ class _CompanyInfoScreenState extends State<CompanyInfoScreen> {
                                 //
                                 if (cubit.profileImage == null &&
                                     cubit.prefilledAvatarUrl == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: const SnackBarText(
-                                        title: "Please upload a company logo",
-                                      ),
-                                      backgroundColor: Colors.red,
-                                      behavior: SnackBarBehavior.floating,
-                                      margin: .all(20.r),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: .circular(10.r),
-                                      ),
-                                    ),
+                                  CustomFeedbackDialog.showWarning(
+                                    context,
+                                    title: "Logo Required",
+                                    message: "Please upload a company logo",
                                   );
                                   return;
                                 }

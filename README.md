@@ -324,6 +324,14 @@ Features common to both user types reside in `lib/features/common/`, including:
 
 A centralized `ErrorHandler` utility class provides human-readable error message translation for all Supabase exception types (`AuthException`, `PostgrestException`, `StorageException`) as well as network-level exceptions (`SocketException`, `TimeoutException`). Repositories consume this handler to surface consistent error messages to the Cubit layer via `Either` (from the `dartz` package) for functional error propagation.
 
+### UI Feedback & CustomFeedbackDialog
+
+Feedback and alert messaging across the entire application are standardized through `CustomFeedbackDialog` (`lib/core/widgets/custom_feedback_dialog.dart`), eliminating transient SnackBars in favor of design-system-aligned feedback overlays:
+
+- **Semantic Variants**: Convenient static helper methods (`CustomFeedbackDialog.showSuccess`, `CustomFeedbackDialog.showError`, `CustomFeedbackDialog.showWarning`, `CustomFeedbackDialog.showInfo`) with pre-configured icons and palette colors from `AppColors`.
+- **Animated Progress & Auto-dismiss**: Smooth scale and fade transitions with a dynamic `LinearProgressIndicator` timer that provides clear visual feedback before dismissal.
+- **Reliable Lifecycle & Navigation**: Safe single-invocation `onFinish` callbacks that coordinate route transitions, data refetches, and state resets without race conditions.
+
 ---
 
 ## Installation and Setup

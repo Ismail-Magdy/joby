@@ -6,6 +6,7 @@ import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/core/widgets/custom_app_bar.dart';
+import 'package:joby/core/widgets/custom_feedback_dialog.dart';
 import 'package:joby/features/common/forgot_password/manager/forgot_password_cubit.dart';
 import 'package:joby/features/common/forgot_password/manager/forgot_password_state.dart';
 
@@ -37,31 +38,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
           listener: (context, state) {
             if (state is ForgotPasswordSuccess) {
-              //
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text(
+              CustomFeedbackDialog.showSuccess(
+                context,
+                title: "Email Sent",
+                message:
                     "Password reset link sent! Check your inbox or spam folder",
-                  ),
-                  backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
-                ),
+                onFinish: () {
+                  if (context.mounted) {
+                    context.pop();
+                  }
+                },
               );
-              //
-              context.pop();
-              //
             } else if (state is ForgotPasswordError) {
-              //
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
-                ),
+              CustomFeedbackDialog.showError(
+                context,
+                title: "Reset Failed",
+                message: state.message,
               );
             }
           },

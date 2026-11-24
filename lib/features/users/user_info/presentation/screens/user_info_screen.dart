@@ -10,13 +10,13 @@ import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/core/widgets/custom_app_bar_without_leading.dart";
 import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
-import "package:joby/core/widgets/snack_bar_text.dart";
+import "package:joby/core/widgets/custom_feedback_dialog.dart";
 import "package:joby/features/users/user_info/presentation/components/step_four_content.dart";
 import "package:joby/features/users/user_info/presentation/components/step_one_content.dart";
 import "package:joby/features/users/user_info/presentation/components/step_three_content.dart";
 import "package:joby/features/users/user_info/presentation/components/step_two_content.dart";
 import "package:joby/features/users/user_info/presentation/widgets/custom_two_buttons_row.dart";
-import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
+import "package:joby/features/users/user_info/data/models/location_picker_result.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "package:joby/features/users/user_info/presentation/widgets/step_title.dart";
 import "../../data/models/user_info_model.dart";
@@ -193,7 +193,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (val == null || val.trim().isEmpty) return null; // optional
     final v = val.trim().toLowerCase();
     if (!v.contains("linkedin.com")) {
-      return "Please Enter a Valid LinkedIn URL";
+      return "Enter a Valid LinkedIn URL";
     }
     return null;
   }
@@ -202,7 +202,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (val == null || val.trim().isEmpty) return null; // optional
     final v = val.trim().toLowerCase();
     if (!v.contains('github.com')) {
-      return "Please Enter a Valid GitHub URL";
+      return "Enter a Valid GitHub URL";
     }
     return null;
   }
@@ -211,7 +211,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (val == null || val.trim().isEmpty) return null; // optional
     final v = val.trim().toLowerCase();
     if (!v.contains('behance.net')) {
-      return "Please Enter a Valid Behance URL";
+      return "Enter a Valid Behance URL";
     }
     return null;
   }
@@ -325,39 +325,23 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         body: BlocConsumer<UserInfoCubit, UserInfoState>(
           listener: (context, state) async {
             if (state is UserInfoSuccess) {
-              // Success
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: SnackBarText(title: "Profile saved successfully"),
-                  backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-              );
-              //
               await SharedPrefHelper.setData("isUserInfoCompleted", true);
-              //
               if (!context.mounted) return;
-              //
-              context.pushReplacementNamed(Routes.userRootScreen);
-              //
-            } else if (state is UserInfoError) {
-              // Error
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: SnackBarText(title: state.message),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.all(20.r),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
+              CustomFeedbackDialog.showSuccess(
+                context,
+                title: "Success",
+                message: "Profile saved successfully",
+                onFinish: () {
+                  if (!context.mounted) return;
+                  context.pushReplacementNamed(Routes.userRootScreen);
+                },
               );
-              //
+            } else if (state is UserInfoError) {
+              CustomFeedbackDialog.showError(
+                context,
+                title: "Save Failed",
+                message: state.message,
+              );
             }
           },
           builder: (context, state) {
@@ -383,41 +367,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     if (_currentStep == 0) {
                       if (_pickedAvatarFile == null &&
                           _networkAvatarUrl == null) {
-                        //
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SnackBarText(
-                              title: "Please Upload Your Profile Picture",
-                            ),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(20.r),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
+                        CustomFeedbackDialog.showWarning(
+                          context,
+                          title: "Picture Required",
+                          message: "Upload Your Profile Picture",
                         );
-                        //
                         return;
                       }
                       if (!_formKey.currentState!.validate()) return;
                       setState(() => _currentStep += 1);
                     } else if (_currentStep == 1) {
                       if (_selectedLevel == null || _selectedWorkType == null) {
-                        //
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SnackBarText(
-                              title:
-                                  "Please Select Your Level and Type of Work",
-                            ),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(20.r),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
+                        CustomFeedbackDialog.showWarning(
+                          context,
+                          title: "Selection Required",
+                          message: "Select Your Level and Type of Work",
                         );
                         return;
                       }
@@ -425,63 +389,31 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     } else if (_currentStep == 2) {
                       // Check step 2 valid before proceeding
                       if (_cvFile == null && _whatsappController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SnackBarText(
-                              title: "Please fill WhatsApp and upload CV",
-                            ),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(20.r),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
+                        CustomFeedbackDialog.showWarning(
+                          context,
+                          title: "Details Required",
+                          message: "Fill WhatsApp Number and Upload CV",
                         );
                         return;
                       } else if (_whatsappController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SnackBarText(
-                              title: "Please Enter Your WhatsApp Number",
-                            ),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(20.r),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
+                        CustomFeedbackDialog.showWarning(
+                          context,
+                          title: "WhatsApp Required",
+                          message: "Enter Your WhatsApp Number",
                         );
                         return;
                       } else if (!_isPhoneValid) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SnackBarText(
-                              title: "Please enter a valid WhatsApp number",
-                            ),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(20.r),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
+                        CustomFeedbackDialog.showWarning(
+                          context,
+                          title: "Invalid Number",
+                          message: "Enter a Valid WhatsApp Number",
                         );
                         return;
                       } else if (_cvFile == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SnackBarText(
-                              title: "Please upload your CV",
-                            ),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(20.r),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                          ),
+                        CustomFeedbackDialog.showWarning(
+                          context,
+                          title: "CV Required",
+                          message: "Upload Your CV",
                         );
                         return;
                       }
@@ -513,7 +445,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               isLastStep ? "Submit" : "Next",
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: .bold,
                                 color: Colors.white,
                               ),
                             ),
@@ -524,9 +456,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     //
                     // Step One
                     Step(
-                      state: _currentStep > 0
-                          ? StepState.complete
-                          : StepState.indexed,
+                      state: _currentStep > 0 ? .complete : .indexed,
                       isActive: _currentStep >= 0,
                       title: const StepTitle(title: "Basic Information"),
                       content: StepOneContent(
@@ -546,9 +476,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     //
                     // Step Two
                     Step(
-                      state: _currentStep > 1
-                          ? StepState.complete
-                          : StepState.indexed,
+                      state: _currentStep > 1 ? .complete : .indexed,
                       isActive: _currentStep >= 1,
                       title: const StepTitle(title: "Experience & Work Type"),
                       content: StepTwoContent(
@@ -562,9 +490,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     //
                     // Step Three
                     Step(
-                      state: _currentStep > 2
-                          ? StepState.complete
-                          : StepState.indexed,
+                      state: _currentStep > 2 ? .complete : .indexed,
                       isActive: _currentStep >= 2,
                       title: const StepTitle(title: "Links & Resume"),
                       content: StepThreeContent(
@@ -603,7 +529,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         onTapCV: () async {
                           FilePickerResult? result = await FilePicker.platform
                               .pickFiles(
-                                type: FileType.custom,
+                                type: .custom,
                                 allowedExtensions: ["pdf"],
                               );
 
