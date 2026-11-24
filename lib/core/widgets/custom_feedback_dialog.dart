@@ -100,6 +100,7 @@ class CustomFeedbackDialog extends StatefulWidget {
   }
 
   /// Displays a custom feedback dialog using a smooth scale & fade transition.
+  /// Safely resolves the dialog before executing any `onFinish` navigation callback.
   static Future<void> show(
     BuildContext context, {
     required IconData icon,
@@ -108,20 +109,19 @@ class CustomFeedbackDialog extends StatefulWidget {
     required String message,
     VoidCallback? onFinish,
     Duration duration = const Duration(milliseconds: 2500),
-  }) {
-    return showGeneralDialog(
+  }) async {
+    await showGeneralDialog(
       context: context,
       barrierDismissible: false,
       barrierLabel: "Feedback",
       barrierColor: Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
         return CustomFeedbackDialog(
           icon: icon,
           color: color,
           title: title,
           message: message,
-          onFinish: onFinish,
           duration: duration,
         );
       },
@@ -135,6 +135,13 @@ class CustomFeedbackDialog extends StatefulWidget {
         );
       },
     );
+
+    // Dialog has fully popped and Navigator is unlocked
+    if (onFinish != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        onFinish();
+      });
+    }
   }
 
   @override
@@ -142,12 +149,20 @@ class CustomFeedbackDialog extends StatefulWidget {
 }
 
 class _CustomFeedbackDialogState extends State<CustomFeedbackDialog> {
-  bool _hasFinished = false;
+  bool _hasPopped = false;
 
-  void _triggerFinish() {
-    if (_hasFinished) return;
-    _hasFinished = true;
-    widget.onFinish?.call();
+  void _popDialog() {
+    if (_hasPopped) return;
+    _hasPopped = true;
+    if (mounted && Navigator.of(context).canPop()) {
+      context.pop();
+    }
+    // If onFinish was provided directly to widget without `CustomFeedbackDialog.show`
+    if (widget.onFinish != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onFinish?.call();
+      });
+    }
   }
 
   @override
@@ -155,17 +170,19 @@ class _CustomFeedbackDialogState extends State<CustomFeedbackDialog> {
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          _triggerFinish();
+        if (didPop && widget.onFinish != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            widget.onFinish?.call();
+          });
         }
       },
       child: Center(
         child: Container(
-          margin: .symmetric(horizontal: 24.w),
-          padding: .only(top: 24.h, left: 24.w, right: 24.w, bottom: 0),
+          margin: EdgeInsets.symmetric(horizontal: 24.w),
+          padding: EdgeInsets.only(top: 24.h, left: 24.w, right: 24.w, bottom: 0),
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: .circular(20.r),
+            borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
                 color: AppColors.dialogShadow,
@@ -175,18 +192,18 @@ class _CustomFeedbackDialogState extends State<CustomFeedbackDialog> {
               ),
             ],
           ),
-          clipBehavior: .antiAlias,
+          clipBehavior: Clip.antiAlias,
           child: Material(
             color: Colors.transparent,
             child: Column(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 // Icon circle
                 Container(
-                  padding: .all(16.w),
+                  padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
                     color: widget.color.withValues(alpha: 0.1),
-                    shape: .circle,
+                    shape: BoxShape.circle,
                   ),
                   child: Icon(widget.icon, color: widget.color, size: 48.sp),
                 ),
@@ -194,14 +211,14 @@ class _CustomFeedbackDialogState extends State<CustomFeedbackDialog> {
                 // Title
                 Text(
                   widget.title,
-                  textAlign: .center,
+                  textAlign: TextAlign.center,
                   style: AppTextStyles.dialogTitle(widget.color),
                 ),
                 verticalSpace(8),
                 // Message
                 Text(
                   widget.message,
-                  textAlign: .center,
+                  textAlign: TextAlign.center,
                   style: AppTextStyles.dialogMessage,
                 ),
                 verticalSpace(20),
@@ -209,12 +226,7 @@ class _CustomFeedbackDialogState extends State<CustomFeedbackDialog> {
                 TweenAnimationBuilder<double>(
                   tween: Tween<double>(begin: 0.0, end: 1.0),
                   duration: widget.duration,
-                  onEnd: () {
-                    if (Navigator.of(context).canPop()) {
-                      context.pop();
-                    }
-                    _triggerFinish();
-                  },
+                  onEnd: _popDialog,
                   builder: (context, value, child) {
                     return LinearProgressIndicator(
                       value: value,
@@ -233,7 +245,7 @@ class _CustomFeedbackDialogState extends State<CustomFeedbackDialog> {
   }
 }
 
-/// Standalone helper function for showing feedback dialogs
+/// Standalone helper function for showing feedback dialogs.
 void showFeedbackDialog(
   BuildContext context, {
   required IconData icon,

@@ -1,5 +1,7 @@
 import "dart:io";
+import "dart:typed_data";
 import "package:dartz/dartz.dart";
+import "package:image_picker/image_picker.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "../models/user_info_model.dart";
 import "user_info_repo.dart";
@@ -21,18 +23,42 @@ class UserInfoRepoImpl implements UserInfoRepo {
       final userEmail = supabaseClient.auth.currentUser?.email ?? '';
 
       if (userId == null) {
-        return const Left("User is not Authenticated");
+        return const Left("User is Not Authenticated");
       }
 
       String? finalAvatarUrl = userInfo.avatarUrl;
       String? finalCvUrl = userInfo.cvUrl;
 
       if (avatarFile != null) {
-        if (await avatarFile.exists()) {
-          //
-          final String avatarName = "$userId.jpg";
-          final avatarBytes = await avatarFile.readAsBytes();
+        String avatarPath = avatarFile.path;
+        if (avatarPath.startsWith("file://")) {
+          try {
+            avatarPath = Uri.parse(avatarPath).toFilePath();
+          } catch (_) {
+            avatarPath = avatarPath.replaceFirst("file://", "");
+          }
+        }
+        final normalizedAvatarFile = File(avatarPath);
 
+        Uint8List? avatarBytes;
+        if (await normalizedAvatarFile.exists()) {
+          try {
+            avatarBytes = await normalizedAvatarFile.readAsBytes();
+          } catch (_) {}
+        }
+
+        if (avatarBytes == null || avatarBytes.isEmpty) {
+          try {
+            avatarBytes = await XFile(avatarFile.path).readAsBytes();
+          } catch (_) {
+            try {
+              avatarBytes = await normalizedAvatarFile.readAsBytes();
+            } catch (_) {}
+          }
+        }
+
+        if (avatarBytes != null && avatarBytes.isNotEmpty) {
+          final String avatarName = "$userId.jpg";
           await supabaseClient.storage
               .from("avatars")
               .uploadBinary(
@@ -47,19 +73,41 @@ class UserInfoRepoImpl implements UserInfoRepo {
           finalAvatarUrl = supabaseClient.storage
               .from("avatars")
               .getPublicUrl(avatarName);
-        } else {
-          return const Left(
-            "Profile Picture File does not Exist. Please Select it Again",
-          );
+        } else if (finalAvatarUrl == null || finalAvatarUrl.isEmpty) {
+          return const Left("Profile Picture File does not Exist");
         }
       }
 
       if (cvFile != null) {
-        if (await cvFile.exists()) {
-          //
-          final String cvName = "$userId.pdf";
-          final cvBytes = await cvFile.readAsBytes();
+        String cvPath = cvFile.path;
+        if (cvPath.startsWith("file://")) {
+          try {
+            cvPath = Uri.parse(cvPath).toFilePath();
+          } catch (_) {
+            cvPath = cvPath.replaceFirst("file://", "");
+          }
+        }
+        final normalizedCvFile = File(cvPath);
 
+        Uint8List? cvBytes;
+        if (await normalizedCvFile.exists()) {
+          try {
+            cvBytes = await normalizedCvFile.readAsBytes();
+          } catch (_) {}
+        }
+
+        if (cvBytes == null || cvBytes.isEmpty) {
+          try {
+            cvBytes = await XFile(cvFile.path).readAsBytes();
+          } catch (_) {
+            try {
+              cvBytes = await normalizedCvFile.readAsBytes();
+            } catch (_) {}
+          }
+        }
+
+        if (cvBytes != null && cvBytes.isNotEmpty) {
+          final String cvName = "$userId.pdf";
           await supabaseClient.storage
               .from("cvs")
               .uploadBinary(
@@ -72,8 +120,8 @@ class UserInfoRepoImpl implements UserInfoRepo {
                 ),
               );
           finalCvUrl = supabaseClient.storage.from("cvs").getPublicUrl(cvName);
-        } else {
-          return const Left("CV File does not Exist. Please Select it Again");
+        } else if (finalCvUrl == null || finalCvUrl.isEmpty) {
+          return const Left("CV File does not Exist");
         }
       }
 

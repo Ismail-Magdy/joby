@@ -215,7 +215,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _triggerSave();
         return false;
       } else {
-        if (!context.mounted) return false;
+        if (!mounted) return false;
         CustomFeedbackDialog.showWarning(
           context,
           title: "Required Fields",

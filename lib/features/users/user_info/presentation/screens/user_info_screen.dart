@@ -250,11 +250,19 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         ],
       );
 
-      if (croppedFile != null) {
-        setState(() {
-          _pickedAvatarFile = File(croppedFile.path);
-        });
+      final selectedPath = croppedFile?.path ?? image.path;
+      String cleanPath = selectedPath;
+      if (cleanPath.startsWith("file://")) {
+        try {
+          cleanPath = Uri.parse(cleanPath).toFilePath();
+        } catch (_) {
+          cleanPath = cleanPath.replaceFirst("file://", "");
+        }
       }
+
+      setState(() {
+        _pickedAvatarFile = File(cleanPath);
+      });
     }
   }
 
