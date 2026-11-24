@@ -106,7 +106,7 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
             verticalSpace(15),
             //
             Text(
-              "No views yet\nKeep updating your profile",
+              "No Profile Views Yet\nKeep Updating Your Profile",
               textAlign: .center,
               style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
             ),
@@ -170,7 +170,7 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                       child: Column(
                         crossAxisAlignment: .start,
                         children: [
-                          // 🔥 Fire Badge
+                          // Fire Badge
                           ProfileViewsCardWithoutTime(
                             viewCompanyName: view.companyName,
                             viewViewCountInt: view.viewCount,

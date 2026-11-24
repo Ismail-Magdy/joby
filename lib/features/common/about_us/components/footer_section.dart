@@ -7,7 +7,7 @@ class FooterSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "© 2026 Joby - Made in Egypt",
+      "© 2026 Joby . Made in Egypt",
       style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade700),
     );
   }

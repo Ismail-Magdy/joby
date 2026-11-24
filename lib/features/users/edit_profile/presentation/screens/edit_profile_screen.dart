@@ -70,12 +70,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // Dropdown options (same as user_info_screen.dart)
   static const List<String> _levelOptions = [
     "Junior",
-    "Mid-Level",
+    "Mid Level",
     "Senior",
     "Lead",
   ];
   //
-  static const List<String> _workTypeOptions = ["Remote", "On-site", "Hybrid"];
+  static const List<String> _workTypeOptions = ["Remote", "On Site", "Hybrid"];
 
   @override
   void initState() {
@@ -163,7 +163,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         //
         content: Text(
-          "You have unsaved changes. What would you like to do?",
+          "You Have unsaved Changes. What Would You Like to Do?",
           style: TextStyle(
             fontSize: 14.sp,
             color: Colors.grey.shade700,
@@ -190,11 +190,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () => Navigator.pop(context, "save"),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: .circular(12.r)),
               elevation: 0,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              padding: .symmetric(horizontal: 20.w, vertical: 10.h),
             ),
             child: Text(
               "Save Changes",
@@ -219,7 +217,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         CustomFeedbackDialog.showWarning(
           context,
           title: "Required Fields",
-          message: "Please fill required fields properly",
+          message: "Fill Required Fields Properly",
         );
         return false;
       }
@@ -234,7 +232,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       CustomFeedbackDialog.showWarning(
         context,
         title: "Required Fields",
-        message: "Please fill required fields properly",
+        message: "Fill Required Fields Properly",
       );
       return;
     }
@@ -323,7 +321,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               CustomFeedbackDialog.showSuccess(
                 context,
                 title: "Success",
-                message: "Profile updated successfully",
+                message: "Profile Updated Successfully",
                 onFinish: () {
                   if (mounted) {
                     Navigator.pop(context, true);
@@ -386,17 +384,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       autovalidateMode: .onUserInteraction,
                       validator: (val) {
                         final v = val?.trim() ?? "";
-                        if (v.isEmpty) return "Please enter your name";
+                        if (v.isEmpty) return "Please Enter Your Name";
                         if (v.length < 2) {
-                          return "Name must be at least 2 characters.";
+                          return "Name Must be at Least 2 Characters";
                         }
                         if (RegExp(r'[0-9]').hasMatch(v)) {
-                          return "Name cannot contain numbers.";
+                          return "Name Cannot Contain Numbers";
                         }
                         if (!RegExp(
                           r'^[a-zA-Z\u0600-\u06FF\s]+$',
                         ).hasMatch(v)) {
-                          return "Name can only contain letters.";
+                          return "Name Can Only Contain Letters";
                         }
                         return null;
                       },
@@ -414,9 +412,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       autovalidateMode: .onUserInteraction,
                       validator: (val) {
                         final v = val?.trim() ?? "";
-                        if (v.isEmpty) return "Please enter your job title";
+                        if (v.isEmpty) return "Please Enter Your Job Title";
                         if (v.length < 2) {
-                          return "Job title must be at least 2 characters";
+                          return "Job Title Must be at Least 2 Characters";
                         }
                         return null;
                       },
@@ -431,7 +429,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     EditProfileDropDown(
                       value: _selectedLevel,
-                      hint: "Select your level",
+                      hint: "Select Your Level",
                       icon: Ionicons.statsChartOutline,
                       items: _levelOptions,
                       onChanged: (val) => setState(() => _selectedLevel = val),
@@ -446,7 +444,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //
                     EditProfileDropDown(
                       value: _selectedWorkType,
-                      hint: "Select work type",
+                      hint: "Select Work Type",
                       icon: Ionicons.locationOutline,
                       items: _workTypeOptions,
                       onChanged: (val) =>

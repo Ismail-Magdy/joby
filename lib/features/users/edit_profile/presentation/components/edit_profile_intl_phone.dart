@@ -27,7 +27,7 @@ class EditProfileIntlPhone extends StatelessWidget {
       cursorColor: AppColors.primaryColor,
       initialValue: initialValue,
       initialCountryCode: initialCountryCode,
-      invalidNumberMessage: "Invalid number for the selected country",
+      invalidNumberMessage: "Invalid Number For The Selected Country",
       pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
 
       decoration: InputDecoration(

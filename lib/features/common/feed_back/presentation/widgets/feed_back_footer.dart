@@ -8,7 +8,7 @@ class FeedBackFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        "Your feedback will be sent directly to our team",
+        "Your Feedback Will Be Sent Directly to Our Team",
         style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade400),
         textAlign: .center,
       ),

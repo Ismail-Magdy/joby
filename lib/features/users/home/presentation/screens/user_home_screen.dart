@@ -261,8 +261,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           arguments: user,
                         );
                         if (result == true && mounted) {
-                          // ignore: use_build_context_synchronously
-                          context.read<UserHomeCubit>().getUserData();
+                          () => context.read<UserHomeCubit>().getUserData();
                         }
                       },
                     ),

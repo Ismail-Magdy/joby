@@ -53,7 +53,7 @@ class BuildStatsCard extends StatelessWidget {
                   ),
                   //
                   Text(
-                    "Total Profile views",
+                    "Total Profile Views",
                     style: TextStyle(
                       fontSize: 13.sp,
                       color: Colors.grey.shade600,
@@ -98,7 +98,7 @@ class BuildStatsCard extends StatelessWidget {
               verticalSpace(4),
               //
               Text(
-                "last week",
+                "Last Week",
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: Colors.grey.shade600,
