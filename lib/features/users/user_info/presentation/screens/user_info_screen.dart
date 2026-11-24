@@ -38,7 +38,8 @@ class UserInfoScreen extends StatefulWidget {
   State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
-class _UserInfoScreenState extends State<UserInfoScreen> {
+class _UserInfoScreenState extends State<UserInfoScreen>
+    with WidgetsBindingObserver {
   int _currentStep = 0;
   final _formKey = GlobalKey<FormState>();
 
@@ -71,8 +72,167 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   @override
   void initState() {
     super.initState();
-    _determinePosition();
+    WidgetsBinding.instance.addObserver(this);
+    final hasSavedLocation = _restoreDraft();
+    _attachDraftListeners();
     _fetchUserMetadata();
+    if (!hasSavedLocation) {
+      _determinePosition();
+    }
+  }
+
+  void _attachDraftListeners() {
+    _nameController.addListener(_onTextDraftChanged);
+    _jobCategoryController.addListener(_onTextDraftChanged);
+    _jobTitleController.addListener(_onTextDraftChanged);
+    _whatsappController.addListener(_onTextDraftChanged);
+    _linkedinController.addListener(_onTextDraftChanged);
+    _githubController.addListener(_onTextDraftChanged);
+    _behanceController.addListener(_onTextDraftChanged);
+  }
+
+  void _detachDraftListeners() {
+    _nameController.removeListener(_onTextDraftChanged);
+    _jobCategoryController.removeListener(_onTextDraftChanged);
+    _jobTitleController.removeListener(_onTextDraftChanged);
+    _whatsappController.removeListener(_onTextDraftChanged);
+    _linkedinController.removeListener(_onTextDraftChanged);
+    _githubController.removeListener(_onTextDraftChanged);
+    _behanceController.removeListener(_onTextDraftChanged);
+  }
+
+  void _onTextDraftChanged() {
+    context.read<UserInfoCubit>().scheduleDraftSave(_buildDraftMap);
+  }
+
+  Future<void> _saveDraftImmediately() async {
+    await context.read<UserInfoCubit>().saveUserInfoDraftNow(_buildDraftMap());
+  }
+
+  Map<String, dynamic> _buildDraftMap() {
+    return {
+      "currentStep": _currentStep,
+      "name": _nameController.text,
+      "jobCategory": _jobCategoryController.text,
+      "jobTitle": _jobTitleController.text,
+      "selectedLevel": _selectedLevel,
+      "selectedWorkType": _selectedWorkType,
+      "whatsapp": _whatsappController.text,
+      "completeWhatsappNumber": _completeWhatsappNumber,
+      "isPhoneValid": _isPhoneValid,
+      "countryCode": _selectedCountry.code,
+      "linkedin": _linkedinController.text,
+      "github": _githubController.text,
+      "behance": _behanceController.text,
+      "cvFilePath": _cvFile?.path,
+      "cvFileName": _cvFileName,
+      "avatarFilePath": _pickedAvatarFile?.path,
+      "networkAvatarUrl": _networkAvatarUrl,
+      "latitude": _latitude,
+      "longitude": _longitude,
+      "locationName": _locationName,
+    };
+  }
+
+  /// Restores any saved user-scoped draft. Returns true if a valid location
+  /// was restored so GPS auto-detection does not overwrite the user's pick.
+  bool _restoreDraft() {
+    final draft = context.read<UserInfoCubit>().loadUserInfoDraft();
+    if (draft == null) return false;
+
+    final savedStep = draft["currentStep"];
+    if (savedStep is int && savedStep >= 0 && savedStep <= 3) {
+      _currentStep = savedStep;
+    }
+
+    _nameController.text = (draft["name"] as String?) ?? "";
+    _jobCategoryController.text = (draft["jobCategory"] as String?) ?? "";
+    _jobTitleController.text = (draft["jobTitle"] as String?) ?? "";
+    _linkedinController.text = (draft["linkedin"] as String?) ?? "";
+    _githubController.text = (draft["github"] as String?) ?? "";
+    _behanceController.text = (draft["behance"] as String?) ?? "";
+
+    final level = draft["selectedLevel"] as String?;
+    if (level != null &&
+        const ["Junior", "Mid Level", "Senior", "Lead"].contains(level)) {
+      _selectedLevel = level;
+    }
+
+    final workType = draft["selectedWorkType"] as String?;
+    if (workType != null &&
+        const ["Remote", "On Site", "Hybrid"].contains(workType)) {
+      _selectedWorkType = workType;
+    }
+
+    final countryCode = draft["countryCode"] as String?;
+    if (countryCode != null && countryCode.isNotEmpty) {
+      _selectedCountry = countries.firstWhere(
+        (c) => c.code == countryCode,
+        orElse: () => _selectedCountry,
+      );
+    }
+
+    _whatsappController.text = (draft["whatsapp"] as String?) ?? "";
+    _completeWhatsappNumber =
+        (draft["completeWhatsappNumber"] as String?) ?? "";
+    _isPhoneValid = (draft["isPhoneValid"] as bool?) ?? false;
+
+    final avatarPath = draft["avatarFilePath"] as String?;
+    if (avatarPath != null && avatarPath.isNotEmpty) {
+      final avatarFile = File(avatarPath);
+      if (avatarFile.existsSync()) {
+        _pickedAvatarFile = avatarFile;
+      }
+    }
+
+    final savedNetworkAvatar = draft["networkAvatarUrl"] as String?;
+    if (savedNetworkAvatar != null && savedNetworkAvatar.isNotEmpty) {
+      _networkAvatarUrl = savedNetworkAvatar;
+    }
+
+    final cvPath = draft["cvFilePath"] as String?;
+    if (cvPath != null && cvPath.isNotEmpty) {
+      final cvFile = File(cvPath);
+      if (cvFile.existsSync()) {
+        _cvFile = cvFile;
+        _cvFileName = draft["cvFileName"] as String?;
+      }
+    }
+
+    final savedLat = (draft["latitude"] as num?)?.toDouble();
+    final savedLng = (draft["longitude"] as num?)?.toDouble();
+    final savedLocationName = draft["locationName"] as String?;
+
+    const transientStatuses = {
+      "",
+      "Detecting Location",
+      "Location Services Disabled",
+      "Location Permissions Denied",
+      "Location Permissions Permanently Denied",
+      "Error Getting Location",
+      "Unknown Location",
+    };
+
+    if (savedLat != null &&
+        savedLng != null &&
+        savedLocationName != null &&
+        !transientStatuses.contains(savedLocationName)) {
+      _latitude = savedLat;
+      _longitude = savedLng;
+      _locationName = LocationHelper.normalizeLocationName(savedLocationName);
+      _isLoadingLocation = false;
+      return true;
+    }
+
+    return false;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _saveDraftImmediately();
+    }
   }
 
   void _fetchUserMetadata() {
@@ -80,24 +240,28 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     if (user != null) {
       final metadata = user.userMetadata;
       if (metadata != null) {
-        if (metadata['full_name'] != null &&
-            metadata['full_name'].toString().isNotEmpty) {
-          _nameController.text = metadata['full_name'];
-        } else if (metadata['name'] != null &&
-            metadata['name'].toString().isNotEmpty) {
-          _nameController.text = metadata['name'];
+        if (_nameController.text.isEmpty) {
+          if (metadata['full_name'] != null &&
+              metadata['full_name'].toString().isNotEmpty) {
+            _nameController.text = metadata['full_name'];
+          } else if (metadata['name'] != null &&
+              metadata['name'].toString().isNotEmpty) {
+            _nameController.text = metadata['name'];
+          }
         }
 
-        if (metadata['avatar_url'] != null &&
-            metadata['avatar_url'].toString().isNotEmpty) {
-          setState(() {
-            _networkAvatarUrl = metadata['avatar_url'];
-          });
-        } else if (metadata['picture'] != null &&
-            metadata['picture'].toString().isNotEmpty) {
-          setState(() {
-            _networkAvatarUrl = metadata['picture'];
-          });
+        if (_networkAvatarUrl == null) {
+          if (metadata['avatar_url'] != null &&
+              metadata['avatar_url'].toString().isNotEmpty) {
+            setState(() {
+              _networkAvatarUrl = metadata['avatar_url'];
+            });
+          } else if (metadata['picture'] != null &&
+              metadata['picture'].toString().isNotEmpty) {
+            setState(() {
+              _networkAvatarUrl = metadata['picture'];
+            });
+          }
         }
       }
     }
@@ -160,6 +324,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
       if (mounted) {
         setState(() => _locationName = loc);
+        _saveDraftImmediately();
       }
     } catch (e) {
       if (mounted) setState(() => _locationName = "Unknown Location");
@@ -206,6 +371,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _detachDraftListeners();
     _nameController.dispose();
     _jobCategoryController.dispose();
     _jobTitleController.dispose();
@@ -213,6 +380,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     _linkedinController.dispose();
     _githubController.dispose();
     _behanceController.dispose();
+    _mapController.dispose();
     super.dispose();
   }
 
@@ -251,6 +419,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       setState(() {
         _pickedAvatarFile = File(cleanPath);
       });
+      _saveDraftImmediately();
     }
   }
 
@@ -273,6 +442,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         _locationName = result.locationName;
       });
       _mapController.move(LatLng(_latitude, _longitude), 14.0);
+      _saveDraftImmediately();
     }
   }
 
@@ -372,6 +542,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       }
                       if (!_formKey.currentState!.validate()) return;
                       setState(() => _currentStep += 1);
+                      _saveDraftImmediately();
                     } else if (_currentStep == 1) {
                       if (_selectedLevel == null || _selectedWorkType == null) {
                         CustomFeedbackDialog.showWarning(
@@ -382,6 +553,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         return;
                       }
                       setState(() => _currentStep += 1);
+                      _saveDraftImmediately();
                     } else if (_currentStep == 2) {
                       // Check step 2 valid before proceeding
                       if (_cvFile == null && _whatsappController.text.isEmpty) {
@@ -415,13 +587,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       }
                       //
                       setState(() => _currentStep += 1);
+                      _saveDraftImmediately();
                     } else if (isLastStep) {
                       _submitData(cubit);
                     }
                   },
                   onStepCancel: _currentStep == 0
                       ? null
-                      : () => setState(() => _currentStep -= 1),
+                      : () {
+                          setState(() => _currentStep -= 1);
+                          _saveDraftImmediately();
+                        },
                   controlsBuilder: (context, details) {
                     final isLastStep = _currentStep == 3;
                     //
@@ -476,10 +652,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       isActive: _currentStep >= 1,
                       title: const StepTitle(title: "Experience & Work Type"),
                       content: StepTwoContent(
-                        onChangedLevel: (newValue) =>
-                            setState(() => _selectedLevel = newValue),
-                        onChangedTypeOfWork: (newValue) =>
-                            setState(() => _selectedWorkType = newValue),
+                        selectedLevel: _selectedLevel,
+                        selectedWorkType: _selectedWorkType,
+                        onChangedLevel: (newValue) {
+                          setState(() => _selectedLevel = newValue);
+                          _saveDraftImmediately();
+                        },
+                        onChangedTypeOfWork: (newValue) {
+                          setState(() => _selectedWorkType = newValue);
+                          _saveDraftImmediately();
+                        },
                       ),
                       //
                     ),
@@ -497,6 +679,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         cvFile: _cvFile,
                         cvFileName: _cvFileName,
                         isPhoneValid: _isPhoneValid,
+                        initialCountryCode: _selectedCountry.code,
                         onChangedPhone: (phone) {
                           setState(() {
                             _completeWhatsappNumber = phone.completeNumber;
@@ -506,6 +689,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 phone.number.length <=
                                     _selectedCountry.maxLength;
                           });
+                          _saveDraftImmediately();
                         },
                         onChangedCountry: (country) {
                           setState(() {
@@ -518,6 +702,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                       _selectedCountry.maxLength;
                             }
                           });
+                          _saveDraftImmediately();
                         },
                         linkedinValidator: _validateLinkedinUrl,
                         githubValidator: _validateGithubUrl,
@@ -535,6 +720,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _cvFile = File(result.files.single.path!);
                               _cvFileName = result.files.single.name;
                             });
+                            _saveDraftImmediately();
                           }
                         },
                       ),

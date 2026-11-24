@@ -71,7 +71,10 @@ Future<void> initGetIt() async {
 
   /// User Info Feature
   getIt.registerLazySingleton<UserInfoRepo>(
-    () => UserInfoRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+    () => UserInfoRepoImpl(
+      supabaseClient: getIt<SupabaseClient>(),
+      sharedPreferences: getIt<SharedPreferences>(),
+    ),
   );
   getIt.registerFactory<UserInfoCubit>(
     () => UserInfoCubit(userInfoRepo: getIt<UserInfoRepo>()),

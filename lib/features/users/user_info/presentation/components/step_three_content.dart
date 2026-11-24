@@ -25,6 +25,7 @@ class StepThreeContent extends StatelessWidget {
     required this.onTapCV,
     required this.cvFile,
     required this.cvFileName,
+    this.initialCountryCode = "EG",
   });
 
   final TextEditingController whatsappController;
@@ -45,6 +46,7 @@ class StepThreeContent extends StatelessWidget {
   //
   final File? cvFile;
   final String? cvFileName;
+  final String initialCountryCode;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class StepThreeContent extends StatelessWidget {
         IntlPhoneField(
           cursorColor: AppColors.primaryColor,
           controller: whatsappController,
-          initialCountryCode: "EG",
+          initialCountryCode: initialCountryCode,
           invalidNumberMessage: "Invalid number for the selected country",
           //
           pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),

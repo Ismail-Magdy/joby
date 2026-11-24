@@ -8,4 +8,10 @@ abstract class UserInfoRepo {
     File? avatarFile,
     File? cvFile,
   });
+
+  Future<void> saveUserInfoDraft(Map<String, dynamic> draftData);
+
+  Map<String, dynamic>? getUserInfoDraft();
+
+  Future<void> clearUserInfoDraft();
 }

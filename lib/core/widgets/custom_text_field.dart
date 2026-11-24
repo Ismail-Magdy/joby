@@ -129,10 +129,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
       case .password:
         if (trimmedValue.isEmpty) {
-          return "Please enter a password.";
-        }
-        if (trimmedValue.length < 6) {
-          return "Password must be at least 6 characters.";
+          return "Please enter your password.";
         }
         break;
 
