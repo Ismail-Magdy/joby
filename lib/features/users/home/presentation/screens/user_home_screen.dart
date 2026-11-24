@@ -8,6 +8,7 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:joby/core/helpers/extensions.dart";
 import "package:joby/core/routes/routes.dart";
 import "package:joby/core/widgets/error_screen.dart";
+import "package:joby/core/widgets/custom_feedback_dialog.dart";
 import "package:joby/features/users/home/presentation/components/social_media_row.dart";
 import "package:joby/features/users/home/presentation/widgets/home_total_points_container.dart";
 import "package:joby/features/users/points/manager/points_cubit.dart";
@@ -15,12 +16,11 @@ import "package:joby/features/users/points/manager/points_state.dart";
 import "package:joby/features/users/points/presentation/widgets/points_celebration_dialog.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:joby/core/helpers/spacing.dart";
-import "package:joby/core/themes/app_colors.dart";
 import "../../manager/user_home_cubit.dart";
 import "../../manager/user_home_state.dart";
 import '../widgets/profile_header_delegate.dart';
 import "package:joby/features/users/user_info/presentation/screens/location_picker_screen.dart";
-import "package:joby/features/users/user_info/presentation/widgets/location_picker_result.dart";
+import "package:joby/features/users/user_info/data/models/location_picker_result.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/widgets/pdf_viewer_screen.dart";
 
@@ -65,28 +65,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
       if (mounted) {
         if (error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
-              margin: EdgeInsets.all(20.r),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
+          CustomFeedbackDialog.showError(
+            context,
+            title: "Location Error",
+            message: error,
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text("Location updated successfully"),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
-              margin: EdgeInsets.all(20.r),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-            ),
+          CustomFeedbackDialog.showSuccess(
+            context,
+            title: "Success",
+            message: "Location updated successfully",
           );
         }
       }
@@ -120,31 +108,19 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     try {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Center(child: const Text("Could not launch the link")),
-              backgroundColor: Colors.red,
-              margin: EdgeInsets.all(20.r),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.r)),
-              ),
-            ),
+          CustomFeedbackDialog.showError(
+            context,
+            title: "Link Error",
+            message: "Could not launch the link",
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Center(child: const Text("Invalid link format")),
-            backgroundColor: Colors.red,
-            margin: EdgeInsets.all(20.r),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.r)),
-            ),
-          ),
+        CustomFeedbackDialog.showError(
+          context,
+          title: "Invalid Link",
+          message: "Invalid link format",
         );
       }
     }
@@ -198,41 +174,19 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           //
           // Points Claim Error
           else if (state is PointsClaimError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Center(
-                  child: Text(
-                    "RPC Error: ${state.message}",
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                backgroundColor: Colors.red,
-                margin: .all(20.r),
-                shape: RoundedRectangleBorder(
-                  borderRadius: .all(Radius.circular(10.r)),
-                ),
-              ),
+            CustomFeedbackDialog.showError(
+              context,
+              title: "Points Claim Error",
+              message: "RPC Error: ${state.message}",
             );
           }
           //
           // Points Already Claimed
           else if (state is PointsClaimAlreadyClaimed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Center(
-                  child: const Text(
-                    "Points Already claimed",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                backgroundColor: AppColors.primaryColor,
-                margin: .all(20.r),
-                shape: RoundedRectangleBorder(
-                  borderRadius: .all(Radius.circular(10.r)),
-                ),
-              ),
+            CustomFeedbackDialog.showInfo(
+              context,
+              title: "Already Claimed",
+              message: "Points Already claimed",
             );
           }
           //

@@ -11,6 +11,7 @@ import 'package:joby/features/common/on_boarding/manager/on_boarding_state.dart'
 import 'package:joby/features/common/on_boarding/presentation/widgets/user_type_card.dart';
 import 'package:joby/core/routes/routes.dart';
 import '../../../../../core/helpers/extensions.dart';
+import 'package:joby/core/widgets/custom_feedback_dialog.dart';
 import 'package:joby/core/widgets/exit_confirmation_wrapper.dart';
 
 class OnBoardingScreen extends StatelessWidget {
@@ -95,24 +96,10 @@ class OnBoardingScreen extends StatelessWidget {
                       // Navigate to Auth Screen after successful save
                       context.pushReplacementNamed(Routes.authScreen);
                     } else if (state is SaveUserTypeError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        // Snack Bar Error
-                        SnackBar(
-                          // Snack Bar Text Error
-                          content: Text(
-                            textAlign: .center,
-                            state.message,
-                            style: TextStyle(fontSize: 14.sp),
-                          ),
-                          //
-                          backgroundColor: Colors.red,
-                          behavior: .floating,
-                          margin: .all(20.r),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: .circular(10.r),
-                          ),
-                        ),
-                        //
+                      CustomFeedbackDialog.showError(
+                        context,
+                        title: "Error",
+                        message: state.message,
                       );
                     }
                   },

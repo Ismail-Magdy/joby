@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/core/widgets/custom_app_bar.dart';
-import 'package:joby/core/widgets/snack_bar_text.dart';
+import 'package:joby/core/widgets/custom_feedback_dialog.dart';
 import 'package:joby/features/common/feed_back/manager/feed_back_cubit.dart';
 import 'package:joby/features/common/feed_back/manager/feed_back_state.dart';
 import 'package:joby/features/common/feed_back/presentation/widgets/feed_back_footer.dart';
@@ -34,19 +34,10 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
     final message = _messageController.text.trim();
 
     if (message.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(
-            child: Text(
-              "Please write your feedback first",
-              style: TextStyle(fontSize: 14.sp, color: Colors.white),
-            ),
-          ),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(20.r),
-          shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
-        ),
+      CustomFeedbackDialog.showWarning(
+        context,
+        title: "Feedback Empty",
+        message: "Please write your feedback first",
       );
       return;
     }
@@ -67,17 +58,11 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
           if (state is FeedBackSent) {
             _messageController.clear();
           } else if (state is FeedBackError) {
-            //
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: SnackBarText(title: state.message),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-                margin: .all(20.r),
-                shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
-              ),
+            CustomFeedbackDialog.showError(
+              context,
+              title: "Submission Error",
+              message: state.message,
             );
-            //
           }
         },
         //

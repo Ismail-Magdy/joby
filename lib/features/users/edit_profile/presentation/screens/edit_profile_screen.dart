@@ -8,6 +8,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:joby/core/widgets/custom_feedback_dialog.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_cubit.dart';
 import 'package:joby/features/users/edit_profile/manager/edit_profile_state.dart';
 import 'package:joby/features/users/edit_profile/presentation/components/edit_profile_text_field.dart';
@@ -214,19 +215,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _triggerSave();
         return false;
       } else {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Center(
-              child: Text("Please fill required fields properly"),
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(20.r),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-          ),
+        if (!mounted) return false;
+        CustomFeedbackDialog.showWarning(
+          context,
+          title: "Required Fields",
+          message: "Please fill required fields properly",
         );
         return false;
       }
@@ -238,14 +231,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   /// Trigger the save via cubit
   void _triggerSave() {
     if (!_formKey.currentState!.validate() || !_isPhoneValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(child: Text("Please fill required fields properly")),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          margin: .all(20.r),
-          shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
-        ),
+      CustomFeedbackDialog.showWarning(
+        context,
+        title: "Required Fields",
+        message: "Please fill required fields properly",
       );
       return;
     }
@@ -331,30 +320,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             //
             // Success
             else if (state is EditProfileSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  content: Center(child: Text("Profile updated successfully")),
-                  backgroundColor: Colors.green,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
-                ),
+              CustomFeedbackDialog.showSuccess(
+                context,
+                title: "Success",
+                message: "Profile updated successfully",
+                onFinish: () {
+                  if (mounted) {
+                    Navigator.pop(context, true);
+                  }
+                },
               );
-              // Pop with `true` so the home screen knows to refresh
-              Navigator.pop(context, true);
             }
             // Error
             else if (state is EditProfileError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  content: Center(child: Text(state.message)),
-                  backgroundColor: Colors.red,
-                  margin: .all(20.r),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(10.r)),
-                ),
+              CustomFeedbackDialog.showError(
+                context,
+                title: "Update Failed",
+                message: state.message,
               );
-              //
             }
           },
           //

@@ -5,7 +5,7 @@ import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/core/helpers/app_regex.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/helpers/spacing.dart";
-import "package:joby/core/widgets/snack_bar_text.dart";
+import "package:joby/core/widgets/custom_feedback_dialog.dart";
 import "package:joby/features/common/auth/presentation/widgets/custom_google_button.dart";
 import "package:joby/features/common/auth/presentation/widgets/forgot_password_widget.dart";
 import "package:joby/features/common/auth/presentation/widgets/show_success_dialog.dart";
@@ -129,44 +129,39 @@ class _AuthScreenState extends State<AuthScreen> {
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
-                //
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: SnackBarText(title: "Welcome ${state.user.name}"),
-                    backgroundColor: Colors.green,
-                    behavior: .floating,
-                    margin: .all(20.r),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: .circular(10.r),
-                    ),
-                  ),
+                CustomFeedbackDialog.showSuccess(
+                  context,
+                  title: "Welcome",
+                  message: "Welcome ${state.user.name}",
+                  onFinish: () {
+                    if (!context.mounted) return;
+                    if (state.hasProfile) {
+                      if (state.userType == "company") {
+                        context.pushNamedAndRemoveUntil(
+                          Routes.companyRootScreen,
+                          predicate: (Route<dynamic> route) => false,
+                        );
+                      } else {
+                        context.pushNamedAndRemoveUntil(
+                          Routes.userRootScreen,
+                          predicate: (Route<dynamic> route) => false,
+                        );
+                      }
+                    } else {
+                      if (state.userType == "company") {
+                        context.pushNamedAndRemoveUntil(
+                          Routes.companyInfoScreen,
+                          predicate: (Route<dynamic> route) => false,
+                        );
+                      } else {
+                        context.pushNamedAndRemoveUntil(
+                          Routes.userInfoScreen,
+                          predicate: (Route<dynamic> route) => false,
+                        );
+                      }
+                    }
+                  },
                 );
-                //
-                if (state.hasProfile) {
-                  if (state.userType == "company") {
-                    context.pushNamedAndRemoveUntil(
-                      Routes.companyRootScreen,
-                      predicate: (Route<dynamic> route) => false,
-                    );
-                  } else {
-                    context.pushNamedAndRemoveUntil(
-                      Routes.userRootScreen,
-                      predicate: (Route<dynamic> route) => false,
-                    );
-                  }
-                } else {
-                  if (state.userType == "company") {
-                    context.pushNamedAndRemoveUntil(
-                      Routes.companyInfoScreen,
-                      predicate: (Route<dynamic> route) => false,
-                    );
-                  } else {
-                    context.pushNamedAndRemoveUntil(
-                      Routes.userInfoScreen,
-                      predicate: (Route<dynamic> route) => false,
-                    );
-                  }
-                }
               } else if (state is AuthSignUpRequiresVerification) {
                 _isAuthInProgress = false;
                 // Verification Dialog
@@ -191,19 +186,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 //
               } else if (state is AuthError) {
                 _isAuthInProgress = false;
-                //
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: SnackBarText(title: state.message),
-                    backgroundColor: Colors.red,
-                    behavior: SnackBarBehavior.floating,
-                    margin: .all(20.r),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: .circular(10.r),
-                    ),
-                  ),
+                CustomFeedbackDialog.showError(
+                  context,
+                  title: "Authentication Failed",
+                  message: state.message,
                 );
-                //
               }
             },
             //

@@ -3,6 +3,7 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:joby/core/helpers/spacing.dart";
+import "package:joby/core/widgets/custom_feedback_dialog.dart";
 import "package:joby/core/widgets/pdf_viewer_screen.dart";
 import "package:joby/features/users/user_info/data/models/user_info_model.dart";
 import "package:joby/features/users/home/presentation/components/home_info_row.dart";
@@ -69,14 +70,10 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
     try {
       if (!await launchUrl(url, mode: .externalApplication)) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: const Center(child: Text("Could not launch the link")),
-              backgroundColor: Colors.red,
-              margin: const .all(20),
-              shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-            ),
+          CustomFeedbackDialog.showError(
+            context,
+            title: "Link Error",
+            message: "Could not launch the link",
           );
         }
       }
@@ -84,16 +81,10 @@ class _TalentDetailsScreenState extends State<TalentDetailsScreen> {
     //
     catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: const Center(child: Text("Invalid link format")),
-            backgroundColor: Colors.red,
-            margin: const EdgeInsets.all(20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+        CustomFeedbackDialog.showError(
+          context,
+          title: "Invalid Link",
+          message: "Invalid link format",
         );
       }
     }

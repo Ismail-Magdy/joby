@@ -35,7 +35,7 @@ class CustomSearchContainer extends StatelessWidget {
         onChanged: onChanged,
         style: TextStyle(fontSize: 14.sp),
         decoration: InputDecoration(
-          hintText: "Search for a location",
+          hintText: "Search For a Location",
           hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14.sp),
           prefixIcon: Icon(
             Icons.search,
