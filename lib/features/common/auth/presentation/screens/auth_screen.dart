@@ -221,8 +221,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       // Two Auth Options
                       TwoAuthOptions(
                         isLogin: isLogin,
-                        onTapLogin: () => setState(() => isLogin = true),
-                        onTapsignUp: () => setState(() => isLogin = false),
+                        onTapLogin: () => setState(() {
+                          isLogin = true;
+                          _formKey.currentState?.reset();
+                        }),
+                        onTapsignUp: () => setState(() {
+                          isLogin = false;
+                          _formKey.currentState?.reset();
+                        }),
                       ),
                       //
                       verticalSpace(30),
@@ -256,36 +262,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         hintText: "Password",
                         fieldType: .password,
                         prefixIcon: Icons.lock_outline,
+                        autovalidateMode: isLogin
+                            ? AutovalidateMode.disabled
+                            : AutovalidateMode.onUserInteraction,
                         validator: isLogin
-                            ? (val) {
-                                final v = val?.trim() ?? "";
-                                if (v.isEmpty) return "Please enter a password";
-                                if (v.length < 8) {
-                                  return "At least 8 characters";
-                                }
-                                return null;
-                              }
-                            : (val) {
-                                final v = val?.trim() ?? "";
-                                if (v.isEmpty) return "Please enter a password";
-                                if (v.length < 8) {
-                                  return "At least 8 characters";
-                                }
-                                if (!AppRegex.hasUpperCase(v)) {
-                                  return "Include an uppercase letter";
-                                }
-                                if (!AppRegex.hasLowerCase(v)) {
-                                  return "Include a lowercase letter";
-                                }
-                                if (!AppRegex.hasNumber(v)) {
-                                  return "Include a number";
-                                }
-                                if (!AppRegex.hasSpecialCharacter(v)) {
-                                  return "Include a special character (!@#\$%^&*)";
-                                }
-
-                                return null;
-                              },
+                            ? AppRegex.validateLoginPassword
+                            : AppRegex.validateNewPassword,
                       ),
                       //
                       verticalSpace(20),

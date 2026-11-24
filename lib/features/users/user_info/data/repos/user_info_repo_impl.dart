@@ -1,7 +1,9 @@
+import "dart:convert";
 import "dart:io";
 import "dart:typed_data";
 import "package:dartz/dartz.dart";
 import "package:image_picker/image_picker.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "../models/user_info_model.dart";
 import "user_info_repo.dart";
@@ -9,8 +11,54 @@ import "../../../../../core/errors/error_handler.dart";
 
 class UserInfoRepoImpl implements UserInfoRepo {
   final SupabaseClient supabaseClient;
+  final SharedPreferences sharedPreferences;
 
-  UserInfoRepoImpl({required this.supabaseClient});
+  UserInfoRepoImpl({
+    required this.supabaseClient,
+    required this.sharedPreferences,
+  });
+
+  String? get _draftKey {
+    final userId = supabaseClient.auth.currentUser?.id;
+    if (userId == null || userId.isEmpty) return null;
+    return "user_info_draft_$userId";
+  }
+
+  @override
+  Future<void> saveUserInfoDraft(Map<String, dynamic> draftData) async {
+    final key = _draftKey;
+    if (key == null) return;
+    await sharedPreferences.setString(key, jsonEncode(draftData));
+  }
+
+  @override
+  Map<String, dynamic>? getUserInfoDraft() {
+    final key = _draftKey;
+    if (key == null) return null;
+
+    final raw = sharedPreferences.getString(key);
+    if (raw == null || raw.isEmpty) return null;
+
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+      if (decoded is Map) {
+        return Map<String, dynamic>.from(decoded);
+      }
+    } catch (_) {
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<void> clearUserInfoDraft() async {
+    final key = _draftKey;
+    if (key == null) return;
+    await sharedPreferences.remove(key);
+  }
 
   @override
   Future<Either<String, void>> saveUserData(

@@ -6,9 +6,13 @@ import 'package:joby/core/themes/app_colors.dart';
 class StepTwoContent extends StatelessWidget {
   const StepTwoContent({
     super.key,
+    this.selectedLevel,
+    this.selectedWorkType,
     required this.onChangedLevel,
     required this.onChangedTypeOfWork,
   });
+  final String? selectedLevel;
+  final String? selectedWorkType;
   final void Function(String?)? onChangedLevel;
   final void Function(String?)? onChangedTypeOfWork;
 
@@ -20,6 +24,7 @@ class StepTwoContent extends StatelessWidget {
         verticalSpace(10),
         //
         DropdownButtonFormField<String>(
+          initialValue: selectedLevel,
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
             color: AppColors.primaryColor,
@@ -57,6 +62,7 @@ class StepTwoContent extends StatelessWidget {
         verticalSpace(15),
         //
         DropdownButtonFormField<String>(
+          initialValue: selectedWorkType,
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
             color: AppColors.primaryColor,

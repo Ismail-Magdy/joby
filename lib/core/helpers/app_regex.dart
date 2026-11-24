@@ -34,4 +34,34 @@ class AppRegex {
   static bool hasMinLength(String password) {
     return RegExp(r'^(?=.{8,})').hasMatch(password);
   }
+
+  /// Validates a password on the Login screen (non-empty check only, no policy leaks).
+  static String? validateLoginPassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Please enter your password";
+    }
+    return null;
+  }
+
+  /// Validates a new password on Sign Up or Password Reset (enforces full policy).
+  static String? validateNewPassword(String? value) {
+    final v = value?.trim() ?? "";
+    if (v.isEmpty) return "Please enter a password";
+    if (v.length < 8) {
+      return "At least 8 characters";
+    }
+    if (!hasUpperCase(v)) {
+      return "Include an uppercase letter";
+    }
+    if (!hasLowerCase(v)) {
+      return "Include a lowercase letter";
+    }
+    if (!hasNumber(v)) {
+      return "Include a number";
+    }
+    if (!hasSpecialCharacter(v)) {
+      return "Include a special character (!@#\$%^&*)";
+    }
+    return null;
+  }
 }
