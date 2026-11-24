@@ -13,6 +13,11 @@ class Routes {
   static const String editProfileScreen = "/editProfileScreen";
   static const String pointsScreen = "/pointsScreen";
   static const String settingsUsersScreen = "/settingsUsersScreen";
+  static const String gamesHubScreen = "/gamesHubScreen";
+  static const String spinWheelGameScreen = "/spinWheelGameScreen";
+  static const String catchLogoGameScreen = "/catchLogoGameScreen";
+  static const String memoryMatchGameScreen = "/memoryMatchGameScreen";
+  static const String logoPuzzleGameScreen = "/logoPuzzleGameScreen";
 
   /// Company
   static const String companyInfoScreen = "/companyInfoScreen";

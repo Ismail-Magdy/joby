@@ -29,6 +29,12 @@ import '../../features/users/user_info/manager/user_info_cubit.dart';
 import '../../features/users/user_info/presentation/screens/user_info_screen.dart';
 import '../../features/users/points/manager/points_cubit.dart';
 import '../../features/users/points/presentation/screens/points_screen.dart';
+import '../../features/users/games/manager/games_cubit.dart';
+import '../../features/users/games/presentation/screens/games_hub_screen.dart';
+import '../../features/users/games/presentation/screens/spin_wheel_game_screen.dart';
+import '../../features/users/games/presentation/screens/catch_logo_game_screen.dart';
+import '../../features/users/games/presentation/screens/memory_match_game_screen.dart';
+import '../../features/users/games/presentation/screens/logo_puzzle_game_screen.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -133,6 +139,86 @@ class AppRouter {
       /// Points Screen
       case Routes.pointsScreen:
         return MaterialPageRoute(builder: (_) => const PointsScreen());
+
+      /// Games Hub Screen
+      case Routes.gamesHubScreen:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<GamesCubit>(
+                create: (context) => getIt<GamesCubit>(),
+              ),
+              BlocProvider<UserHomeCubit>(
+                create: (context) => getIt<UserHomeCubit>()..getUserData(),
+              ),
+            ],
+            child: const GamesHubScreen(),
+          ),
+        );
+
+      /// Spin Wheel Game Screen
+      case Routes.spinWheelGameScreen:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<GamesCubit>(
+                create: (context) => getIt<GamesCubit>()..loadGames(),
+              ),
+              BlocProvider<UserHomeCubit>(
+                create: (context) => getIt<UserHomeCubit>()..getUserData(),
+              ),
+            ],
+            child: const SpinWheelGameScreen(),
+          ),
+        );
+
+      /// Catch Logo Game Screen
+      case Routes.catchLogoGameScreen:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<GamesCubit>(
+                create: (context) => getIt<GamesCubit>()..loadGames(),
+              ),
+              BlocProvider<UserHomeCubit>(
+                create: (context) => getIt<UserHomeCubit>()..getUserData(),
+              ),
+            ],
+            child: const CatchLogoGameScreen(),
+          ),
+        );
+
+      /// Memory Match Game Screen
+      case Routes.memoryMatchGameScreen:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<GamesCubit>(
+                create: (context) => getIt<GamesCubit>()..loadGames(),
+              ),
+              BlocProvider<UserHomeCubit>(
+                create: (context) => getIt<UserHomeCubit>()..getUserData(),
+              ),
+            ],
+            child: const MemoryMatchGameScreen(),
+          ),
+        );
+
+      /// Logo Puzzle Game Screen
+      case Routes.logoPuzzleGameScreen:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<GamesCubit>(
+                create: (context) => getIt<GamesCubit>()..loadGames(),
+              ),
+              BlocProvider<UserHomeCubit>(
+                create: (context) => getIt<UserHomeCubit>()..getUserData(),
+              ),
+            ],
+            child: const LogoPuzzleGameScreen(),
+          ),
+        );
 
       //// Company Part
 
