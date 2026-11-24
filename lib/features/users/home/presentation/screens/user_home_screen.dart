@@ -23,6 +23,7 @@ import "package:joby/features/users/user_info/presentation/screens/location_pick
 import "package:joby/features/users/user_info/data/models/location_picker_result.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/widgets/pdf_viewer_screen.dart";
+import "package:joby/features/users/games/presentation/widgets/games_entry_banner_card.dart";
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -302,6 +303,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           HomeTotalPointsContainer(
                             text: user.totalPoints.toString(),
                           ),
+                          //
+                          verticalSpace(15),
+                          const GamesEntryBannerCard(),
                           //
                           verticalSpace(25),
                           // Level, Job Category, & Work Type
