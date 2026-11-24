@@ -186,7 +186,7 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                   // Wheel Stack
                   SizedBox(
                     width: 300.w,
-                    height: 300.w,
+                    height: 300.h,
                     child: Stack(
                       alignment: .center,
                       children: [
@@ -200,7 +200,7 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                             return Transform.rotate(
                               angle: angle,
                               child: CustomPaint(
-                                size: Size(290.w, 290.w),
+                                size: Size(290.w, 290.h),
                                 painter: _WheelPainter(
                                   rewards: _rewards,
                                   colors: _sliceColors,
@@ -271,8 +271,9 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                                 SizedBox(
                                   width: 20.w,
                                   height: 20.w,
-                                  child: const CupertinoActivityIndicator(
+                                  child: CupertinoActivityIndicator(
                                     color: Colors.white,
+                                    radius: 12.r,
                                   ),
                                 ),
                                 horizontalSpace(12),

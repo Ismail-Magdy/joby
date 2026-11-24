@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:joby/core/themes/app_colors.dart';
 import '../../../../../core/helpers/spacing.dart';
 import '../../data/models/game_cooldown_status.dart';
 import '../../data/models/mini_game_model.dart';
@@ -146,10 +147,10 @@ class GameHubCard extends StatelessWidget {
                     Container(
                       padding: .symmetric(horizontal: 10.w, vertical: 5.h),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFF7ED),
+                        color: const Color(0xFF64B5F6).withValues(alpha: 0.1),
                         borderRadius: .circular(12.r),
                         border: .all(
-                          color: const Color(0xFFFDBA74).withValues(alpha: 0.5),
+                          color: const Color(0xFF64B5F6).withValues(alpha: 0.5),
                         ),
                       ),
                       child: Row(
@@ -165,7 +166,7 @@ class GameHubCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: .bold,
-                              color: const Color(0xFFC2410C),
+                              color: AppColors.primaryColor,
                             ),
                           ),
                         ],
