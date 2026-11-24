@@ -251,7 +251,7 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                     color: const Color(0xFF1E293B),
                     borderRadius: .circular(24.r),
                     border: .all(
-                      color: const Color(0xFF7C3AED).withValues(alpha: 0.4),
+                      color: AppColors.primaryColor.withValues(alpha: 0.4),
                       width: 1.5,
                     ),
                   ),
@@ -273,21 +273,21 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                                 Icon(
                                   Icons.sports_esports_rounded,
                                   size: 64.sp,
-                                  color: const Color(0xFFA78BFA),
+                                  color: AppColors.primaryColor,
                                 ),
                                 verticalSpace(12),
                                 Text(
                                   "Catch The Joby Logos",
                                   style: TextStyle(
                                     fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: .bold,
                                     color: Colors.white,
                                     fontFamily: "BrunoAceSC",
                                   ),
                                 ),
                                 verticalSpace(6),
                                 Text(
-                                  "Drag paddle left & right to catch items!",
+                                  "Drag Paddle Left & Right To Catch Items",
                                   style: TextStyle(
                                     fontSize: 13.sp,
                                     color: Colors.white70,
@@ -297,8 +297,8 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                                 ElevatedButton(
                                   onPressed: _startGame,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF7C3AED),
-                                    padding: EdgeInsets.symmetric(
+                                    backgroundColor: AppColors.primaryColor,
+                                    padding: .symmetric(
                                       horizontal: 32.w,
                                       vertical: 14.h,
                                     ),
@@ -326,10 +326,10 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                               alignment: FractionalOffset(item.x, item.y),
                               child: item.isSpecialStar
                                   ? Container(
-                                      padding: EdgeInsets.all(6.r),
+                                      padding: .all(6.r),
                                       decoration: const BoxDecoration(
                                         color: Colors.amber,
-                                        shape: BoxShape.circle,
+                                        shape: .circle,
                                       ),
                                       child: Icon(
                                         Icons.star_rounded,
@@ -340,10 +340,10 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                                   : Container(
                                       width: 36.w,
                                       height: 36.w,
-                                      padding: EdgeInsets.all(6.r),
+                                      padding: .all(6.r),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        shape: BoxShape.circle,
+                                        shape: .circle,
                                         boxShadow: [
                                           BoxShadow(
                                             color: AppColors.primaryColor
@@ -354,9 +354,9 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                                       ),
                                       child: SvgPicture.asset(
                                         "assets/svgs/joby_logo.svg",
-                                        colorFilter: const ColorFilter.mode(
+                                        colorFilter: const .mode(
                                           AppColors.primaryColor,
-                                          BlendMode.srcIn,
+                                          .srcIn,
                                         ),
                                       ),
                                     ),
@@ -372,16 +372,16 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFF7C3AED),
-                                    Color(0xFFA78BFA),
+                                    AppColors.primaryColor,
+                                    Color(0xFF64B5F6),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(12.r),
+                                borderRadius: .circular(12.r),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(
-                                      0xFF7C3AED,
-                                    ).withValues(alpha: 0.6),
+                                    color: AppColors.primaryColor.withValues(
+                                      alpha: 0.6,
+                                    ),
                                     blurRadius: 14,
                                     offset: const Offset(0, 3),
                                   ),
@@ -417,7 +417,7 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
           value,
           style: TextStyle(
             fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             color: color,
             fontFamily: "BrunoAceSC",
           ),
@@ -426,5 +426,3 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
     );
   }
 }
-
-// TODO :

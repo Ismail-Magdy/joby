@@ -181,9 +181,9 @@ class _GameResultClaimSheetState extends State<GameResultClaimSheet> {
                       ? SizedBox(
                           width: 24.w,
                           height: 24.w,
-                          child: const CupertinoActivityIndicator(
+                          child: CupertinoActivityIndicator(
                             color: Colors.white,
-                            radius: 2.5,
+                            radius: 12.r,
                           ),
                         )
                       : Text(
