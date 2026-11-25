@@ -40,7 +40,7 @@ class ErrorScreen extends StatelessWidget {
             verticalSpace(16),
             //
             Text(
-              "An error occurred while loading page.\nPlease try again later.",
+              "An Error Occurred While Loading Page",
               textAlign: .center,
               style: TextStyle(
                 fontSize: 16.sp,
