@@ -16,3 +16,9 @@ class PointsClaimError extends PointsState {
 
   PointsClaimError(this.message);
 }
+
+class PointsTotalUpdated extends PointsState {
+  final int totalPoints;
+
+  PointsTotalUpdated(this.totalPoints);
+}

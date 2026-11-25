@@ -82,10 +82,16 @@ Future<void> initGetIt() async {
 
   /// User Home Feature
   getIt.registerLazySingleton<UserHomeRepo>(
-    () => UserHomeRepoImpl(supabaseClient: getIt<SupabaseClient>()),
+    () => UserHomeRepoImpl(
+      supabaseClient: getIt<SupabaseClient>(),
+      pointsRepo: getIt<PointsRepo>(),
+    ),
   );
   getIt.registerFactory<UserHomeCubit>(
-    () => UserHomeCubit(userHomeRepo: getIt<UserHomeRepo>()),
+    () => UserHomeCubit(
+      userHomeRepo: getIt<UserHomeRepo>(),
+      pointsRepo: getIt<PointsRepo>(),
+    ),
   );
 
   /// Edit Profile Feature
@@ -123,10 +129,14 @@ Future<void> initGetIt() async {
     () => GamesRepoImpl(
       supabaseClient: getIt<SupabaseClient>(),
       sharedPrefs: getIt<SharedPreferences>(),
+      pointsRepo: getIt<PointsRepo>(),
     ),
   );
   getIt.registerFactory<GamesCubit>(
-    () => GamesCubit(gamesRepo: getIt<GamesRepo>()),
+    () => GamesCubit(
+      gamesRepo: getIt<GamesRepo>(),
+      pointsRepo: getIt<PointsRepo>(),
+    ),
   );
 
   /// Notification Feature

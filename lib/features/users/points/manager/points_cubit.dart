@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/core/di/dependency_injection.dart';
 import 'package:joby/features/users/notification/services/local_notification_service.dart';
@@ -9,9 +10,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PointsCubit extends Cubit<PointsState> {
   final PointsRepo pointsRepo;
   final SharedPreferences sharedPrefs;
+  StreamSubscription<int>? _pointsSubscription;
 
   PointsCubit({required this.pointsRepo, required this.sharedPrefs})
-    : super(PointsInitial());
+    : super(PointsInitial()) {
+    _pointsSubscription = pointsRepo.pointsStream.listen((totalPoints) {
+      if (!isClosed) {
+        emit(PointsTotalUpdated(totalPoints));
+      }
+    });
+  }
 
   Future<void> claimDailyPoints(UserHomeCubit userHomeCubit) async {
     final todayLocal = DateTime.now().toIso8601String().substring(0, 10);
@@ -81,5 +89,11 @@ class PointsCubit extends Cubit<PointsState> {
       LocalNotificationService.dailyStreakLastDateKey,
       todayLocal,
     );
+  }
+
+  @override
+  Future<void> close() {
+    _pointsSubscription?.cancel();
+    return super.close();
   }
 }

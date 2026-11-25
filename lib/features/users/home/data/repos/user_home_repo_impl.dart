@@ -1,4 +1,5 @@
 import "package:dartz/dartz.dart";
+import "package:joby/features/users/points/data/repos/points_repo.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "../../../user_info/data/models/user_info_model.dart";
 import "user_home_repo.dart";
@@ -6,8 +7,12 @@ import "../../../../../core/errors/error_handler.dart";
 
 class UserHomeRepoImpl implements UserHomeRepo {
   final SupabaseClient supabaseClient;
+  final PointsRepo pointsRepo;
 
-  UserHomeRepoImpl({required this.supabaseClient});
+  UserHomeRepoImpl({
+    required this.supabaseClient,
+    required this.pointsRepo,
+  });
 
   @override
   Future<Either<String, UserInfoModel>> getUserProfile() async {
@@ -24,7 +29,9 @@ class UserHomeRepoImpl implements UserHomeRepo {
           .eq("id", userId)
           .single();
 
-      return Right(UserInfoModel.fromJson(data));
+      final userInfo = UserInfoModel.fromJson(data);
+      pointsRepo.updatePointsCache(userInfo.totalPoints);
+      return Right(userInfo);
     } catch (error) {
       return Left(ErrorHandler.handleError(error));
     }

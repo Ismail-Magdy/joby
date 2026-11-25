@@ -3,14 +3,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/core/di/dependency_injection.dart';
 import 'package:joby/features/users/games/data/repos/games_repo.dart';
 import 'package:joby/features/users/notification/services/local_notification_service.dart';
+import 'package:joby/features/users/points/data/repos/points_repo.dart';
 import '../../home/manager/user_home_cubit.dart';
 import '../data/models/game_cooldown_status.dart';
 import 'games_state.dart';
 
 class GamesCubit extends Cubit<GamesState> {
   final GamesRepo gamesRepo;
+  final PointsRepo pointsRepo;
+  StreamSubscription<int>? _pointsSubscription;
 
-  GamesCubit({required this.gamesRepo}) : super(GamesInitial());
+  GamesCubit({required this.gamesRepo, required this.pointsRepo})
+    : super(GamesInitial()) {
+    _pointsSubscription = pointsRepo.pointsStream.listen(_onPointsUpdated);
+  }
+
+  void _onPointsUpdated(int newTotalPoints) {
+    if (isClosed) return;
+    final currentState = state;
+    if (currentState is GamesLoaded &&
+        currentState.userTotalPoints != newTotalPoints) {
+      emit(
+        GamesLoaded(
+          games: currentState.games,
+          cooldowns: currentState.cooldowns,
+          userTotalPoints: newTotalPoints,
+        ),
+      );
+    }
+  }
 
   /// Loads the games catalog, cooldowns, and user points
   Future<void> loadGames() async {
@@ -96,5 +117,11 @@ class GamesCubit extends Cubit<GamesState> {
       return status?.isAvailable ?? true;
     }
     return true;
+  }
+
+  @override
+  Future<void> close() {
+    _pointsSubscription?.cancel();
+    return super.close();
   }
 }

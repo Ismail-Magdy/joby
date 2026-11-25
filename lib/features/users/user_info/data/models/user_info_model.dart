@@ -39,6 +39,46 @@ class UserInfoModel {
     required this.longitude,
   });
 
+  UserInfoModel copyWith({
+    String? id,
+    String? name,
+    String? jobCategory,
+    String? jobTitle,
+    String? level,
+    String? typeOfWork,
+    String? whatsapp,
+    String? linkedin,
+    String? github,
+    String? behance,
+    String? cvUrl,
+    String? avatarUrl,
+    int? totalPoints,
+    String? lastCheckIn,
+    String? locationName,
+    double? latitude,
+    double? longitude,
+  }) {
+    return UserInfoModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      jobCategory: jobCategory ?? this.jobCategory,
+      jobTitle: jobTitle ?? this.jobTitle,
+      level: level ?? this.level,
+      typeOfWork: typeOfWork ?? this.typeOfWork,
+      whatsapp: whatsapp ?? this.whatsapp,
+      linkedin: linkedin ?? this.linkedin,
+      github: github ?? this.github,
+      behance: behance ?? this.behance,
+      cvUrl: cvUrl ?? this.cvUrl,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      totalPoints: totalPoints ?? this.totalPoints,
+      lastCheckIn: lastCheckIn ?? this.lastCheckIn,
+      locationName: locationName ?? this.locationName,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+    );
+  }
+
   String get displayShortName {
     if (name.trim().isEmpty) return "";
     final parts = name.trim().split(" ");

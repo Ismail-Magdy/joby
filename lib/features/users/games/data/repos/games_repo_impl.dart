@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../core/errors/error_handler.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../core/themes/app_colors.dart';
+import '../../../points/data/repos/points_repo.dart';
 import '../models/game_cooldown_status.dart';
 import '../models/mini_game_model.dart';
 import 'games_repo.dart';
@@ -12,10 +13,15 @@ import 'games_repo.dart';
 class GamesRepoImpl implements GamesRepo {
   final SupabaseClient supabaseClient;
   final SharedPreferences sharedPrefs;
+  final PointsRepo pointsRepo;
 
   static const String _prefPrefix = "joby_game_last_played_";
 
-  GamesRepoImpl({required this.supabaseClient, required this.sharedPrefs});
+  GamesRepoImpl({
+    required this.supabaseClient,
+    required this.sharedPrefs,
+    required this.pointsRepo,
+  });
 
   @override
   List<MiniGameModel> getAvailableGames() {
@@ -109,58 +115,22 @@ class GamesRepoImpl implements GamesRepo {
     required String gameId,
     required int pointsEarned,
   }) async {
-    try {
-      final userId = supabaseClient.auth.currentUser?.id;
-      if (userId == null) {
-        return const Left("User is not authenticated");
-      }
-
-      // Fetch current points from Supabase
-      final data = await supabaseClient
-          .from("seekers")
-          .select("total_points")
-          .eq("id", userId)
-          .single();
-
-      final currentPoints = (data["total_points"] as num?)?.toInt() ?? 0;
-      final newTotalPoints = currentPoints + pointsEarned;
-
-      // Update in Supabase
-      await supabaseClient
-          .from("seekers")
-          .update({"total_points": newTotalPoints})
-          .eq("id", userId);
-
-      // Record cooldown locally in SharedPreferences
-      await sharedPrefs.setString(
-        "$_prefPrefix$gameId",
-        DateTime.now().toIso8601String(),
-      );
-
-      return Right(newTotalPoints);
-    } catch (e) {
-      return Left(ErrorHandler.handleError(e));
-    }
+    final result = await pointsRepo.addPoints(pointsEarned);
+    return result.fold(
+      (error) => Left(error),
+      (newTotalPoints) async {
+        // Record cooldown locally in SharedPreferences
+        await sharedPrefs.setString(
+          "$_prefPrefix$gameId",
+          DateTime.now().toIso8601String(),
+        );
+        return Right(newTotalPoints);
+      },
+    );
   }
 
   @override
-  Future<Either<String, int>> getUserTotalPoints() async {
-    try {
-      final userId = supabaseClient.auth.currentUser?.id;
-      if (userId == null) {
-        return const Left("User is not authenticated");
-      }
-
-      final data = await supabaseClient
-          .from("seekers")
-          .select("total_points")
-          .eq("id", userId)
-          .single();
-
-      final points = (data["total_points"] as num?)?.toInt() ?? 0;
-      return Right(points);
-    } catch (e) {
-      return Left(ErrorHandler.handleError(e));
-    }
+  Future<Either<String, int>> getUserTotalPoints() {
+    return pointsRepo.fetchTotalPoints();
   }
 }
