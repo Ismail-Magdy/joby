@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/themes/app_colors.dart";
 import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
@@ -9,6 +10,7 @@ import "package:joby/features/company/home/manager/company_home_cubit.dart";
 import "package:joby/features/company/home/presentation/screens/company_home_screen.dart";
 import "package:joby/features/company/profile_company/screens/company_profile_screen.dart";
 import "package:joby/features/company/saved/screens/saved_screen.dart";
+import "package:joby/features/users/notification/services/local_notification_service.dart";
 
 class CompanyRootScreen extends StatefulWidget {
   const CompanyRootScreen({super.key});
@@ -20,6 +22,12 @@ class CompanyRootScreen extends StatefulWidget {
 class _CompanyRootScreenState extends State<CompanyRootScreen> {
   int currentIndex = 0;
   final Set<int> _initializedTabs = {0};
+
+  @override
+  void initState() {
+    super.initState();
+    getIt<LocalNotificationService>().cancelAllNotifications();
+  }
 
   void _onTabChanged(int index) {
     setState(() {

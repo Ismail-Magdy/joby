@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joby/core/di/dependency_injection.dart';
+import 'package:joby/features/users/notification/services/local_notification_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/repos/edit_profile_repo.dart';
 import 'edit_profile_state.dart';
@@ -128,6 +130,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       );
 
       if (success) {
+        await getIt<LocalNotificationService>().syncUserNotifications();
         emit(EditProfileSuccess());
       } else {
         emit(EditProfileError("Failed to Update Profile Data"));

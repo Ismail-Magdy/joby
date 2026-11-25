@@ -1,4 +1,6 @@
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:joby/core/di/dependency_injection.dart";
+import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "../data/models/auth_credentials.dart";
 import "../data/repos/auth_repo.dart";
 import "auth_state.dart";
@@ -74,11 +76,18 @@ class AuthCubit extends Cubit<AuthState> {
 
       await SharedPrefHelper.setData("isGoogleSignedInBefore", true);
 
+      final resolvedRole =
+          dbRole != "none" ? dbRole : (selectedRole ?? "seeker");
+
+      if (resolvedRole == "company") {
+        await getIt<LocalNotificationService>().cancelAllNotifications();
+      }
+
       emit(
         AuthSuccess(
           user: user,
           hasProfile: dbRole != "none",
-          userType: dbRole != "none" ? dbRole : (selectedRole ?? "seeker"),
+          userType: resolvedRole,
         ),
       );
     });

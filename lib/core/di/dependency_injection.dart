@@ -131,7 +131,10 @@ Future<void> initGetIt() async {
 
   /// Notification Feature
   getIt.registerLazySingleton<LocalNotificationService>(
-    () => LocalNotificationService(),
+    () => LocalNotificationService(
+      sharedPrefs: getIt<SharedPreferences>(),
+      supabaseClient: getIt<SupabaseClient>(),
+    ),
   );
 
   /// Shared AudioPlayer (reused across all cards)
