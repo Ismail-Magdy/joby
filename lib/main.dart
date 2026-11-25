@@ -6,7 +6,6 @@ import "package:joby/core/helpers/constants.dart";
 import "package:joby/core/helpers/shared_prefrences_helper.dart";
 import "package:joby/core/routes/app_router.dart";
 import "package:joby/core/routes/routes.dart";
-import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "package:joby/joby_app.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -22,16 +21,11 @@ void main() async {
   // Initialize Supabase
   await Supabase.initialize(
     url: dotenv.env["SUPABASE_URL"]!,
-    anonKey: dotenv.env["SUPABASE_ANON_KEY"]!,
+    publishableKey: dotenv.env["SUPABASE_ANON_KEY"]!,
   );
 
   // Initialize GetIt service locator
   await initGetIt();
-
-  // Initialize Local Notifications (init & permissions for all user types)
-  final notificationService = getIt<LocalNotificationService>();
-  await notificationService.init();
-  await notificationService.requestPermissions();
 
   // Determine initial route from session state
   String initialRoute = Routes.onBoardingScreen;
@@ -41,10 +35,6 @@ void main() async {
     final userType = await SharedPrefHelper.getString(AppConstants.userTypeKey);
 
     if (userType == "company") {
-      // Cancel any previously scheduled user-specific notifications
-      await notificationService.cancelNotification(1);
-      await notificationService.cancelNotification(2);
-
       bool isCompanyInfoCompleted = false;
       try {
         final managerData = await Supabase.instance.client
@@ -74,10 +64,6 @@ void main() async {
         initialRoute = Routes.companyInfoScreen;
       }
     } else {
-      // Schedule notifications only for regular users (job seekers)
-      await notificationService.scheduleDailyCheckInReminder();
-      await notificationService.scheduleProfileViewsReminder();
-
       bool isInfoCompleted = false;
       try {
         final userData = await Supabase.instance.client

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import "package:dartz/dartz.dart";
+import "package:joby/core/di/dependency_injection.dart";
+import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:google_sign_in/google_sign_in.dart";
 import "../models/auth_credentials.dart";
@@ -129,6 +131,7 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   Future<void> signOut() async {
+    await getIt<LocalNotificationService>().cancelAllNotifications();
     await supabaseClient.auth.signOut();
 
     try {

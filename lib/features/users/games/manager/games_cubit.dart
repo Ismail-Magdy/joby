@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joby/core/di/dependency_injection.dart';
 import 'package:joby/features/users/games/data/repos/games_repo.dart';
+import 'package:joby/features/users/notification/services/local_notification_service.dart';
 import '../../home/manager/user_home_cubit.dart';
 import '../data/models/game_cooldown_status.dart';
 import 'games_state.dart';
@@ -78,8 +80,9 @@ class GamesCubit extends Cubit<GamesState> {
           ),
         );
 
-        // Reload state to update cooldowns
+        // Reload state to update cooldowns & sync smart notifications
         await loadGames();
+        await getIt<LocalNotificationService>().syncUserNotifications();
         return true;
       },
     );

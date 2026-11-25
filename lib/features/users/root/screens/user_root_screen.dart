@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
+import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
+import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "package:joby/features/users/points/presentation/screens/points_screen.dart";
 import "package:joby/features/users/settings_users/screens/settings_users_screen.dart.dart";
 import "package:joby/features/users/profile_views/presentation/screens/profile_views_screen.dart";
@@ -18,6 +20,14 @@ class UserRootScreen extends StatefulWidget {
 
 class _UserRootScreenState extends State<UserRootScreen> {
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getIt<LocalNotificationService>().syncUserNotifications(
+      requestPermissionIfNeeded: true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

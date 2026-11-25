@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/core/widgets/custom_app_bar_without_leading.dart";
+import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 import "package:joby/core/routes/routes.dart";
@@ -98,6 +100,8 @@ class SettingsScreen extends StatelessWidget {
                 );
 
                 if (confirmLogout == true && context.mounted) {
+                  await getIt<LocalNotificationService>()
+                      .cancelAllNotifications();
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
                   await Supabase.instance.client.auth.signOut();
