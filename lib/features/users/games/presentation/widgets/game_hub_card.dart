@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:joby/core/themes/app_colors.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../core/helpers/spacing.dart';
 import '../../data/models/game_cooldown_status.dart';
 import '../../data/models/mini_game_model.dart';
@@ -76,7 +77,11 @@ class GameHubCard extends StatelessWidget {
                       ),
                       child: ClipRRect(
                         borderRadius: .circular(16.r),
-                        child: Image.asset(game.icon, fit: .cover),
+                        child: Skeleton.replace(
+                          width: 54.w,
+                          height: 54.w,
+                          child: Image.asset(game.icon, fit: .cover),
+                        ),
                       ),
                     ),
                     horizontalSpace(14),
@@ -156,9 +161,13 @@ class GameHubCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: .min,
                         children: [
-                          SvgPicture.asset(
-                            "assets/svgs/points_count.svg",
+                          Skeleton.replace(
+                            width: 14.h,
                             height: 14.h,
+                            child: SvgPicture.asset(
+                              "assets/svgs/points_count.svg",
+                              height: 14.h,
+                            ),
                           ),
                           horizontalSpace(6),
                           Text(

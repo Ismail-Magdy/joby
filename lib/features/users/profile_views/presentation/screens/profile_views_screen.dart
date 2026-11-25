@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/core/widgets/app_skeletonizer.dart';
 import 'package:joby/core/widgets/custom_app_bar_without_leading.dart';
 import 'package:joby/core/widgets/error_screen.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
@@ -78,9 +78,75 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
   ///
   Widget _buildBodyContent(ProfileViewsState state) {
     // Loading
-    if (state is ProfileViewsLoading) {
-      return const Center(
-        child: CupertinoActivityIndicator(color: AppColors.primaryColor),
+    if (state is ProfileViewsLoading || state is ProfileViewsInitial) {
+      return AppSkeletonizer(
+        enabled: true,
+        child: ListView.builder(
+          padding: .symmetric(vertical: 10.h, horizontal: 20.w),
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: .only(bottom: 12.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: .circular(16.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade100,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: .symmetric(horizontal: 16.w, vertical: 12.h),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 55.w,
+                      height: 55.w,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        shape: .circle,
+                      ),
+                    ),
+                    horizontalSpace(15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          Text(
+                            "Company Name Placeholder",
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: .bold,
+                            ),
+                          ),
+                          verticalSpace(6),
+                          Text(
+                            "2h ago",
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 44.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: .circular(12.r),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       );
     }
     //

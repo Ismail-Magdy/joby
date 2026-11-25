@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/core/widgets/app_skeletonizer.dart';
 import 'package:joby/core/widgets/error_screen.dart';
 import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:joby/features/company/home/manager/company_home_state.dart';
 import 'package:joby/features/company/home/presentation/components/seeker_card.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import 'package:lottie/lottie.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class BottomSectionCompanyHome extends StatefulWidget {
   const BottomSectionCompanyHome({super.key});
@@ -67,7 +67,7 @@ class _BottomSectionCompanyHomeState extends State<BottomSectionCompanyHome> {
               totalPoints: 100,
             );
             //
-            return Skeletonizer(
+            return AppSkeletonizer(
               enabled: true,
               child: ListView.builder(
                 padding: .only(
