@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joby/core/routes/routes.dart';
 import 'package:joby/core/di/dependency_injection.dart';
+import 'package:joby/core/widgets/unknown_route_screen.dart';
 import 'package:joby/features/common/forgot_password/manager/forgot_password_cubit.dart';
 import 'package:joby/features/common/forgot_password/presentation/screens/forgot_password_screen.dart';
 import 'package:joby/features/common/on_boarding/presentation/screens/on_boarding_screen.dart';
@@ -17,7 +18,8 @@ import 'package:joby/features/company/root/screens/company_root_screen.dart';
 import 'package:joby/features/common/about_us/screens/about_us_screen.dart';
 import 'package:joby/features/common/feed_back/presentation/screens/feed_back_screen.dart';
 import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
-import 'package:joby/features/users/settings_users/screens/settings_users_screen.dart.dart';
+import 'package:joby/features/users/settings_users/manager/settings_users_cubit.dart';
+import 'package:joby/features/users/settings_users/presentation/screens/settings_users_screen.dart.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/user_info/data/models/user_info_model.dart';
 import '../../features/common/feed_back/manager/feed_back_cubit.dart';
@@ -104,6 +106,10 @@ class AppRouter {
               BlocProvider<ProfileViewsCubit>(
                 create: (context) => getIt<ProfileViewsCubit>(),
               ),
+              BlocProvider<SettingsUsersCubit>(
+                create: (context) =>
+                    getIt<SettingsUsersCubit>()..loadSettings(),
+              ),
             ],
             child: const UserRootScreen(),
           ),
@@ -125,9 +131,14 @@ class AppRouter {
 
       /// Users Profile Screen
       case Routes.settingsUsersScreen:
-        return MaterialPageRoute(builder: (_) => const SettingsUsersScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<SettingsUsersCubit>(
+            create: (context) => getIt<SettingsUsersCubit>()..loadSettings(),
+            child: const SettingsUsersScreen(),
+          ),
+        );
 
-      /// Advice / Feedback Screen
+      /// Advice & Feedback Screen
       case Routes.feedBackScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<FeedBackCubit>(
@@ -258,13 +269,7 @@ class AppRouter {
 
       /// Default Case
       default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text("No Page Found For This ${settings.name}"),
-            ),
-          ),
-        );
+        return MaterialPageRoute(builder: (_) => UnknownRouteScreen());
     }
   }
 }

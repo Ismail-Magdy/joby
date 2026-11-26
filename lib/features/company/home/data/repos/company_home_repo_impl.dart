@@ -26,7 +26,10 @@ class CompanyHomeRepoImpl implements CompanyHomeRepo {
     required int page,
   }) async {
     try {
-      var query = supabaseClient.from("seekers").select();
+      var query = supabaseClient
+          .from("seekers")
+          .select()
+          .eq("is_visible", true);
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
         query = query.or(

@@ -30,6 +30,9 @@ import '../../features/users/points/manager/points_cubit.dart';
 import '../../features/users/games/data/repos/games_repo.dart';
 import '../../features/users/games/data/repos/games_repo_impl.dart';
 import '../../features/users/games/manager/games_cubit.dart';
+import '../../features/users/settings_users/data/repos/settings_users_repo.dart';
+import '../../features/users/settings_users/data/repos/settings_users_repo_impl.dart';
+import '../../features/users/settings_users/manager/settings_users_cubit.dart';
 import '../../features/company/company_info/data/repos/company_info_repo.dart';
 import '../../features/company/company_info/data/repos/company_info_repo_impl.dart';
 import '../../features/company/company_info/manager/company_info_cubit.dart';
@@ -144,6 +147,20 @@ Future<void> initGetIt() async {
     () => LocalNotificationService(
       sharedPrefs: getIt<SharedPreferences>(),
       supabaseClient: getIt<SupabaseClient>(),
+    ),
+  );
+
+  /// User Settings Feature
+  getIt.registerLazySingleton<SettingsUsersRepo>(
+    () => SettingsUsersRepoImpl(
+      supabaseClient: getIt<SupabaseClient>(),
+      sharedPrefs: getIt<SharedPreferences>(),
+    ),
+  );
+  getIt.registerFactory<SettingsUsersCubit>(
+    () => SettingsUsersCubit(
+      settingsUsersRepo: getIt<SettingsUsersRepo>(),
+      notificationService: getIt<LocalNotificationService>(),
     ),
   );
 
