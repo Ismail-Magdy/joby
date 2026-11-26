@@ -11,7 +11,6 @@ import 'package:joby/core/widgets/custom_app_bar_without_leading.dart';
 import 'package:joby/core/widgets/error_screen.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_cubit.dart';
 import 'package:joby/features/users/profile_views/manager/profile_views_state.dart';
-import 'package:joby/features/users/profile_views/presentation/widgets/build_stats_card.dart';
 import 'package:joby/features/users/profile_views/presentation/widgets/profile_views_card_without_time.dart';
 import 'package:lottie/lottie.dart';
 
@@ -55,17 +54,8 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
                 // Loaded
                 if (state is ProfileViewsLoaded)
                   //
-                  Padding(
-                    padding: .only(
-                      left: 20.w,
-                      right: 20.w,
-                      bottom: 10.h,
-                      top: 10.h,
-                    ),
-                    child: BuildStatsCard(state: state),
-                  ),
-                //
-                Expanded(child: _buildBodyContent(state)),
+                  //
+                  Expanded(child: _buildBodyContent(state)),
               ],
             );
             //
@@ -302,4 +292,4 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
     return const SizedBox.shrink();
   }
 }
-// 286
+// 305

@@ -17,7 +17,7 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
 
       final data = await Supabase.instance.client
           .from('profile_views')
-          .select('viewed_at, companies(id, name, avatar_url)')
+          .select("viewed_at, companies(id, name, avatar_url)")
           .eq('seeker_id', userId)
           .order('viewed_at', ascending: false);
 
@@ -42,40 +42,6 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
         }
 
         //
-        final now = DateTime.now();
-        int viewsThisWeek = 0;
-        int viewsLastWeek = 0;
-
-        for (var view in uniqueViews) {
-          final diffInDays = now.difference(view.viewedAt).inDays;
-          if (diffInDays <= 7) {
-            viewsThisWeek++;
-          } else if (diffInDays > 7 && diffInDays <= 14) {
-            viewsLastWeek++;
-          }
-        }
-
-        final bool isTrendUp = viewsThisWeek >= viewsLastWeek;
-
-        //
-        int trendPercentage = 0;
-        if (viewsLastWeek == 0) {
-          trendPercentage = viewsThisWeek > 0 ? 100 : 0;
-        } else {
-          trendPercentage =
-              (((viewsThisWeek - viewsLastWeek) / viewsLastWeek) * 100)
-                  .round()
-                  .abs();
-        }
-
-        emit(
-          ProfileViewsLoaded(
-            views: uniqueViews,
-            totalViews: uniqueViews.length,
-            isTrendUp: isTrendUp,
-            trendDifference: trendPercentage,
-          ),
-        );
       }
     } catch (e) {
       emit(ProfileViewsError("Failed to Load Profile Views"));

@@ -32,6 +32,7 @@ class _LogoPuzzleGameScreenState extends State<LogoPuzzleGameScreen> {
   }
 
   void _shuffleBoard() {
+    if (_isSolved) return;
     final random = Random();
     List<int> candidate = [1, 2, 3, 4, 5, 6, 7, 8, 0];
 
@@ -190,7 +191,7 @@ class _LogoPuzzleGameScreenState extends State<LogoPuzzleGameScreen> {
                     ),
                   ),
                   OutlinedButton.icon(
-                    onPressed: _shuffleBoard,
+                    onPressed: _isSolved ? null : _shuffleBoard,
                     icon: const Icon(Icons.shuffle_rounded, size: 18),
                     label: const Text("Shuffle"),
                     style: OutlinedButton.styleFrom(

@@ -40,6 +40,7 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
 
   double _currentAngle = 0.0;
   bool _isSpinning = false;
+  bool _isGameFinished = false;
 
   @override
   void initState() {
@@ -57,7 +58,7 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
   }
 
   void _spin() {
-    if (_isSpinning) return;
+    if (_isSpinning || _isGameFinished) return;
 
     final isAvailable = context.read<GamesCubit>().isGameAvailable(
       "spin_wheel",
@@ -96,7 +97,10 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
       if (!mounted) return;
       final points = _rewards[targetIndex];
       _currentAngle = _animation.value;
-      setState(() => _isSpinning = false);
+      setState(() {
+        _isSpinning = false;
+        _isGameFinished = true;
+      });
 
       _showResultSheet(points);
     });
@@ -254,7 +258,10 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                     width: .infinity,
                     height: 56.h,
                     child: ElevatedButton(
-                      onPressed: (_isSpinning || !isAvailable) ? null : _spin,
+                      onPressed:
+                          (_isSpinning || _isGameFinished || !isAvailable)
+                          ? null
+                          : _spin,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         disabledBackgroundColor: Colors.grey.shade300,
@@ -288,7 +295,9 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                               ],
                             )
                           : Text(
-                              isAvailable ? "SPIN NOW" : "ON COOLDOWN",
+                              _isGameFinished
+                                  ? "ROUND COMPLETED"
+                                  : (isAvailable ? "SPIN NOW" : "ON COOLDOWN"),
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: .bold,
@@ -301,7 +310,7 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                   ),
                   verticalSpace(16),
                   Text(
-                    "One Free Spin Every 18 Hours, Points Update Profile Balance Immediately",
+                    "One Free Spin Every Day (Resets At 12:00 AM), Points Update Profile Balance Immediately",
                     textAlign: .center,
                     style: TextStyle(
                       fontSize: 12.sp,

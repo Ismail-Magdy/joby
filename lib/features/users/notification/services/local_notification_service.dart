@@ -203,14 +203,14 @@ class LocalNotificationService {
           'daily_check_in_channel',
           'Daily Check In',
           channelDescription: 'Reminders For Daily Check In Points',
-          importance: Importance.max,
-          priority: Priority.high,
+          importance: .max,
+          priority: .high,
           icon: '@mipmap/ic_launcher',
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
+      androidScheduleMode: .exactAllowWhileIdle,
+      matchDateTimeComponents: .time,
     );
   }
 
@@ -249,14 +249,14 @@ class LocalNotificationService {
           'daily_mini_games_channel',
           'Daily Mini Games',
           channelDescription: 'Reminders For Daily Mini Games Bonus Points',
-          importance: Importance.max,
-          priority: Priority.high,
+          importance: .max,
+          priority: .high,
           icon: '@mipmap/ic_launcher',
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
+      androidScheduleMode: .exactAllowWhileIdle,
+      matchDateTimeComponents: .time,
     );
   }
 
@@ -298,8 +298,8 @@ class LocalNotificationService {
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
+      androidScheduleMode: .exactAllowWhileIdle,
+      matchDateTimeComponents: .time,
     );
   }
 
@@ -390,13 +390,13 @@ class LocalNotificationService {
           'incomplete_profile_channel',
           'Incomplete Profile',
           channelDescription: 'Reminders To Complete Your Joby Profile',
-          importance: Importance.defaultImportance,
-          priority: Priority.defaultPriority,
+          importance: .defaultImportance,
+          priority: .defaultPriority,
           icon: '@mipmap/ic_launcher',
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: .exactAllowWhileIdle,
     );
   }
 
@@ -471,9 +471,11 @@ class LocalNotificationService {
     for (final gameId in _gameIds) {
       final lastPlayedStr = sharedPrefs.getString('$_gamePrefPrefix$gameId');
       if (lastPlayedStr == null) continue;
-      final lastPlayed = DateTime.tryParse(lastPlayedStr);
+      final lastPlayed = DateTime.tryParse(lastPlayedStr)?.toLocal();
       if (lastPlayed != null &&
-          now.difference(lastPlayed) < const Duration(hours: 18)) {
+          lastPlayed.year == now.year &&
+          lastPlayed.month == now.month &&
+          lastPlayed.day == now.day) {
         played++;
       }
     }

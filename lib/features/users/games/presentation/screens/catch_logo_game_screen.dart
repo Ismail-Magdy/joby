@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:joby/core/helpers/extensions.dart';
+import 'package:joby/features/users/games/presentation/widgets/catch_logo_hud_badge.dart';
 import '../../../../../core/helpers/spacing.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../../../../core/widgets/custom_app_bar.dart';
@@ -70,6 +71,7 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
   }
 
   void _startGame() {
+    if (_isPlaying || isGameOver) return;
     final isAvailable = context.read<GamesCubit>().isGameAvailable(
       "catch_logo",
     );
@@ -223,9 +225,21 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
               child: Row(
                 mainAxisAlignment: .spaceBetween,
                 children: [
-                  _hudBadge("TIME", "${_secondsLeft}s", Colors.amber),
-                  _hudBadge("SCORE", "$_score", Colors.cyanAccent),
-                  _hudBadge("CAUGHT", "$_caughtCount", Colors.greenAccent),
+                  CatchLogoHudBadge(
+                    label: "TIME",
+                    value: "${_secondsLeft}s",
+                    color: Colors.amber,
+                  ),
+                  CatchLogoHudBadge(
+                    label: "SCORE",
+                    value: "$_score",
+                    color: Colors.cyanAccent,
+                  ),
+                  CatchLogoHudBadge(
+                    label: "CAUGHT",
+                    value: "$_caughtCount",
+                    color: Colors.greenAccent,
+                  ),
                 ],
               ),
             ),
@@ -265,7 +279,7 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                           child: GridPaper(color: Colors.white, interval: 40.r),
                         ),
                         // Start overlay
-                        if (!_isPlaying)
+                        if (!_isPlaying && !isGameOver)
                           Center(
                             child: Column(
                               mainAxisSize: .min,
@@ -314,6 +328,38 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
                                       color: Colors.white,
                                       fontFamily: "BrunoAceSC",
                                     ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        // Terminal post-game lock overlay
+                        if (isGameOver)
+                          Center(
+                            child: Column(
+                              mainAxisSize: .min,
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline_rounded,
+                                  size: 64.sp,
+                                  color: Colors.greenAccent,
+                                ),
+                                verticalSpace(12),
+                                Text(
+                                  "Round Completed",
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: .bold,
+                                    color: Colors.white,
+                                    fontFamily: "BrunoAceSC",
+                                  ),
+                                ),
+                                verticalSpace(6),
+                                Text(
+                                  "Calculating Reward...",
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.white70,
                                   ),
                                 ),
                               ],
@@ -398,31 +444,6 @@ class _CatchLogoGameScreenState extends State<CatchLogoGameScreen>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _hudBadge(String label, String value, Color color) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 10.sp,
-            color: Colors.white60,
-            fontFamily: "BrunoAceSC",
-          ),
-        ),
-        verticalSpace(2),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: .bold,
-            color: color,
-            fontFamily: "BrunoAceSC",
-          ),
-        ),
-      ],
     );
   }
 }
