@@ -88,7 +88,7 @@ class SettingsUsersRepoImpl implements SettingsUsersRepo {
 
       final data = await supabaseClient
           .from('app_ratings')
-          .select('rating, comment')
+          .select('rating, comment, updated_at')
           .eq('user_id', userId)
           .maybeSingle();
 
@@ -108,8 +108,18 @@ class SettingsUsersRepoImpl implements SettingsUsersRepo {
       final userId = supabaseClient.auth.currentUser?.id;
       if (userId == null) return const Left('User is not authenticated');
 
+      final existing = await supabaseClient
+          .from('app_ratings')
+          .select('user_id')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      if (existing != null) {
+        return const Left('You have already submitted your rating');
+      }
+
       final trimmedComment = comment?.trim();
-      await supabaseClient.from('app_ratings').upsert({
+      await supabaseClient.from('app_ratings').insert({
         'user_id': userId,
         'rating': rating,
         'comment': (trimmedComment == null || trimmedComment.isEmpty)

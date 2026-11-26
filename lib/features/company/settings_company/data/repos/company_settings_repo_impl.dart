@@ -104,8 +104,11 @@ class CompanySettingsRepoImpl implements CompanySettingsRepo {
           return const Left('Selected image file could not be read');
         }
 
-        final fileName = '${userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-        await supabaseClient.storage.from('avatars').uploadBinary(
+        final fileName =
+            '${userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        await supabaseClient.storage
+            .from('avatars')
+            .uploadBinary(
               fileName,
               avatarBytes,
               fileOptions: const FileOptions(
@@ -115,14 +118,15 @@ class CompanySettingsRepoImpl implements CompanySettingsRepo {
               ),
             );
 
-        finalAvatarUrl =
-            supabaseClient.storage.from('avatars').getPublicUrl(fileName);
+        finalAvatarUrl = supabaseClient.storage
+            .from('avatars')
+            .getPublicUrl(fileName);
       }
 
-      await supabaseClient.from(AppConstants.companiesTable).update({
-        'name': trimmedName,
-        'avatar_url': finalAvatarUrl,
-      }).eq('id', userId);
+      await supabaseClient
+          .from(AppConstants.companiesTable)
+          .update({'name': trimmedName, 'avatar_url': finalAvatarUrl})
+          .eq('id', userId);
 
       final updated = CompanySettingsProfile(
         name: trimmedName,
@@ -143,7 +147,7 @@ class CompanySettingsRepoImpl implements CompanySettingsRepo {
 
       final data = await supabaseClient
           .from('app_ratings')
-          .select('rating, comment')
+          .select('rating, comment, updated_at')
           .eq('user_id', userId)
           .maybeSingle();
 
@@ -163,8 +167,18 @@ class CompanySettingsRepoImpl implements CompanySettingsRepo {
       final userId = supabaseClient.auth.currentUser?.id;
       if (userId == null) return const Left('User is not authenticated');
 
+      final existing = await supabaseClient
+          .from('app_ratings')
+          .select('user_id')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      if (existing != null) {
+        return const Left('You have already submitted your rating');
+      }
+
       final trimmedComment = comment?.trim();
-      await supabaseClient.from('app_ratings').upsert({
+      await supabaseClient.from('app_ratings').insert({
         'user_id': userId,
         'rating': rating,
         'comment': (trimmedComment == null || trimmedComment.isEmpty)
