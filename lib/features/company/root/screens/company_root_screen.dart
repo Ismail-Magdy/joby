@@ -8,8 +8,8 @@ import "package:joby/core/themes/app_colors.dart";
 import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/features/company/home/manager/company_home_cubit.dart";
 import "package:joby/features/company/home/presentation/screens/company_home_screen.dart";
-import "package:joby/features/company/profile_company/screens/company_profile_screen.dart";
 import "package:joby/features/company/saved/screens/saved_screen.dart";
+import "package:joby/features/company/settings_company/presentation/screens/company_settings_screen.dart";
 import "package:joby/features/users/notification/services/local_notification_service.dart";
 
 class CompanyRootScreen extends StatefulWidget {
@@ -55,7 +55,7 @@ class _CompanyRootScreenState extends State<CompanyRootScreen> {
               ? const SavedScreen()
               : const SizedBox.shrink(),
           _initializedTabs.contains(2)
-              ? const CompanyProfileScreen()
+              ? const CompanySettingsScreen()
               : const SizedBox.shrink(),
         ],
       ),

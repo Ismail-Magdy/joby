@@ -38,6 +38,9 @@ import '../../features/company/company_info/data/repos/company_info_repo_impl.da
 import '../../features/company/company_info/manager/company_info_cubit.dart';
 import '../../features/company/home/data/repos/company_home_repo_impl.dart';
 import '../../features/company/home/manager/company_home_cubit.dart';
+import '../../features/company/settings_company/data/repos/company_settings_repo.dart';
+import '../../features/company/settings_company/data/repos/company_settings_repo_impl.dart';
+import '../../features/company/settings_company/manager/company_settings_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -189,5 +192,18 @@ Future<void> initGetIt() async {
   );
   getIt.registerFactory<CompanyHomeCubit>(
     () => CompanyHomeCubit(repo: getIt<CompanyHomeRepo>()),
+  );
+
+  /// Company Settings Feature
+  getIt.registerLazySingleton<CompanySettingsRepo>(
+    () => CompanySettingsRepoImpl(
+      supabaseClient: getIt<SupabaseClient>(),
+      sharedPrefs: getIt<SharedPreferences>(),
+    ),
+  );
+  getIt.registerFactory<CompanySettingsCubit>(
+    () => CompanySettingsCubit(
+      companySettingsRepo: getIt<CompanySettingsRepo>(),
+    ),
   );
 }
