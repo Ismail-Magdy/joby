@@ -9,23 +9,32 @@ class GameCooldownStatus {
     required this.cooldownDuration,
   });
 
-  /// Whether the game is currently playable
-  bool get isAvailable {
-    if (lastPlayedAt == null) return true;
+  /// Whether the game was already played during the current local calendar day
+  bool get isPlayedToday {
+    if (lastPlayedAt == null) return false;
+    final localLastPlayed = lastPlayedAt!.toLocal();
     final now = DateTime.now();
-    return now.isAfter(availableAt);
+    return localLastPlayed.year == now.year &&
+        localLastPlayed.month == now.month &&
+        localLastPlayed.day == now.day;
   }
 
-  /// Timestamp when the game will become playable again
+  /// Whether the game is currently playable (resets strictly at 12:00 AM midnight)
+  bool get isAvailable => !isPlayedToday;
+
+  /// Timestamp of the next 12:00 AM midnight when the game unlocks
   DateTime get availableAt {
-    if (lastPlayedAt == null) return DateTime.now();
-    return lastPlayedAt!.add(cooldownDuration);
+    final now = DateTime.now();
+    if (isAvailable) return now;
+    return DateTime(now.year, now.month, now.day + 1);
   }
 
-  /// Duration left until the game can be played again
+  /// Duration left until next 12:00 AM midnight
   Duration get remainingCooldown {
     if (isAvailable) return Duration.zero;
-    final remaining = availableAt.difference(DateTime.now());
+    final now = DateTime.now();
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+    final remaining = nextMidnight.difference(now);
     return remaining.isNegative ? Duration.zero : remaining;
   }
 

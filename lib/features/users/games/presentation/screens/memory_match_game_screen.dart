@@ -82,6 +82,7 @@ class _MemoryMatchGameScreenState extends State<MemoryMatchGameScreen> {
   int _moves = 0;
   int _pairsFound = 0;
   bool _isProcessing = false;
+  bool _isGameFinished = false;
   int? _firstFlippedIndex;
 
   @override
@@ -91,6 +92,7 @@ class _MemoryMatchGameScreenState extends State<MemoryMatchGameScreen> {
   }
 
   void _startNewGame() {
+    if (_isGameFinished) return;
     final list = [..._items, ..._items];
     list.shuffle(Random());
     setState(() {
@@ -105,7 +107,12 @@ class _MemoryMatchGameScreenState extends State<MemoryMatchGameScreen> {
   }
 
   void _onCardTapped(int index) {
-    if (_isProcessing || _isFlipped[index] || _isMatched[index]) return;
+    if (_isProcessing ||
+        _isGameFinished ||
+        _isFlipped[index] ||
+        _isMatched[index]) {
+      return;
+    }
 
     final isAvailable = context.read<GamesCubit>().isGameAvailable(
       "memory_match",
@@ -159,6 +166,7 @@ class _MemoryMatchGameScreenState extends State<MemoryMatchGameScreen> {
   }
 
   void _onGameWon() {
+    setState(() => _isGameFinished = true);
     int pointsWon = 45;
     if (_moves > 16) {
       pointsWon = 25;
@@ -263,7 +271,7 @@ class _MemoryMatchGameScreenState extends State<MemoryMatchGameScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: _startNewGame,
+                    onPressed: _isGameFinished ? null : _startNewGame,
                     icon: const Icon(Icons.refresh_rounded),
                     color: Colors.grey.shade700,
                   ),
