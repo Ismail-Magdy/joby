@@ -10,16 +10,8 @@ class ProfileViewsEmpty extends ProfileViewsState {}
 
 class ProfileViewsLoaded extends ProfileViewsState {
   final List<ProfileViewModel> views;
-  final int totalViews;
-  final bool isTrendUp;
-  final int trendDifference;
 
-  ProfileViewsLoaded({
-    required this.views,
-    required this.totalViews,
-    required this.isTrendUp,
-    required this.trendDifference,
-  });
+  ProfileViewsLoaded({required this.views});
 }
 
 class ProfileViewsError extends ProfileViewsState {
