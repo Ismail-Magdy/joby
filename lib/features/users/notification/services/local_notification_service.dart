@@ -30,6 +30,8 @@ class LocalNotificationService {
   static const int weeklyFreshnessId = 106;
 
   // SharedPreferences Keys
+  static const String dailyNotificationsEnabledKey =
+      'daily_notifications_enabled';
   static const String lastCelebrationDateKey = 'last_celebration_date';
   static const String dailyStreakCountKey = 'joby_daily_streak_count';
   static const String dailyStreakLastDateKey = 'joby_daily_streak_last_date';
@@ -90,9 +92,13 @@ class LocalNotificationService {
     return true;
   }
 
+  /// Whether the Job Seeker has enabled daily notifications in Settings.
+  bool get isDailyNotificationsEnabled =>
+      sharedPrefs.getBool(dailyNotificationsEnabledKey) ?? true;
+
   /// Requests notification permissions exclusively for Job Seeker accounts.
   Future<void> requestPermissions() async {
-    if (!isJobSeeker) return;
+    if (!isJobSeeker || !isDailyNotificationsEnabled) return;
     await ensureInitialized();
 
     if (Platform.isIOS) {
@@ -132,7 +138,7 @@ class LocalNotificationService {
     UserInfoModel? userInfo,
     bool requestPermissionIfNeeded = false,
   }) async {
-    if (!isJobSeeker) {
+    if (!isJobSeeker || !isDailyNotificationsEnabled) {
       await cancelAllNotifications();
       return;
     }

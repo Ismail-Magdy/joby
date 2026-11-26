@@ -6,7 +6,7 @@ import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
 import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
 import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "package:joby/features/users/points/presentation/screens/points_screen.dart";
-import "package:joby/features/users/settings_users/screens/settings_users_screen.dart.dart";
+import "package:joby/features/users/settings_users/presentation/screens/settings_users_screen.dart.dart";
 import "package:joby/features/users/profile_views/presentation/screens/profile_views_screen.dart";
 import "../../../../core/helpers/spacing.dart";
 import "../../../../core/themes/app_colors.dart";
@@ -33,62 +33,66 @@ class _UserRootScreenState extends State<UserRootScreen> {
   Widget build(BuildContext context) {
     return ExitConfirmationWrapper(
       child: Scaffold(
-      extendBody: true,
-      //
-      body: IndexedStack(
-        index: currentIndex,
-        children: [
-          const UserHomeScreen(),
-          const PointsScreen(),
-          const ProfileViewsScreen(),
-          const SettingsUsersScreen(),
-        ],
-      ),
-      //
-      bottomNavigationBar: Padding(
-        padding: .only(left: 20.w, right: 20.w, bottom: 20.h),
-        child: SafeArea(
-          top: false,
-          bottom: true,
-          child: Container(
-            height: 68.h,
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor,
-              borderRadius: .circular(40.r),
+        extendBody: true,
+        //
+        body: IndexedStack(
+          index: currentIndex,
+          children: [
+            const UserHomeScreen(),
+            const PointsScreen(),
+            const ProfileViewsScreen(),
+            const SettingsUsersScreen(),
+          ],
+        ),
+        //
+        bottomNavigationBar: Padding(
+          padding: .only(left: 20.w, right: 20.w, bottom: 20.h),
+          child: SafeArea(
+            top: false,
+            bottom: true,
+            child: Container(
+              height: 68.h,
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: .circular(40.r),
+              ),
+              //
+              child: Row(
+                mainAxisAlignment: .spaceAround,
+                children: [
+                  //
+                  _navItem(
+                    index: 0,
+                    icon: "assets/svgs/profile.svg",
+                    title: "Profile",
+                  ),
+                  //
+                  _navItem(
+                    index: 1,
+                    icon: "assets/svgs/points.svg",
+                    title: "Points",
+                  ),
+                  //
+                  _navItem(
+                    index: 2,
+                    icon: "assets/svgs/eye.svg",
+                    title: "Views",
+                  ),
+                  //
+                  _navItem(
+                    index: 3,
+                    icon: "assets/svgs/settings.svg",
+                    title: "Settings",
+                  ),
+                  //
+                ],
+              ),
+              //
             ),
-            //
-            child: Row(
-              mainAxisAlignment: .spaceAround,
-              children: [
-                //
-                _navItem(
-                  index: 0,
-                  icon: "assets/svgs/profile.svg",
-                  title: "Profile",
-                ),
-                //
-                _navItem(
-                  index: 1,
-                  icon: "assets/svgs/points.svg",
-                  title: "Points",
-                ),
-                //
-                _navItem(index: 2, icon: "assets/svgs/eye.svg", title: "Views"),
-                //
-                _navItem(
-                  index: 3,
-                  icon: "assets/svgs/settings.svg",
-                  title: "Settings",
-                ),
-                //
-              ],
-            ),
-            //
           ),
         ),
+        //
       ),
-      //
-    ),
     );
   }
 
