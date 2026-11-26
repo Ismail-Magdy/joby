@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/spacing.dart';
 import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/core/themes/app_text_styles.dart';
@@ -61,6 +62,10 @@ class _CompanyRateAppDialogState extends State<CompanyRateAppDialog> {
         }
       },
       builder: (context, state) {
+        final saved = state.savedRating ?? widget.initialRating;
+        final isAlreadyRated = saved != null;
+        final displayStars = isAlreadyRated ? saved.rating : _selectedStars;
+
         return Dialog(
           backgroundColor: AppColors.white,
           shape: RoundedRectangleBorder(borderRadius: .circular(24.r)),
@@ -85,12 +90,14 @@ class _CompanyRateAppDialogState extends State<CompanyRateAppDialog> {
                   ),
                   verticalSpace(14),
                   Text(
-                    'Rate JOBY',
+                    isAlreadyRated ? 'Your Rating' : 'Rate JOBY',
                     style: AppTextStyles.dialogTitle(AppColors.textPrimary),
                   ),
                   verticalSpace(6),
                   Text(
-                    'Tap a Star To Rate Your Experience',
+                    isAlreadyRated
+                        ? 'Thank You For Rating JOBY'
+                        : 'Tap a Star To Rate Your Experience',
                     textAlign: .center,
                     style: AppTextStyles.dialogMessage,
                   ),
@@ -99,9 +106,9 @@ class _CompanyRateAppDialogState extends State<CompanyRateAppDialog> {
                     mainAxisAlignment: .center,
                     children: List.generate(5, (index) {
                       final starValue = index + 1;
-                      final isSelected = starValue <= _selectedStars;
+                      final isSelected = starValue <= displayStars;
                       return GestureDetector(
-                        onTap: state.isSubmittingRating
+                        onTap: (isAlreadyRated || state.isSubmittingRating)
                             ? null
                             : () => setState(() => _selectedStars = starValue),
                         child: Padding(
@@ -124,66 +131,113 @@ class _CompanyRateAppDialogState extends State<CompanyRateAppDialog> {
                       );
                     }),
                   ),
-                  verticalSpace(18),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: state.isSubmittingRating
-                              ? null
-                              : () => Navigator.of(context).pop(),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
+                  if (isAlreadyRated) ...[
+                    if (saved.comment != null &&
+                        saved.comment!.trim().isNotEmpty) ...[
+                      verticalSpace(18),
+                      Container(
+                        width: .infinity,
+                        padding: .all(14.r),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: .circular(14.r),
+                          border: .all(color: Colors.grey.shade200),
                         ),
-                      ),
-                      horizontalSpace(10),
-                      Expanded(
-                        flex: 2,
-                        child: ElevatedButton(
-                          onPressed:
-                              (_selectedStars == 0 || state.isSubmittingRating)
-                              ? null
-                              : () {
-                                  context
-                                      .read<CompanySettingsCubit>()
-                                      .submitRating(
-                                        rating: _selectedStars,
-                                        comment: _commentController.text,
-                                      );
-                                },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                            disabledBackgroundColor: Colors.grey.shade300,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14.r),
-                            ),
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                            elevation: 0,
+                        child: Text(
+                          saved.comment!.trim(),
+                          textAlign: .center,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: AppColors.textPrimary,
+                            height: 1.4,
                           ),
-                          child: state.isSubmittingRating
-                              ? const CupertinoActivityIndicator(
-                                  color: Colors.white,
-                                )
-                              : Text(
-                                  'Submit Rating',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
                         ),
                       ),
                     ],
-                  ),
+                    verticalSpace(20),
+                    SizedBox(
+                      width: .infinity,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: .circular(14.r),
+                          ),
+                          padding: .symmetric(vertical: 12.h),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Close',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: .w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    verticalSpace(16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: state.isSubmittingRating
+                                ? null
+                                : () => context.pop(),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: .w600,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        horizontalSpace(10),
+                        Expanded(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed:
+                                (_selectedStars == 0 ||
+                                    state.isSubmittingRating)
+                                ? null
+                                : () {
+                                    context
+                                        .read<CompanySettingsCubit>()
+                                        .submitRating(
+                                          rating: _selectedStars,
+                                          comment: _commentController.text,
+                                        );
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              disabledBackgroundColor: Colors.grey.shade300,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: .circular(14.r),
+                              ),
+                              padding: .symmetric(vertical: 12.h),
+                              elevation: 0,
+                            ),
+                            child: state.isSubmittingRating
+                                ? const CupertinoActivityIndicator(
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    'Submit Rating',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: .w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

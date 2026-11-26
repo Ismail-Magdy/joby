@@ -41,10 +41,14 @@ class ProfileViewsCubit extends Cubit<ProfileViewsState> {
           }
         }
 
-        //
+        if (!isClosed) {
+          emit(ProfileViewsLoaded(views: uniqueViews));
+        }
       }
     } catch (e) {
-      emit(ProfileViewsError("Failed to Load Profile Views"));
+      if (!isClosed) {
+        emit(ProfileViewsError("Failed to Load Profile Views"));
+      }
     }
   }
 }

@@ -81,6 +81,7 @@ class SettingsUsersCubit extends Cubit<SettingsUsersState> {
   }
 
   Future<void> submitRating({required int rating, String? comment}) async {
+    if (state.savedRating != null) return;
     emit(state.copyWith(isSubmittingRating: true, ratingError: null));
 
     final result = await settingsUsersRepo.submitAppRating(

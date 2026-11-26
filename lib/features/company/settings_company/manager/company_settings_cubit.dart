@@ -85,6 +85,7 @@ class CompanySettingsCubit extends Cubit<CompanySettingsState> {
     required int rating,
     String? comment,
   }) async {
+    if (state.savedRating != null) return;
     emit(state.copyWith(isSubmittingRating: true, ratingError: null));
 
     final result = await companySettingsRepo.submitAppRating(

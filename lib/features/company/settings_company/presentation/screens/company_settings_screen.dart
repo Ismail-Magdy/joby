@@ -160,7 +160,9 @@ class CompanySettingsScreen extends StatelessWidget {
                     SettingsTileItem(
                       icon: Icons.star_outline_rounded,
                       title: 'Rate App',
-                      subtitle: 'Rate Your Experience With JOBY',
+                      subtitle: state.savedRating != null
+                          ? 'You Rated JOBY ${state.savedRating!.rating}/5'
+                          : 'Rate Your Experience With JOBY',
                       onTap: () => _openRateAppDialog(context, state),
                     ),
                   ],
@@ -210,4 +212,3 @@ class CompanySettingsScreen extends StatelessWidget {
     );
   }
 }
-// 218

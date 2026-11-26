@@ -48,17 +48,11 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
       body: SafeArea(
         child: BlocBuilder<ProfileViewsCubit, ProfileViewsState>(
           builder: (context, state) {
-            //
             return Column(
               children: [
-                // Loaded
-                if (state is ProfileViewsLoaded)
-                  //
-                  //
-                  Expanded(child: _buildBodyContent(state)),
+                Expanded(child: _buildBodyContent(state)),
               ],
             );
-            //
           },
         ),
       ),
@@ -147,36 +141,51 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
     //
     // Empty
     else if (state is ProfileViewsEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            //
-            Lottie.asset(
-              "assets/lotties/no_views.json",
-              width: 180.w,
-              height: 180.h,
-              fit: .contain,
+      return RefreshIndicator(
+        color: AppColors.primaryColor,
+        onRefresh: () => context.read<ProfileViewsCubit>().fetchViews(),
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: .center,
+                  children: [
+                    Lottie.asset(
+                      "assets/lotties/no_views.json",
+                      width: 180.w,
+                      height: 180.h,
+                      fit: .contain,
+                    ),
+                    verticalSpace(15),
+                    Text(
+                      "No Profile Views Yet\nKeep Updating Your Profile",
+                      textAlign: .center,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            //
-            verticalSpace(15),
-            //
-            Text(
-              "No Profile Views Yet\nKeep Updating Your Profile",
-              textAlign: .center,
-              style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
-            ),
-            //
-          ],
+          ),
         ),
       );
       //
       // Loaded
     } else if (state is ProfileViewsLoaded) {
       //
-      return ListView.builder(
-        padding: .symmetric(vertical: 10.h, horizontal: 20.w),
-        itemCount: state.views.length,
+      return RefreshIndicator(
+        color: AppColors.primaryColor,
+        onRefresh: () => context.read<ProfileViewsCubit>().fetchViews(),
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: .symmetric(vertical: 10.h, horizontal: 20.w),
+          itemCount: state.views.length,
         itemBuilder: (context, index) {
           final view = state.views[index];
 
@@ -286,6 +295,7 @@ class _ProfileViewsScreenState extends State<ProfileViewsScreen> {
             ),
           );
         },
+      ),
       );
       //
     }
