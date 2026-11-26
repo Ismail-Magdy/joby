@@ -40,7 +40,6 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
 
   double _currentAngle = 0.0;
   bool _isSpinning = false;
-  int? _wonPoints;
 
   @override
   void initState() {
@@ -74,7 +73,6 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
 
     setState(() {
       _isSpinning = true;
-      _wonPoints = null;
     });
 
     final random = Random();
@@ -95,11 +93,12 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
 
     _controller.reset();
     _controller.forward().then((_) {
+      if (!mounted) return;
+      final points = _rewards[targetIndex];
       _currentAngle = _animation.value;
-      _wonPoints = _rewards[targetIndex];
       setState(() => _isSpinning = false);
 
-      _showResultSheet(_wonPoints!);
+      _showResultSheet(points);
     });
   }
 
@@ -169,16 +168,14 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                         color: AppColors.primaryColor.withValues(alpha: 0.2),
                       ),
                     ),
-                    child: Expanded(
-                      child: Text(
-                        textAlign: .center,
-                        "Spin Daily To Win Up To 50 Pts",
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: .bold,
-                          color: AppColors.primaryColor,
-                          fontFamily: "BrunoAceSC",
-                        ),
+                    child: Text(
+                      textAlign: .center,
+                      "Spin Daily To Win Up To 50 Pts",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: .bold,
+                        color: AppColors.primaryColor,
+                        fontFamily: "BrunoAceSC",
                       ),
                     ),
                   ),
@@ -186,7 +183,7 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                   // Wheel Stack
                   SizedBox(
                     width: 300.w,
-                    height: 300.h,
+                    height: 300.w,
                     child: Stack(
                       alignment: .center,
                       children: [
@@ -200,7 +197,7 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                             return Transform.rotate(
                               angle: angle,
                               child: CustomPaint(
-                                size: Size(290.w, 290.h),
+                                size: Size(290.w, 290.w),
                                 painter: _WheelPainter(
                                   rewards: _rewards,
                                   colors: _sliceColors,
@@ -231,6 +228,8 @@ class _SpinWheelGameScreenState extends State<SpinWheelGameScreen>
                           padding: .all(12.r),
                           child: SvgPicture.asset(
                             "assets/svgs/joby_logo.svg",
+                            width: 34.w,
+                            height: 34.w,
                             colorFilter: const .mode(
                               AppColors.primaryColor,
                               .srcIn,
@@ -328,8 +327,17 @@ class _WheelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (size.isEmpty ||
+        size.width <= 0 ||
+        size.height <= 0 ||
+        size.width.isNaN ||
+        size.height.isNaN ||
+        rewards.isEmpty) {
+      return;
+    }
+
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
+    final radius = min(size.width, size.height) / 2;
     final sliceAngle = (2 * pi) / rewards.length;
 
     final paint = Paint()..style = PaintingStyle.fill;
