@@ -98,8 +98,9 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
           final List<MiniGameModel> games = state is GamesLoaded
               ? state.games
               : _placeholderGames;
-          final Map<String, GameCooldownStatus> cooldowns =
-              state is GamesLoaded ? state.cooldowns : const {};
+          final Map<String, GameCooldownStatus> cooldowns = state is GamesLoaded
+              ? state.cooldowns
+              : const {};
 
           final content = ListView(
             padding: .symmetric(horizontal: 20.w, vertical: 16.h),
