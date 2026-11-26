@@ -15,6 +15,7 @@ import 'package:joby/features/company/home/manager/company_home_cubit.dart';
 import 'package:joby/features/company/home/presentation/screens/company_home_screen.dart';
 import 'package:joby/features/company/profile_company/screens/company_profile_screen.dart';
 import 'package:joby/features/company/root/screens/company_root_screen.dart';
+import 'package:joby/features/company/settings_company/manager/company_settings_cubit.dart';
 import 'package:joby/features/common/about_us/screens/about_us_screen.dart';
 import 'package:joby/features/common/feed_back/presentation/screens/feed_back_screen.dart';
 import 'package:joby/features/users/company_view/presentation/screens/company_view_screen.dart';
@@ -253,6 +254,10 @@ class AppRouter {
             providers: [
               BlocProvider<CompanyHomeCubit>(
                 create: (context) => getIt<CompanyHomeCubit>(),
+              ),
+              BlocProvider<CompanySettingsCubit>(
+                create: (context) =>
+                    getIt<CompanySettingsCubit>()..loadSettings(),
               ),
             ],
             child: const CompanyRootScreen(),
