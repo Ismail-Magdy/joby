@@ -3,7 +3,7 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_svg/svg.dart";
 import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/core/widgets/exit_confirmation_wrapper.dart";
-import "package:joby/core/widgets/joby_pixel_buddy.dart";
+import "package:joby/features/users/robot/screens/joby_pixel_buddy.dart";
 import "package:joby/features/users/home/presentation/screens/user_home_screen.dart";
 import "package:joby/features/users/notification/services/local_notification_service.dart";
 import "package:joby/features/users/points/presentation/screens/points_screen.dart";

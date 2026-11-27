@@ -6,56 +6,56 @@ class ErrorHandler {
   /// Converts any given exception into a user-friendly string message.
   static String handleError(dynamic error) {
     if (error == null) {
-      return "An unexpected error occurred. Please try again";
+      return "An Unexpected Error Occurred";
     }
 
     // 1. Handle Supabase Auth Exceptions
     if (error is AuthException) {
       switch (error.message.toLowerCase()) {
         case "invalid login credentials":
-          return "Invalid email or password";
+          return "Invalid Email Or Password";
         case "user already registered":
-          return "An account with this email already exists";
+          return "An Account With This Email Already Exists";
         case "email rate limit exceeded":
-          return "Too many requests. Please try again later";
+          return "Too Many Requests";
         default:
-          return "Authentication failed. Please try again";
+          return "Authentication Failed";
       }
     }
 
     // 2. Handle Supabase Database Exceptions (Postgrest)
     if (error is PostgrestException) {
       if (error.message.contains("duplicate key value")) {
-        return "The information you entered already exists";
+        return "The Information You Entered Already Exists";
       } else if (error.code == "23503") {
         // Foreign key violation
-        return "Invalid reference. The selected item does not exist";
+        return "Invalid Reference, The Selected Item Does Not Exist";
       } else if (error.code == "PGRST116") {
-        return "Requested data was not found";
+        return "Requested Data Was Not Found";
       }
-      return "Failed to load data. Please try again later";
+      return "Failed To Load Data";
     }
 
     // 3. Handle Supabase Storage Exceptions
     if (error is StorageException) {
       if (error.message.contains("The resource was not found")) {
-        return "The requested file could not be found";
+        return "The Requested File Could Not Be Found";
       } else if (error.statusCode == "413") {
-        return "The file size is too large";
+        return "The File Size Is Too Large";
       }
-      return "A problem occurred with file storage. Please try again";
+      return "A problem Occurred With File Storage";
     }
 
     // 4. Handle Common Network & Base Exceptions
     if (error is SocketException) {
-      return "No internet connection. Please check your network and try again";
+      return "No Internet Connection, Please Check Your Network";
     }
 
     if (error is TimeoutException) {
-      return "The connection timed out. Please try again";
+      return "The Connection Timed Out";
     }
 
     // 5. Generic Error handling
-    return "An unexpected error occurred. Please try again later";
+    return "An Unexpected Error Occurred";
   }
 }
