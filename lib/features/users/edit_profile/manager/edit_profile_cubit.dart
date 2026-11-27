@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joby/core/di/dependency_injection.dart';
+import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/features/users/notification/services/local_notification_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/repos/edit_profile_repo.dart';
@@ -117,7 +118,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       // Update profile data — only non-empty fields are sent
       final success = await editProfileRepo.updateUserInfo(
         userId: userId,
-        name: name.trim(),
+        name: name.trim().toTitleCase(),
         jobTitle: jobTitle.trim(),
         level: level,
         typeOfWork: typeOfWork,

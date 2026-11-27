@@ -23,3 +23,17 @@ extension Navigation on BuildContext {
 
   void pop() => Navigator.of(this).pop();
 }
+
+extension StringFormattingExtension on String {
+  String toTitleCase() {
+    if (trim().isEmpty) return this;
+    return trim()
+        .split(RegExp(r'\s+'))
+        .map(
+          (word) => word.isEmpty
+              ? ''
+              : '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}',
+        )
+        .join(' ');
+  }
+}

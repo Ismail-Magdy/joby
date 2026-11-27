@@ -107,12 +107,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     }
 
     try {
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!await launchUrl(url, mode: .externalApplication)) {
         if (mounted) {
           CustomFeedbackDialog.showError(
             context,
             title: "Link Error",
-            message: "Could not launch the link",
+            message: "Could Not Launch The Link",
           );
         }
       }
@@ -279,7 +279,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           verticalSpace(70),
                           // Name
                           Text(
-                            user.displayShortName,
+                            user.displayShortName.toTitleCase(),
                             style: TextStyle(
                               fontSize: 22.sp,
                               fontWeight: .bold,
