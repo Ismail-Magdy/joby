@@ -1,3 +1,4 @@
+import 'package:joby/core/helpers/extensions.dart';
 import 'package:joby/core/helpers/location_helper.dart';
 
 class UserInfoModel {
@@ -81,8 +82,8 @@ class UserInfoModel {
 
   String get displayShortName {
     if (name.trim().isEmpty) return "";
-    final parts = name.trim().split(" ");
-    return parts.take(2).join(" ");
+    final parts = name.trim().split(RegExp(r'\s+'));
+    return parts.take(2).join(" ").toTitleCase();
   }
 
   Map<String, dynamic> toMap() {

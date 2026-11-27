@@ -456,7 +456,7 @@ class _UserInfoScreenState extends State<UserInfoScreen>
       final behanceText = _behanceController.text.trim();
 
       final userInfo = UserInfoModel(
-        name: _nameController.text.trim(),
+        name: _nameController.text.trim().toTitleCase(),
         jobCategory: _jobCategoryController.text.trim(),
         jobTitle: _jobTitleController.text.trim(),
         level: _selectedLevel!,
