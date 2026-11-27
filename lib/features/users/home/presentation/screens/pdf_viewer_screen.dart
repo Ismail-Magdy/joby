@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joby/core/helpers/spacing.dart';
+import 'package:joby/core/widgets/app_skeletonizer.dart';
 import 'package:joby/core/widgets/custom_app_bar.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PdfViewerScreen extends StatelessWidget {
   final String pdfUrl;
@@ -50,19 +51,20 @@ class PdfViewerScreen extends StatelessWidget {
   }
 
   Widget _buildLoadingAnimation() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+    return AppSkeletonizer(
+      enabled: true,
       child: ListView.builder(
         itemCount: 3,
         padding: .all(20.r),
         itemBuilder: (context, index) {
-          return Container(
-            height: 300.h,
-            margin: .only(bottom: 20.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: .circular(12.r),
+          return Skeleton.leaf(
+            child: Container(
+              height: 300.h,
+              margin: .only(bottom: 20.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: .circular(12.r),
+              ),
             ),
           );
         },
