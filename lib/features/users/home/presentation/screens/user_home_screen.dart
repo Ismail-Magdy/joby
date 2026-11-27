@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
-import "package:joby/core/widgets/home_shimmer_loading.dart";
+import "package:joby/core/widgets/app_skeletonizer.dart";
+import "package:joby/features/users/user_info/data/models/user_info_model.dart";
+import "package:skeletonizer/skeletonizer.dart";
 import "package:joby/features/users/home/presentation/components/home_info_row.dart";
 import "package:joby/features/users/home/presentation/components/cv_section.dart";
 import "package:joby/features/users/home/presentation/widgets/location_map_section.dart";
@@ -35,6 +37,25 @@ class UserHomeScreen extends StatefulWidget {
 class _UserHomeScreenState extends State<UserHomeScreen> {
   bool _isAvatarLoading = false;
   String? _loadedAvatarUrl;
+
+  static final UserInfoModel _dummyUser = UserInfoModel(
+    id: "",
+    name: "Placeholder User Name",
+    jobCategory: "Software",
+    jobTitle: "Senior Flutter Developer",
+    level: "Senior",
+    typeOfWork: "Full Time",
+    whatsapp: "01000000000",
+    linkedin: "https://linkedin.com",
+    github: "https://github.com",
+    behance: "https://behance.net",
+    cvUrl: "https://example.com/cv.pdf",
+    avatarUrl: null,
+    totalPoints: 1250,
+    locationName: "Cairo, Egypt",
+    latitude: 0.0,
+    longitude: 0.0,
+  );
 
   @override
   void initState() {
@@ -231,18 +252,26 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             }
           },
           builder: (context, state) {
-            // Loading State
-            if (state is UserHomeLoading || _isAvatarLoading) {
-              return const HomeShimmerLoading();
-            }
             // Error State
-            else if (state is UserHomeError) {
+            if (state is UserHomeError) {
               return ErrorScreen();
             }
-            // Success State
-            else if (state is UserHomeSuccess) {
-              final user = state.userInfo;
-              return CustomScrollView(
+
+            final bool isLoading =
+                state is UserHomeLoading ||
+                state is UserHomeInitial ||
+                _isAvatarLoading;
+            final UserInfoModel user =
+                state is UserHomeSuccess && !_isAvatarLoading
+                ? state.userInfo
+                : _dummyUser;
+
+            return AppSkeletonizer(
+              enabled: isLoading,
+              child: CustomScrollView(
+                physics: isLoading
+                    ? const NeverScrollableScrollPhysics()
+                    : null,
                 slivers: [
                   // Animated collapsing header
                   SliverPersistentHeader(
@@ -254,17 +283,21 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       title: "My Profile",
                       name: user.displayShortName,
                       jobTitle: user.jobTitle,
-                      onManagerTap: () =>
-                          context.pushNamed(Routes.companyViewScreen),
-                      onEditTap: () async {
-                        final result = await context.pushNamed(
-                          Routes.editProfileScreen,
-                          arguments: user,
-                        );
-                        if (result == true && mounted) {
-                          () => context.read<UserHomeCubit>().getUserData();
-                        }
-                      },
+                      onManagerTap: isLoading
+                          ? null
+                          : () => context.pushNamed(Routes.companyViewScreen),
+                      onEditTap: isLoading
+                          ? null
+                          : () async {
+                              final result = await context.pushNamed(
+                                Routes.editProfileScreen,
+                                arguments: user,
+                              );
+                              if (result == true && mounted) {
+                                () =>
+                                    context.read<UserHomeCubit>().getUserData();
+                              }
+                            },
                     ),
                   ),
                   //
@@ -373,8 +406,25 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             ),
                           ),
                           //
+                          // Location Map Placeholder during skeleton loading
+                          if (isLoading) ...[
+                            verticalSpace(30),
+                            Padding(
+                              padding: .symmetric(horizontal: 24.w),
+                              child: Skeleton.leaf(
+                                child: Container(
+                                  width: .infinity,
+                                  height: 200.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: .circular(16.r),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ]
                           // Location Map
-                          if (user.locationName.isNotEmpty &&
+                          else if (user.locationName.isNotEmpty &&
                               user.latitude != 0.0) ...[
                             //
                             verticalSpace(30),
@@ -398,9 +448,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                   //
                 ],
-              );
-            }
-            return const SizedBox.shrink();
+              ),
+            );
           },
         ),
       ),
