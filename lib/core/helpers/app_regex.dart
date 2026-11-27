@@ -38,7 +38,7 @@ class AppRegex {
   /// Validates a password on the Login screen (non-empty check only, no policy leaks).
   static String? validateLoginPassword(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Please enter your password";
+      return "Please Enter Your Password";
     }
     return null;
   }
@@ -46,21 +46,21 @@ class AppRegex {
   /// Validates a new password on Sign Up or Password Reset (enforces full policy).
   static String? validateNewPassword(String? value) {
     final v = value?.trim() ?? "";
-    if (v.isEmpty) return "Please enter a password";
+    if (v.isEmpty) return "Please Enter a Password";
     if (v.length < 8) {
-      return "At least 8 characters";
+      return "At Least 8 Characters";
     }
     if (!hasUpperCase(v)) {
-      return "Include an uppercase letter";
+      return "Include an Uppercase Letter";
     }
     if (!hasLowerCase(v)) {
-      return "Include a lowercase letter";
+      return "Include a Lowercase Letter";
     }
     if (!hasNumber(v)) {
-      return "Include a number";
+      return "Include a Number";
     }
     if (!hasSpecialCharacter(v)) {
-      return "Include a special character (!@#\$%^&*)";
+      return "Include a Special Character (!@#\$%^&*)";
     }
     return null;
   }

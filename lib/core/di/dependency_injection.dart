@@ -108,7 +108,7 @@ Future<void> initGetIt() async {
     () => EditProfileCubit(getIt<EditProfileRepo>(), getIt<SupabaseClient>()),
   );
 
-  /// Advice (Feedback) Feature
+  /// Feedback Feature
   getIt.registerLazySingleton<FeedBackRepo>(
     () => FeedBackRepoImpl(supabaseClient: getIt<SupabaseClient>()),
   );
@@ -202,8 +202,7 @@ Future<void> initGetIt() async {
     ),
   );
   getIt.registerFactory<CompanySettingsCubit>(
-    () => CompanySettingsCubit(
-      companySettingsRepo: getIt<CompanySettingsRepo>(),
-    ),
+    () =>
+        CompanySettingsCubit(companySettingsRepo: getIt<CompanySettingsRepo>()),
   );
 }

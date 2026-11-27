@@ -4,7 +4,7 @@ import "package:flutter_svg/svg.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:joby/core/helpers/spacing.dart";
 import "package:joby/core/widgets/custom_feedback_dialog.dart";
-import "package:joby/core/widgets/pdf_viewer_screen.dart";
+import "package:joby/features/users/home/presentation/screens/pdf_viewer_screen.dart";
 import "package:joby/features/users/user_info/data/models/user_info_model.dart";
 import "package:joby/features/users/home/presentation/components/home_info_row.dart";
 import "package:joby/features/users/home/presentation/components/cv_section.dart";

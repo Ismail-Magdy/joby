@@ -22,7 +22,7 @@ import '../widgets/profile_header_delegate.dart';
 import "package:joby/features/users/user_info/presentation/screens/location_picker_screen.dart";
 import "package:joby/features/users/user_info/data/models/location_picker_result.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
-import "package:joby/core/widgets/pdf_viewer_screen.dart";
+import "package:joby/features/users/home/presentation/screens/pdf_viewer_screen.dart";
 import "package:joby/features/users/games/presentation/widgets/games_entry_banner_card.dart";
 
 class UserHomeScreen extends StatefulWidget {
