@@ -66,7 +66,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (dbRole != "none" && selectedRole != null && dbRole != selectedRole) {
         await authRepo.signOut();
         final roleName = dbRole == "seeker" ? "Job Seeker" : "Company";
-        emit(AuthError("This email is already registered as a $roleName"));
+        emit(AuthError("This Email is Already Registered as a $roleName"));
         return;
       }
 
@@ -76,8 +76,9 @@ class AuthCubit extends Cubit<AuthState> {
 
       await SharedPrefHelper.setData("isGoogleSignedInBefore", true);
 
-      final resolvedRole =
-          dbRole != "none" ? dbRole : (selectedRole ?? "seeker");
+      final resolvedRole = dbRole != "none"
+          ? dbRole
+          : (selectedRole ?? "seeker");
 
       if (resolvedRole == "company") {
         await getIt<LocalNotificationService>().cancelAllNotifications();

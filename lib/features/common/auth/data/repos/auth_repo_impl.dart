@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import "package:dartz/dartz.dart";
 import "package:joby/core/di/dependency_injection.dart";
 import "package:joby/features/users/notification/services/local_notification_service.dart";
@@ -38,14 +37,13 @@ class AuthRepoImpl implements AuthRepo {
       if (response.user != null) {
         if (response.user!.identities != null &&
             response.user!.identities!.isEmpty) {
-          return const Left("An account with this email already exists");
+          return const Left("An Account With This Email Already Exists");
         }
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Sign up failed. Please try again");
+        return const Left("Sign Up Failed");
       }
     } catch (error) {
-      debugPrint("Google Auth Real Error: ${error.toString()}");
       return Left(ErrorHandler.handleError(error));
     }
   }
@@ -63,10 +61,9 @@ class AuthRepoImpl implements AuthRepo {
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Sign in failed");
+        return const Left("Sign In Failed");
       }
     } catch (error) {
-      debugPrint("Google Auth Real Error: ${error.toString()}");
       return Left(ErrorHandler.handleError(error));
     }
   }
@@ -77,7 +74,7 @@ class AuthRepoImpl implements AuthRepo {
       final googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        return const Left("Google sign in was canceled");
+        return const Left("Google Sign In Was Canceled");
       }
 
       final googleAuth = await googleUser.authentication;
@@ -91,10 +88,9 @@ class AuthRepoImpl implements AuthRepo {
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Google sign in failed");
+        return const Left("Google Sign In Failed");
       }
     } catch (error) {
-      debugPrint("Google Auth Real Error: ${error.toString()}");
       return Left(ErrorHandler.handleError(error));
     }
   }
@@ -107,7 +103,7 @@ class AuthRepoImpl implements AuthRepo {
       final googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        return const Left("Google sign in was canceled");
+        return const Left("Google Sign In Was Canceled");
       }
 
       final googleAuth = await googleUser.authentication;
@@ -121,10 +117,9 @@ class AuthRepoImpl implements AuthRepo {
       if (response.user != null) {
         return Right(UserModel.fromSupabase(response.user!));
       } else {
-        return const Left("Google sign in failed");
+        return const Left("Google Sign In Failed");
       }
     } catch (error) {
-      debugPrint("Google Auth Real Error: ${error.toString()}");
       return Left(ErrorHandler.handleError(error));
     }
   }
@@ -134,12 +129,8 @@ class AuthRepoImpl implements AuthRepo {
     await getIt<LocalNotificationService>().cancelAllNotifications();
     await supabaseClient.auth.signOut();
 
-    try {
-      await _googleSignIn.signOut();
-      await _googleSignIn.disconnect();
-    } catch (error) {
-      debugPrint("Google SignOut Error: ${ErrorHandler.handleError(error)}");
-    }
+    await _googleSignIn.signOut();
+    await _googleSignIn.disconnect();
   }
 
   @override

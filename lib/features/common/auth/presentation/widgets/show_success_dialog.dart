@@ -30,7 +30,7 @@ class ShowSuccessDialog extends StatelessWidget {
           verticalSpace(12),
           //
           Text(
-            "You can now log in",
+            "You Can Now Log In",
             style: TextStyle(fontSize: 14.sp),
             textAlign: .center,
           ),

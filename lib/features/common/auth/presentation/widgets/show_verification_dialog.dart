@@ -22,7 +22,7 @@ class ShowVerificationDialog extends StatelessWidget {
           ),
           verticalSpace(16),
           Text(
-            "Check your email",
+            "Check Your Email",
             style: TextStyle(
               fontFamily: "BrunoAceSC",
               color: AppColors.primaryColor,
@@ -32,7 +32,7 @@ class ShowVerificationDialog extends StatelessWidget {
           ),
           verticalSpace(12),
           Text(
-            "We've sent a verification link. Please click it to verify your account.",
+            "We've Sent a Verification Link, Please Click It to Verify Your Account",
             style: TextStyle(fontSize: 14.sp),
             textAlign: .center,
           ),

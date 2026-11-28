@@ -43,8 +43,6 @@ class _AuthScreenState extends State<AuthScreen> {
   StreamSubscription<supabase.AuthState>? _authSubscription;
   bool _isAuthInProgress = false;
 
-  ///
-
   @override
   void initState() {
     super.initState();
@@ -132,7 +130,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 CustomFeedbackDialog.showSuccess(
                   context,
                   title: "Welcome",
-                  message: "Welcome ${state.user.name}",
+                  message: "Welcome To Joby",
                   onFinish: () {
                     if (!context.mounted) return;
                     if (state.hasProfile) {
@@ -209,7 +207,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       verticalSpace(10),
                       //
                       Text(
-                        "Go ahead and set up your account",
+                        "Go Ahead and Set Up Your Account",
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.grey.shade600,
@@ -241,7 +239,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           fieldType: .normal,
                           prefixIcon: Icons.person_outline,
                           validator: (val) =>
-                              val!.isEmpty ? "Please enter your name" : null,
+                              val!.isEmpty ? "Please Enter Your Name" : null,
                         ),
                         //
                         verticalSpace(16),
@@ -263,8 +261,8 @@ class _AuthScreenState extends State<AuthScreen> {
                         fieldType: .password,
                         prefixIcon: Icons.lock_outline,
                         autovalidateMode: isLogin
-                            ? AutovalidateMode.disabled
-                            : AutovalidateMode.onUserInteraction,
+                            ? .disabled
+                            : .onUserInteraction,
                         validator: isLogin
                             ? AppRegex.validateLoginPassword
                             : AppRegex.validateNewPassword,
