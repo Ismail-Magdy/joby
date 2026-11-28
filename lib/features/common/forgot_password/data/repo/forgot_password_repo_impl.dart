@@ -18,7 +18,7 @@ class ForgotPasswordRepoImpl implements ForgotPasswordRepo {
 
       if (isEmailExists == false) {
         return const Left(
-          "This email is not registered. Please check again or sign up",
+          "This Email is Not Registered, Please Check Again or Sign Up",
         );
       }
 

@@ -42,7 +42,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 context,
                 title: "Email Sent",
                 message:
-                    "Password reset link sent! Check your inbox or spam folder",
+                    "Password Reset Link Sent, Check Your Inbox or Spam Folder",
                 onFinish: () {
                   if (context.mounted) {
                     context.pop();
@@ -87,7 +87,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     verticalSpace(10),
                     //
                     Text(
-                      "Enter the email associated with your account and we'll send an email with instructions to reset your password",
+                      "Enter The Email Address Associated with Your Account and We'll Send an Email with Instructions to Reset Your Password",
                       textAlign: .center,
                       style: TextStyle(
                         fontSize: 14.sp,
@@ -191,4 +191,3 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
-// 218
