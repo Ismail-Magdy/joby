@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joby/core/themes/app_colors.dart';
 import 'package:joby/features/common/about_us/components/cards_and_footer_section.dart';
 import '../components/about_header_delegate.dart';
 
@@ -9,7 +10,7 @@ class AboutUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       //
       body: CustomScrollView(
         slivers: [

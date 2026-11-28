@@ -24,7 +24,7 @@ class CardsAndFooterSection extends StatelessWidget {
           title: "Our Mission",
           child: Text(
             "Joby Bridges The Gap Between Passionate Job Seekers and "
-            "Forward Thinking Companies in Egypt and Beyond. We Believe "
+            "Forward Thinking Companies in Egypt and Beyond, We Believe "
             "The Right Talent and the Right Opportunity Should Always "
             "Find Each Other Fast, Smart, and Effortlessly",
             style: TextStyle(
@@ -131,7 +131,7 @@ class CardsAndFooterSection extends StatelessWidget {
               CustomTechRow(
                 icon: Ionicons.phonePortraitOutline,
                 name: "Flutter",
-                description: "Cross Platform Mobile Framework by Google",
+                description: "Cross Platform Mobile Framework By Google",
               ),
               //
               CustomTechRow(
@@ -235,8 +235,6 @@ class CardsAndFooterSection extends StatelessWidget {
   ///
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: .externalApplication)) {
-      debugPrint("AboutUsScreen: Could not launch $url");
-    }
+    if (!await launchUrl(uri, mode: .externalApplication)) {}
   }
 }

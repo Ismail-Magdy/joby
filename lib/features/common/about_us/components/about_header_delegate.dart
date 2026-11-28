@@ -97,7 +97,7 @@ class AboutHeaderDelegate extends SliverPersistentHeaderDelegate {
             right: 0,
             top: logoY,
             child: Align(
-              alignment: Alignment.center,
+              alignment: .center,
               child: SvgPicture.asset(
                 "assets/svgs/joby_logo.svg",
                 height: logoH,
