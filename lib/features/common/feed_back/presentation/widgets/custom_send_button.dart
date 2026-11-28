@@ -38,7 +38,7 @@ class CustomSendButton extends StatelessWidget {
               ),
 
         label: Text(
-          isLoading ? "Sending..." : "Send Feedback",
+          isLoading ? "Sending" : "Send Feedback",
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.sp,

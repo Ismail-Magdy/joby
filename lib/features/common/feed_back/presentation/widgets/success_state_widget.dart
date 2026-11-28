@@ -27,7 +27,7 @@ class SuccessStateWidget extends StatelessWidget {
           ),
           verticalSpace(12),
           Text(
-            "Thank You for Your Feedback",
+            "Thank You For Your Feedback",
             style: TextStyle(
               fontSize: 17.sp,
               fontWeight: .bold,

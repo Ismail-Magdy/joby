@@ -48,7 +48,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       // App Bar
       appBar: CustomAppBar(text: "Feedback"),
       //
@@ -125,7 +125,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                             decoration: InputDecoration(
                               hintText:
                                   "Share Your Ideas, Bugs You Found, or Anything "
-                                  "You'd Like Us to Improve...",
+                                  "You'd Like Us to Improve",
                               hintStyle: TextStyle(
                                 color: Colors.grey.shade400,
                                 fontSize: 13.sp,
